@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Main Map</title>
+      <link rel="stylesheet" href="index.css">
+      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCF9ON6rwVZVm-QDQ-ngUi5vc8-NPLnP0M",
+            authDomain: "maps-ca38f.firebaseapp.com",
+            databaseURL: "https://maps-ca38f.firebaseio.com",
+            projectId: "maps-ca38f",
+            storageBucket: "",
+            messagingSenderId: "6568625724"
+        };
+
+        firebase.initializeApp(config);
+
+      </script>
+  </head>
+  <body>
+          <div id="map"></div>
+          <div id="overlay">
+              <center><input type="text" placeholder="Search Mennonite Maps" id="search_input" onkeyup="searchForMatches()"></center>
+              <ul id="names_found_list"></ul>
+              <center><h3 id="name"></h3></center>
+              <center><input id="add_location" type="button" value="Add new Location" onclick="addLocation()"></center>
+          </div> 
+        
+      <script>
+          
+        function initMap() {
+              
+            var whereToCenter = {lat: 38.500, lng: -97.276}
+            
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center: whereToCenter,
+                  mapTypeControlOptions: {
+                      position: google.maps.ControlPosition.TOP_RIGHT
+                    }
+                });
+            
+                var locations = []
+                
+                var databaseRef = firebase.database().ref('locations');
+                databaseRef.on('value', function(snapshot){
+                    var array = snapshotToArray(snapshot);
+                    for(var i=0; i<array.length; i++){
+                        itemArray = array[i];
+                        
+                        var name = itemArray.firstAndLastName;
+                        var lat = itemArray.latitude;
+                        var long = itemArray.longitude;
+                        var id = itemArray.locationId;
+                        
+                        var newArray = new Array(name, lat, long, id);
+                        locations.push(newArray);
+                    }
+
+                    
+                    for (var i = 0; i < locations.length; i++) {
+                        var location = locations[i];
+                        
+                        var marker = new google.maps.Marker({
+                            position: {lat: parseFloat(location[1]), lng: parseFloat(location[2])},
+                            map: map,
+                            title: location[0],
+                            locationId: location[3]
+                        });
+                        
+                        marker.addListener('click', function(){
+                            document.getElementById("names_found_list").innerHTML = "";
+                            var id = this.get("locationId");
+                            console.log(id);
+                            var databaseRef = firebase.database().ref("locations/" + id + "/firstAndLastName");
+                            databaseRef.once('value').then(function(snapshot){
+                                var name = snapshot.val()
+                                document.getElementById("name").innerHTML = name;
+                            })
+                        })
+                        
+                    }
+                    
+                });
+
+          }  
+
+        function addLocation(){
+            location.href = "add_location.html";
+        }
+    
+        function searchForMatches(){
+            document.getElementById("names_found_list").innerHTML = "";
+            var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
+            if(equalTo.length == 0){
+                return;
+            }
+            console.log(equalTo);
+            var ref = firebase.database().ref("locations").orderByChild('firstAndLastName').startAt(equalTo).limitToLast(7);
+            ref.once('value').then(function(snapshot){
+                var array = snapshotToArray(snapshot);
+                for(var j=0; array.length > j; j++){
+                    var itemArray = array[j];
+                    var name = itemArray.firstAndLastName;
+                    
+                    var ul = document.getElementById('names_found_list');
+                    var li = document.createElement("li");
+                    li.appendChild(document.createTextNode(name));
+                    li.setAttribute("id", "li_items");
+                    ul.appendChild(li);
+                    
+                }
+                
+                var list = document.getElementById("names_found_list");
+                
+                for(i=0;i<=list.childElementCount-1;i++){
+                    list.children[i].addEventListener("click",itemClicked);
+                }
+                
+                function itemClicked(){
+                    console.log("here");
+                }
+                
+            })
+        }
+          
+        function listItemClicked(){
+              console.log("Clicked");
+          }
+          
+        function snapshotToArray(snapshot) {
+    	   var returnArr = [];
+
+    	   snapshot.forEach(function(childSnapshot) {
+        	   var item = childSnapshot.val();
+        	   item.key = childSnapshot.key;
+
+        	   returnArr.push(item);
+    	   });
+
+    	   return returnArr;
+	     };
+		  
+		  function capitalizeFirstLetter(string) {
+    		return string.charAt(0).toUpperCase() + string.slice(1);
+		  }
+		  
+    </script>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA&callback=initMap">
+    </script>
+  </body>
+</html>

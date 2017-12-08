@@ -1,0 +1,62 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+#map {
+    min-height: 100%;
+}
+
+#add_location{
+    margin: 20px;
+    background-color: aqua;
+    padding: 10px;
+    border-style: none;
+    border-radius: 5px;
+    font-family: Roboto, sans-serif;
+}
+
+h3{
+    font-family: Roboto, sans-serif;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#overlay {
+    position: fixed; 
+    width: 400px; 
+    height: 00px; 
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 2px;
+    background-color: white;
+    z-index: 2;
+    box-shadow: 1px 1px 2px #888;
+}
+
+#search_input{
+    padding: 10px;
+    border-style: none;
+    font-family: Roboto, sans-serif;
+    font-size: 17px;
+    margin: 10px;
+    border-bottom: 1px solid #3b3b3b;
+}
+
+
+#names_found_list{
+    list-style: none;
+    margin-right: 35px;
+}
+
+#li_items{
+    font-family: Roboto, sans-serif;
+    color: #3b3b3b;
+    border-bottom: 1px solid #eeeeee;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}

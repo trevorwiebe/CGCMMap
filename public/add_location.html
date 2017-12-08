@@ -1,0 +1,68 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Add Location</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="add_location.css">
+      <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCF9ON6rwVZVm-QDQ-ngUi5vc8-NPLnP0M",
+            authDomain: "maps-ca38f.firebaseapp.com",
+            databaseURL: "https://maps-ca38f.firebaseio.com",
+            projectId: "maps-ca38f",
+            storageBucket: "",
+            messagingSenderId: "6568625724"
+        };
+          
+        firebase.initializeApp(config);
+          
+      </script>
+    
+</head>
+<body>
+    
+    <center>
+        <input type="number" id="latitude" class="input" placeholder="Latitude"><br>
+        <input type="number" id="longitude" class="input" placeholder="Longitude"><br>
+        <input type="text" id="first_and_last_name" class="input" placeholder="First and Last Name"><br>
+        <input type="button" id="save_location" value="Save Location"><br>
+    </center>
+    
+    <script>
+    
+        
+        document.getElementById("save_location").addEventListener("click", function(){
+            
+            var latitude = document.getElementById('latitude').value
+            var longitude = document.getElementById('longitude').value;
+            var firstAndLastName = document.getElementById('first_and_last_name').value;
+            
+            if(latitude.length == 0 || longitude.length == 0 || firstAndLastName.length == 0){
+                return;
+            }
+            
+            saveLocation(latitude, longitude, firstAndLastName);
+            
+            document.getElementById('latitude').value = "";
+            document.getElementById('longitude').value = "";
+            document.getElementById('first_and_last_name').value = "";
+
+            
+        });
+        
+        function saveLocation(varLatitude, varLongitude, varFirstAndLastName){
+            var ref = firebase.database().ref('locations').push();
+            var key = ref.getKey();
+            ref.set({
+                latitude: varLatitude,
+                longitude: varLongitude,
+                firstAndLastName: varFirstAndLastName,
+                locationId: key
+            });
+        }
+        
+    </script>
+</body>
+</html> 

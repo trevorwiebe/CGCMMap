@@ -1,0 +1,24 @@
+body, html{
+    width: 100%;
+    margin: 0px;
+}
+
+.input{
+    border-style: solid;
+    font-size: 20px;
+    border-width: 0px 0px 1px 0px;
+    margin: 20px;
+    border-radius: 2px;
+    padding: 5px;
+}
+
+#save_location{
+    padding: 15px;
+    border-radius: 3px;
+    background-color: aqua;
+    border-style: none;
+}
+
+#save_location :hover{
+    background-color: cadetblue;
+}
