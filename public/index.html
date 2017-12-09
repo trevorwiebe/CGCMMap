@@ -25,13 +25,17 @@
           <div id="map"></div>
           <div id="overlay">
               <center><input type="text" placeholder="Search Mennonite Maps" id="search_input" onkeyup="searchForMatches()"></center>
+			  <center><div class="loader" id="loader_id"></div></center>
               <ul id="names_found_list"></ul>
-              <center><h3 id="name"></h3></center>
-              <center><input id="add_location" type="button" value="Add new Location" onclick="addLocation()"></center>
+              <h3 id="name"></h3>
+			  <h4 id="h_latitude" class="name_details">Latitude: </h4>
+			  <h4 id="h_longitude" class="name_details">Longitude: </h4>
+              <center><input id="add_location" type="button" value="Add new Information" onclick="addLocation()"></center>
           </div> 
         
       <script>
           
+		  document.getElementById("loader_id").style.display = 'none';
         function initMap() {
               
             var whereToCenter = {lat: 38.500, lng: -97.276}
@@ -76,10 +80,15 @@
                             document.getElementById("names_found_list").innerHTML = "";
                             var id = this.get("locationId");
                             console.log(id);
-                            var databaseRef = firebase.database().ref("locations/" + id + "/firstAndLastName");
+                            var databaseRef = firebase.database().ref("locations/" + id);
                             databaseRef.once('value').then(function(snapshot){
-                                var name = snapshot.val()
+								var array = snapshot.val();
+								var name = array.firstAndLastName;
+								var lat = array.latitude;
+								var long = array.longitude;
                                 document.getElementById("name").innerHTML = name;
+								document.getElementById("h_latitude").innerHTML = lat;
+								document.getElementById("h_longitude").innerHTML = long;
                             })
                         })
                         

@@ -9,23 +9,24 @@ html, body{
 
 #add_location{
     margin: 20px;
-    background-color: aqua;
+    background-color: #303F9F;
     padding: 10px;
+	color: white;
     border-style: none;
-    border-radius: 5px;
+    border-radius: 2px;
     font-family: Roboto, sans-serif;
 }
 
 h3{
     font-family: Roboto, sans-serif;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 #overlay {
     position: fixed; 
     width: 400px; 
-    height: 00px; 
+    height: 500px; 
     top: 10px;
     left: 10px;
     right: 10px;
@@ -59,4 +60,27 @@ h3{
     padding-left: 10px;
     padding-bottom: 10px;
     padding-top: 10px;
+}
+
+.loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #FFC107;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.name_details{
+	font-family: Roboto, sans-serif;
+    margin-left: 40px;
+    margin-right: 40px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	color: #757575;
 }

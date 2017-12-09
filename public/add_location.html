@@ -3,6 +3,7 @@
 <head>
     <title>Add Location</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
     <link rel="stylesheet" href="add_location.css">
       <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
       <script>
@@ -23,45 +24,139 @@
 </head>
 <body>
     
-    <center>
-        <input type="number" id="latitude" class="input" placeholder="Latitude"><br>
-        <input type="number" id="longitude" class="input" placeholder="Longitude"><br>
-        <input type="text" id="first_and_last_name" class="input" placeholder="First and Last Name"><br>
-        <input type="button" id="save_location" value="Save Location"><br>
-    </center>
-    
+	<div id="container">
+		<div id="add_location">
+			<center><h2 class="tags">Add new Location</h2></center>
+			<input type="text" id="first_name" class="input" placeholder="First Name"><br>
+			<input type="text" id="last_name" class="input" placeholder="Last Name"><br>
+			<input type="text" id="address" class="input" placeholder="Address"><br>
+			<input type="text" id="city" class="input" placeholder="City"><br>
+			
+			<center><h4 id="h_state_congregation_selected" class="tags">State or Province Selected:</h4></center>
+			<center><h3 id="h_state" class="tags">Kansas</h3></center>
+			
+			<div class="dropdown">
+  				<button onclick="myFunction()" class="state_drop_down_btn">Select a State or Province</button>
+  				<div id="myDropdown" class="dropdown-content">
+				<a href="#">Link 1</a>
+				<a href="#">Link 2</a>
+				<a href="#">Link 3</a>
+			  </div>
+			</div>
+			
+			<center><h4 id="h_congregation_selected" class="tags">Congregation Selected:</h4></center>
+			<center><h3 id="h_congregation" class="tags">Morning Star</h3></center>
+			
+			<div class="dropdown">
+  				<button onclick="myFunction()" class="cong_drop_down_btn">Select a Congregation</button>
+  				<div id="myDropdown" class="dropdown-content">
+				<a href="#">Link 1</a>
+				<a href="#">Link 2</a>
+				<a href="#">Link 3</a>
+			  </div>
+			</div>
+		
+			<center><input type="button" id="save_location" class="save_button" value="Save Location"></center>
+		</div>
+		<div id="add_state_and_congregation">
+			<center><h2 class="tags">Add new State or Province</h2></center>
+			<input type="text" id="state" class="input" placeholder="State or Province"><br>
+			<center><input type="button" id="save_state" class="save_button" value="Save State or Province" onclick="saveState()"></center>
+			<center><h2 class="tags">Add new Congregation</h2></center>
+			<input type="text" id="congregation" class="input" placeholder="Congregation"><br>
+			<center><input type="button" id="save_congregation" class="save_button" value="Save Congregation" onclick="saveCongregation()"></center>
+		</div>
+	</div>
+       
     <script>
     
-        
         document.getElementById("save_location").addEventListener("click", function(){
             
-            var latitude = document.getElementById('latitude').value
-            var longitude = document.getElementById('longitude').value;
-            var firstAndLastName = document.getElementById('first_and_last_name').value;
+            var firstName = document.getElementById('first_name').value;
+			var lastName = document.getElementById('last_name').value;
+			var address = document.getElementById('address').value;
+			var city = document.getElementById('city').value;
+			var state = document.getElementById('h_state').innerHTML;
+			var cong = document.getElementById('h_congregation').innerHTML;
             
-            if(latitude.length == 0 || longitude.length == 0 || firstAndLastName.length == 0){
+            if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0){
+				console.log("here");
                 return;
             }
             
-            saveLocation(latitude, longitude, firstAndLastName);
-            
-            document.getElementById('latitude').value = "";
-            document.getElementById('longitude').value = "";
-            document.getElementById('first_and_last_name').value = "";
+			saveLocation(48.564, -97.364, firstName, lastName, city, state, address, cong);
+
+         
+            document.getElementById('first_name').value = "";
+			document.getElementById('last_name').value = "";
+			document.getElementById('address').value = "";
+			document.getElementById('city').value = ""
 
             
         });
-        
-        function saveLocation(varLatitude, varLongitude, varFirstAndLastName){
+		
+	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong){
             var ref = firebase.database().ref('locations').push();
             var key = ref.getKey();
             ref.set({
                 latitude: varLatitude,
                 longitude: varLongitude,
-                firstAndLastName: varFirstAndLastName,
+				firstName: varFirstName,
+				lastName: varLastName,
+				address: varAddress,
+				city: varCity,
+				congregation: varCong,
+				state: varState,
                 locationId: key
             });
         }
+        
+		function saveState(){
+			var state = document.getElementById("state").value;
+			if(state.length == 0){
+				return;
+			}
+			var ref = firebase.database().ref('stateOrProvidence').push();
+			var key = ref.getKey();
+			ref.set({
+				stateId: key,
+				state: state
+			});
+			document.getElementById("state").value = "";
+		}
+		
+		function saveCongregation(){
+			var cong = document.getElementById("congregation").value;
+			if(cong.length == 0){
+				return;
+			}
+			var ref = firebase.database().ref('congregations').push();
+			var key = ref.getKey();
+			ref.set({
+				congregationId: key,
+				congregation: cong
+			});
+			document.getElementById("congregation").value = "";
+		}
+		
+//		function myFunction() {
+//			document.getElementById("myDropdown").classList.toggle("show");
+//		}
+//
+//		// Close the dropdown menu if the user clicks outside of it
+//		window.onclick = function(event) {
+//		  if (!event.target.matches('.cong_drop_down_btn')) {
+//
+//			var dropdowns = document.getElementsByClassName("dropdown-content");
+//			var i;
+//			for (i = 0; i < dropdowns.length; i++) {
+//			  var openDropdown = dropdowns[i];
+//			  if (openDropdown.classList.contains('show')) {
+//				openDropdown.classList.remove('show');
+//			  }
+//			}
+//		  }
+//		}
         
     </script>
 </body>

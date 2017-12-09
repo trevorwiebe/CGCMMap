@@ -3,22 +3,125 @@ body, html{
     margin: 0px;
 }
 
+#container{
+	display: flex;
+	flex-wrap: wrap;
+}
+
 .input{
     border-style: solid;
     font-size: 20px;
-    border-width: 0px 0px 1px 0px;
+	border-bottom-color: #3F51B5;
+    border-width: 0px 0px 1.5px 0px;
     margin: 20px;
     border-radius: 2px;
     padding: 5px;
+	font-family: Roboto, sans-serif;
 }
 
-#save_location{
-    padding: 15px;
-    border-radius: 3px;
-    background-color: aqua;
+#add_state_and_congregation{
+	margin: 50px;
+}
+
+#add_location{
+	margin: 50px;
+}
+
+@media only screen and (max-width: 400px)  {
+	#add_state_and_congregation{
+		margin-top: 50px;
+		margin: auto;
+	}
+
+	#add_location{
+		margin-top: 50px;
+		margin: auto;
+	}
+}
+
+.save_button{
+	margin: 20px;
+    background-color: #FFC107;
+    padding: 10px;
+	color: white;
     border-style: none;
+    border-radius: 2px;
+    font-family: Roboto, sans-serif;
+	box-shadow: 1px 1px 2px #888;
 }
 
-#save_location :hover{
-    background-color: cadetblue;
+.tags{
+	font-family: Roboto, sans-serif;
+	color: #757575;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
+
+.state_drop_down_btn{
+	background-color: #3F51B5;
+    color: white;
+	padding-left: 40px;
+	padding-right: 40px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-top: 10px;
+	margin-bottom: 30px;
+	border-radius: 2px;
+	box-shadow: 1px 1px 2px #888;
+	font-size: 16px;
+    border: none;
+    cursor: pointer;
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+.cong_drop_down_btn {
+    background-color: #3F51B5;
+    color: white;
+	padding-left: 55px;
+	padding-right: 55px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	border-radius: 2px;
+	box-shadow: 1px 1px 2px #888;
+	font-size: 16px;
+    border: none;
+    cursor: pointer;
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+	margin-left: 70px;
+	margin-right: 70px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
