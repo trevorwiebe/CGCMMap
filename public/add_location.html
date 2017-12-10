@@ -36,25 +36,24 @@
 			<center><h3 id="h_state" class="tags">Kansas</h3></center>
 			
 			<div class="dropdown">
-  				<button onclick="myFunction()" class="state_drop_down_btn">Select a State or Province</button>
-  				<div id="myDropdown" class="dropdown-content">
-				<a href="#">Link 1</a>
-				<a href="#">Link 2</a>
-				<a href="#">Link 3</a>
+			  <button onclick="stateDropDownFunction()" class="dropbtn" id="state_drop_down_btn">Select State or Province</button>
+			  <div id="stateDropDown" class="dropdown-content">
+				  <ul id="state_ul">
+				  </ul>
 			  </div>
 			</div>
-			
+		
 			<center><h4 id="h_congregation_selected" class="tags">Congregation Selected:</h4></center>
 			<center><h3 id="h_congregation" class="tags">Morning Star</h3></center>
 			
 			<div class="dropdown">
-  				<button onclick="myFunction()" class="cong_drop_down_btn">Select a Congregation</button>
-  				<div id="myDropdown" class="dropdown-content">
-				<a href="#">Link 1</a>
-				<a href="#">Link 2</a>
-				<a href="#">Link 3</a>
+			  <button onclick="congDropDownFunction()" class="dropbtn" id="cong_drop_down_btn">Select Congregation</button>
+			  <div id="congDropDown" class="dropdown-content">
+				<ul id="cong_ul">
+				</ul>
 			  </div>
 			</div>
+	
 		
 			<center><input type="button" id="save_location" class="save_button" value="Save Location"></center>
 		</div>
@@ -70,6 +69,24 @@
        
     <script>
     
+		var mCongregationMap = {};
+		var mCongregationArray = [];
+		
+		var mStatesMaps = {};
+		var mStatesArray = [];
+		
+		var database = firebase.database();
+		
+		database.ref('congregations').on('value', function(snapshot){
+			document.getElementById("cong_ul").innerHTML = "";
+			parseCongSnapshot(snapshot);
+		});
+		
+		database.ref('stateOrProvidence').on('value', function(snapshot){
+			document.getElementById("state_ul").innerHTML = "";
+			parseStateSnapshot(snapshot);
+		});
+		
         document.getElementById("save_location").addEventListener("click", function(){
             
             var firstName = document.getElementById('first_name').value;
@@ -139,24 +156,63 @@
 			document.getElementById("congregation").value = "";
 		}
 		
-//		function myFunction() {
-//			document.getElementById("myDropdown").classList.toggle("show");
-//		}
-//
-//		// Close the dropdown menu if the user clicks outside of it
-//		window.onclick = function(event) {
-//		  if (!event.target.matches('.cong_drop_down_btn')) {
-//
-//			var dropdowns = document.getElementsByClassName("dropdown-content");
-//			var i;
-//			for (i = 0; i < dropdowns.length; i++) {
-//			  var openDropdown = dropdowns[i];
-//			  if (openDropdown.classList.contains('show')) {
-//				openDropdown.classList.remove('show');
-//			  }
-//			}
-//		  }
-//		}
+		function parseCongSnapshot(snapshot) {
+			var congUl = document.getElementById("cong_ul");
+    	   snapshot.forEach(function(childSnapshot) {
+			   var name = childSnapshot.val().congregation;
+			   var nameId = childSnapshot.val().congregationId;
+			   	
+			   var node = document.createElement("LI");
+			   var textNode = document.createTextNode(name);
+			   node.appendChild(textNode);
+			   congUl.appendChild(node)
+			   
+			   mCongregationArray.push(name);
+			   mCongregationMap[nameId] = name;
+    	   });
+
+	     };
+		
+		function parseStateSnapshot(snapshot){
+			var stateUl = document.getElementById("state_ul");
+			snapshot.forEach(function(childSnapshot){
+				var name = childSnapshot.val().state;
+				var nameId = childSnapshot.val().stateId;
+				
+				var node = document.createElement("LI");
+				var textNode = document.createTextNode(name);
+				node.appendChild(textNode);
+				stateUl.appendChild(node);
+				
+				mStatesArray.push(name);
+				mStatesArray[nameId] = name;
+			})
+		};
+		
+		/* When the user clicks on the button, 
+		toggle between hiding and showing the dropdown content */
+		function stateDropDownFunction() {
+			document.getElementById("stateDropDown").classList.toggle("show");
+		}
+		
+		function congDropDownFunction() {
+			document.getElementById("congDropDown").classList.toggle("show");
+		}
+
+		// Close the dropdown menu if the user clicks outside of it
+		window.onclick = function(event) {
+		  if (!event.target.matches('.dropbtn')) {
+
+			var dropdowns = document.getElementsByClassName("dropdown-content");
+			var i;
+			for (i = 0; i < dropdowns.length; i++) {
+			  var openDropdown = dropdowns[i];
+			  if (openDropdown.classList.contains('show')) {
+				openDropdown.classList.remove('show');
+			  }
+			}
+		  }
+		}
         
     </script>
 </body>
