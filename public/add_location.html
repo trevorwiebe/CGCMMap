@@ -33,7 +33,7 @@
 			<input type="text" id="city" class="input" placeholder="City"><br>
 			
 			<center><h4 id="h_state_congregation_selected" class="tags">State or Province Selected:</h4></center>
-			<center><h3 id="h_state" class="tags">Kansas</h3></center>
+			<center><h3 id="h_state" class="tags"></h3></center>
 			
 			<div class="dropdown">
 			  <button onclick="stateDropDownFunction()" class="dropbtn" id="state_drop_down_btn">Select State or Province</button>
@@ -44,7 +44,7 @@
 			</div>
 		
 			<center><h4 id="h_congregation_selected" class="tags">Congregation Selected:</h4></center>
-			<center><h3 id="h_congregation" class="tags">Morning Star</h3></center>
+			<center><h3 id="h_congregation" class="tags"></h3></center>
 			
 			<div class="dropdown">
 			  <button onclick="congDropDownFunction()" class="dropbtn" id="cong_drop_down_btn">Select Congregation</button>
@@ -87,6 +87,18 @@
 			parseStateSnapshot(snapshot);
 		});
 		
+		var congregation_ul = document.getElementById("cong_ul");
+		congregation_ul.onclick = function(event){
+			var name = event.target.innerHTML;
+			document.getElementById("h_congregation").innerHTML = name;
+		}
+		
+		var state_ul = document.getElementById("state_ul");
+		state_ul.onclick = function(event){
+			var name = event.target.innerHTML;
+			document.getElementById("h_state").innerHTML = name;
+		}
+		
         document.getElementById("save_location").addEventListener("click", function(){
             
             var firstName = document.getElementById('first_name').value;
@@ -101,8 +113,22 @@
                 return;
             }
             
-			saveLocation(48.564, -97.364, firstName, lastName, city, state, address, cong);
+			var url = "https://maps.googleapis.com/maps/api/geocode/json?address=2994+Falcon+Rd,+Durham+Ks&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA"
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					var json = JSON.parse(this.responseText);
+					var lat_n_long = json.results[0].geometry.location;
+					
+					var lat = lat_n_long.lat;
+					var long = lat_n_long.lng;
+					
+					saveLocation(lat, long, firstName, lastName, city, state, address, cong);
 
+				}
+			}
+			request.open('GET', url);
+			request.send();
          
             document.getElementById('first_name').value = "";
 			document.getElementById('last_name').value = "";
@@ -163,6 +189,7 @@
 			   var nameId = childSnapshot.val().congregationId;
 			   	
 			   var node = document.createElement("LI");
+			   node.setAttribute("id", "cong_li");
 			   var textNode = document.createTextNode(name);
 			   node.appendChild(textNode);
 			   congUl.appendChild(node)
@@ -180,6 +207,7 @@
 				var nameId = childSnapshot.val().stateId;
 				
 				var node = document.createElement("LI");
+				node.setAttribute("id", "state_li");
 				var textNode = document.createTextNode(name);
 				node.appendChild(textNode);
 				stateUl.appendChild(node);

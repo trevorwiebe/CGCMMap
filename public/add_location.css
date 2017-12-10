@@ -1,16 +1,25 @@
 body, html{
     width: 100%;
     margin: 0px;
+	background-color: #eeeeee;
 }
 
 #container{
 	justify-content: center;
 	display: flex;
 	flex-wrap: wrap;
+	box-shadow: 3px 3px 5px #888;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-left: 200px;
+	margin-right: 200px;
+	background-color: white;;
 }
 
 .input{
+	text-align: center;
     border-style: solid;
+	background-color: white;
     font-size: 20px;
 	border-bottom-color: #3F51B5;
     border-width: 0px 0px 1.5px 0px;
@@ -28,7 +37,15 @@ body, html{
 	margin: 50px;
 }
 
-@media only screen and (max-width: 400px)  {
+@media only screen and (max-width: 800px)  {
+	#container{
+		margin-left: 0px;
+		margin-right: 0px;
+		margin-top: 0px;
+		margin-bottom: 0px;
+		box-shadow: none;
+	}
+/*
 	#add_state_and_congregation{
 		margin-top: 50px;
 		margin: auto;
@@ -38,6 +55,7 @@ body, html{
 		margin-top: 50px;
 		margin: auto;
 	}
+*/
 }
 
 .dropdown-content {
@@ -64,7 +82,6 @@ body, html{
 
 .tags{
 	font-family: Roboto, sans-serif;
-	color: #757575;
 	margin-left: 20px;
 	margin-right: 20px;
 	margin-top: 10px;
@@ -108,3 +125,20 @@ body, html{
 }
 
 .show {display:block;}
+
+#cong_ul{
+	list-style-type: none;
+}
+
+#state_ul{
+	list-style-type: none;
+}
+
+#state_li, #cong_li{
+	font-family: Roboto, sans-serif;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	cursor: pointer;
+}
+
+
