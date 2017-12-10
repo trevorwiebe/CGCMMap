@@ -27,6 +27,12 @@ html, body{
 	overflow: hidden;
 }
 
+#add_location_icon{
+	margin-top: 14px;
+	height: 27px;
+	width: 27px;
+}
+
 h3{
     font-family: Roboto, sans-serif;
     margin-left: 40px;
@@ -69,9 +75,12 @@ h3{
 		height: 40px;
 		border-radius: 30px;
 	}
+	#add_location_icon{
+		margin-top: 10px;
+		height: 20px;
+		width: 20px;
+	}
 }
-
-
 
 #search_input{
     padding: 5px;
