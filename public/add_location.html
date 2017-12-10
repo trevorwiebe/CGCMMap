@@ -108,12 +108,22 @@
 			var state = document.getElementById('h_state').innerHTML;
 			var cong = document.getElementById('h_congregation').innerHTML;
             
-            if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0){
-				console.log("here");
-                return;
-            }
+//            if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
+//                return;
+//            }
             
-			var url = "https://maps.googleapis.com/maps/api/geocode/json?address=2994+Falcon+Rd,+Durham+Ks&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA"
+			var addressString = address.split(" ");
+			var finishedAddresString = "";
+			for(var i=0; addressString.length > i; i++){
+				var item = addressString[i];
+				finishedAddresString = finishedAddresString + item + "+";	
+			}
+
+			finishedAddresString = finishedAddresString.slice(0, -1);
+			
+			var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
+			var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+			var url = baseUrl + finishedAddresString + apiKey;
 			var request = new XMLHttpRequest();
 			request.onreadystatechange = function(){
 				if(this.readyState == 4 && this.status == 200){
