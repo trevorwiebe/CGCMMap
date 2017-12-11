@@ -23,6 +23,10 @@
   </head>
   <body>
           <div id="map"></div>
+	  	  <div id="incorrect_data_div">
+			  <input type="button" value="Cancel" class="button" onclick="cancelIncorrect()">
+	  	  </div>
+	  	  <div id="incorrect_data_div_shadow"></div>
 	  	  <div id="add_location_div">
 			  <img id="add_location_icon" src="res/add-plus-button.svg">
 	  	  </div>
@@ -35,31 +39,31 @@
 				  <h4 id="h_cong" class="name_details"></h4>
 				  <h4 id="h_address" class="name_details"></h4>
 				  <h4 id="h_city_and_state" class="name_details"></h4>
-<!--
-				  <h4 id="h_latitude" class="name_details"></h4>
-				  <h4 id="h_longitude" class="name_details"></h4>
--->
+				  <input class="button" type="button" value="Notify as Incorrect" onclick="notifyAsIncorrect()">
 			  </div>
           </div> 
         
       <script>
           
-		  document.getElementById("loader_id").style.display = 'none';
+		  document.getElementById("loader_id").style.visibility = "hidden"; 
+		  document.getElementById("incorrect_data_div").style.visibility = "hidden";
+		  document.getElementById("incorrect_data_div_shadow").style.visibility = "hidden";
+		  
 		  document.getElementById("add_location_div").addEventListener('click', addLocation);
         function initMap() {
               
-            var whereToCenter = {lat: 38.500, lng: -97.276}
-            
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 5,
+			navigator.geolocation.getCurrentPosition(function(location){
+				var whereToCenter = {lat: location.coords.latitude, lng: location.coords.longitude};
+				var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
                 center: whereToCenter,
                   mapTypeControlOptions: {
                       position: google.maps.ControlPosition.BOTTOM_LEFT,
 					  fullscreenControl: false
                     }
                 });
-            
-                var locations = []
+				
+				var locations = []
                 
                 var databaseRef = firebase.database().ref('locations');
                 databaseRef.on('value', function(snapshot){
@@ -107,17 +111,23 @@
 								document.getElementById("h_address").innerHTML = address;
 								document.getElementById("h_cong").innerHTML = cong;
 								document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
-//								document.getElementById("h_latitude").innerHTML = lat;
-//								document.getElementById("h_longitude").innerHTML = long;
                             })
                         })
-                        
                     }
-                    
                 });
-
+			})
           }  
-
+		  
+		function notifyAsIncorrect(){
+			document.getElementById("incorrect_data_div").style.visibility = 'visible';
+		  	document.getElementById("incorrect_data_div_shadow").style.visibility = 'visible';
+		}
+		  
+		function cancelIncorrect(){
+			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
+		  	document.getElementById("incorrect_data_div_shadow").style.visibility = 'hidden';
+		}
+		  
         function addLocation(){
             location.href = "add_location.html";
         }
