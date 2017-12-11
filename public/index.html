@@ -47,13 +47,14 @@
 				  <h4 id="h_cong" class="name_details"></h4>
 				  <h4 id="h_address" class="name_details"></h4>
 				  <h4 id="h_city_and_state" class="name_details"></h4>
-				  <input class="button" type="button" value="Send feedback on this entry" onclick="notifyAsIncorrect()">
+				  <input class="button" type="button" value="Send feedback on this location" onclick="notifyAsIncorrect()">
 			  </div>
           </div> 
         
       <script>
           
-		  document.getElementById("loader_id").style.visibility = "hidden"; 
+		  var mMap;
+		  document.getElementById("loader_id").style.display = "none"; 
 		  document.getElementById("incorrect_data_div").style.visibility = "hidden";
 		  document.getElementById("incorrect_data_div_shadow").style.visibility = "hidden";
 		  
@@ -62,12 +63,13 @@
               
 			navigator.geolocation.getCurrentPosition(function(location){
 				var whereToCenter = {lat: location.coords.latitude, lng: location.coords.longitude};
-				var map = new google.maps.Map(document.getElementById('map'), {
+				mMap = new google.maps.Map(document.getElementById('map'), {
                 zoom: 8,
                 center: whereToCenter,
                   mapTypeControlOptions: {
                       position: google.maps.ControlPosition.BOTTOM_LEFT,
-					  fullscreenControl: false
+					  fullscreenControl: false,
+          			  zoomControl: false
                     }
                 });
 				
@@ -94,7 +96,7 @@
                         
                         var marker = new google.maps.Marker({
                             position: {lat: parseFloat(location[1]), lng: parseFloat(location[2])},
-                            map: map,
+                            map: mMap,
                             title: location[0],
                             locationId: location[3]
                         });
@@ -119,6 +121,9 @@
 								document.getElementById("h_address").innerHTML = address;
 								document.getElementById("h_cong").innerHTML = cong;
 								document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
+								var whereToZoom = {lat: lat, lng: long};
+								mMap.setZoom(16);
+								mMap.panTo(whereToZoom);
                             })
                         })
                     }
@@ -145,23 +150,28 @@
         }
     
         function searchForMatches(){
-            document.getElementById("name_details_div").style.visibility = "hidden";
+			document.getElementById("names_found_list").innerHTML = "";
             var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
             if(equalTo.length == 0){
                 return;
             }
-            console.log(equalTo);
-            var ref = firebase.database().ref("locations").orderByChild('firstAndLastName').startAt(equalTo).limitToLast(7);
+            document.getElementById("name_details_div").style.visibility = "hidden";
+			document.getElementById("loader_id").style.display = "block";
+            var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(5);
             ref.once('value').then(function(snapshot){
                 var array = snapshotToArray(snapshot);
                 for(var j=0; array.length > j; j++){
                     var itemArray = array[j];
-                    var name = itemArray.firstAndLastName;
+					var firstName = itemArray.firstName;
+					var lastName = itemArray.lastName;
+					var locationId = itemArray.locationId;
+                    var name = firstName + " " + lastName;
                     
                     var ul = document.getElementById('names_found_list');
                     var li = document.createElement("li");
                     li.appendChild(document.createTextNode(name));
                     li.setAttribute("id", "li_items");
+					li.setAttribute("myLocationId", locationId);
                     ul.appendChild(li);
                     
                 }
@@ -172,8 +182,32 @@
                     list.children[i].addEventListener("click",itemClicked);
                 }
                 
+				document.getElementById("loader_id").style.display = "none"; 
+				
                 function itemClicked(){
-                    console.log("here");
+					document.getElementById("search_input").value= "";
+					document.getElementById("names_found_list").innerHTML = "";
+					document.getElementById("name_details_div").style.visibility = "visible";
+                    var locationId = this.getAttribute("myLocationId");
+					var ref = firebase.database().ref("locations/" + locationId);
+					ref.once('value').then(function(snapshot){
+						var array = snapshot.val();
+							var firstName = array.firstName;
+							var lastName = array.lastName;
+							var address = array.address;
+							var city = array.city;
+							var state = array.state;
+							var cong = array.congregation;
+							var lat = array.latitude;
+							var long = array.longitude;
+                            document.getElementById("name").innerHTML = firstName + " " + lastName;
+							document.getElementById("h_address").innerHTML = address;
+							document.getElementById("h_cong").innerHTML = cong;
+							document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
+							var whereToZoom = {lat: lat, lng: long};
+							mMap.setZoom(16);
+							mMap.panTo(whereToZoom);
+					})
                 }
                 
             })

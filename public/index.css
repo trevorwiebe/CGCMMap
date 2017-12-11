@@ -50,7 +50,7 @@ h3{
 #overlay {
     position: fixed; 
     width: 350px; 
-    height: 350px;
+    height: 275px;
     top: 10px;
     left: 10px;
     right: 10px;
@@ -134,8 +134,8 @@ h3{
 }
 
 select{
-	margin-left: 50px;
-	margin-right: 50px;
+	margin-left: 40px;
+	margin-right: 40px;
 	padding-left: 30px;
 	padding-right: 30px;
 	padding-top: 10px;
