@@ -28,9 +28,9 @@ html, body{
 }
 
 #add_location_icon{
-	margin-top: 14px;
-	height: 27px;
-	width: 27px;
+	margin-top: 16px;
+	height: 23px;
+	width: 23px;
 }
 
 h3{
@@ -50,7 +50,7 @@ h3{
 #overlay {
     position: fixed; 
     width: 350px; 
-    height: 250px;
+    height: 350px;
     top: 10px;
     left: 10px;
     right: 10px;
@@ -86,7 +86,7 @@ h3{
     left: 0px;
     right: 0px;
     bottom: 0px;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 4;
 }
 
@@ -127,6 +127,34 @@ h3{
     margin-right: 35px;
 }
 
+#incorrect_cancel_btn{
+	margin-left: 390px;
+	background-color: white;
+	color: firebrick;
+}
+
+select{
+	margin-left: 50px;
+	margin-right: 50px;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-family: Roboto, sans-serif;
+	font-size: 15px;
+}
+
+#incorrect_data_notes{
+	margin-left: 40px;
+	margin-right: 40px;
+	margin-bottom: 20px;
+	resize: none;
+	min-width: 500px;
+	min-height: 250px;
+	font-family: Roboto, sans-serif;
+	font-size: 16px;
+}
+
 #li_items{
     font-family: Roboto, sans-serif;
     color: #3b3b3b;
@@ -165,8 +193,8 @@ h3{
     color: white;
 	padding-left: 20px;
 	padding-right: 20px;
-	padding-top:5px;
-	padding-bottom: 5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	margin-top: 10px;
 	border-radius: 2px;
 	box-shadow: 1px 1px 2px #888;

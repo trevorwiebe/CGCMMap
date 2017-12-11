@@ -24,7 +24,15 @@
   <body>
           <div id="map"></div>
 	  	  <div id="incorrect_data_div">
-			  <input type="button" value="Cancel" class="button" onclick="cancelIncorrect()">
+			  	<h3>Select type of problem</h3>
+			  		<select>
+						<option value="incorrect_address">Incorrect Location</option>
+						<option value="typo">Typo</option>
+			  		</select>
+			  	<h3>Notes</h3>
+			  	<textarea id="incorrect_data_notes"></textarea>
+				<input type="button" value="Cancel" class="button" id="incorrect_cancel_btn" onclick="cancelIncorrect()">
+			  	<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendData()">
 	  	  </div>
 	  	  <div id="incorrect_data_div_shadow"></div>
 	  	  <div id="add_location_div">
@@ -39,7 +47,7 @@
 				  <h4 id="h_cong" class="name_details"></h4>
 				  <h4 id="h_address" class="name_details"></h4>
 				  <h4 id="h_city_and_state" class="name_details"></h4>
-				  <input class="button" type="button" value="Notify as Incorrect" onclick="notifyAsIncorrect()">
+				  <input class="button" type="button" value="Send feedback on this entry" onclick="notifyAsIncorrect()">
 			  </div>
           </div> 
         
@@ -126,6 +134,10 @@
 		function cancelIncorrect(){
 			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
 		  	document.getElementById("incorrect_data_div_shadow").style.visibility = 'hidden';
+		}
+		  
+		function sendData(){
+			
 		}
 		  
         function addLocation(){
