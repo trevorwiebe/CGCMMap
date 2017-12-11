@@ -1,243 +1,123 @@
 <!DOCTYPE html>
 <html>
-  <head>
-      <title>Main Map</title>
-      <link rel="stylesheet" href="index.css">
-      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
-      <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyCF9ON6rwVZVm-QDQ-ngUi5vc8-NPLnP0M",
-            authDomain: "maps-ca38f.firebaseapp.com",
-            databaseURL: "https://maps-ca38f.firebaseio.com",
-            projectId: "maps-ca38f",
-            storageBucket: "",
-            messagingSenderId: "6568625724"
-        };
+<head>
+	<title>Sign In</title>
+	<link rel="stylesheet" href="index.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+</head>
+<body>
+	
+	<div id="sign_in_container">
+		<h1>Mennonite Maps</h1>
 
-        firebase.initializeApp(config);
+		<h3>Please sign in to continue.</h3>
 
-      </script>
-  </head>
-  <body>
-          <div id="map"></div>
-	  	  <div id="incorrect_data_div">
-			  	<h3>Select type of problem</h3>
-			  		<select>
-						<option value="incorrect_address">Incorrect Location</option>
-						<option value="typo">Typo</option>
-			  		</select>
-			  	<h3>Notes</h3>
-			  	<textarea id="incorrect_data_notes"></textarea>
-				<input type="button" value="Cancel" class="button" id="incorrect_cancel_btn" onclick="cancelIncorrect()">
-			  	<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendData()">
-	  	  </div>
-	  	  <div id="incorrect_data_div_shadow"></div>
-	  	  <div id="add_location_div">
-			  <img id="add_location_icon" src="res/add-plus-button.svg">
-	  	  </div>
-          <div id="overlay">
-              <center><input type="text" placeholder="Search Maps" id="search_input" onkeyup="searchForMatches()"></center>
-			  <center><div class="loader" id="loader_id"></div></center>
-              <ul id="names_found_list"></ul>
-			  <div id="name_details_div">
-				  <h3 id="name"></h3>
-				  <h4 id="h_cong" class="name_details"></h4>
-				  <h4 id="h_address" class="name_details"></h4>
-				  <h4 id="h_city_and_state" class="name_details"></h4>
-				  <input class="button" type="button" value="Send feedback on this location" onclick="notifyAsIncorrect()">
-			  </div>
-          </div> 
-        
-      <script>
-          
-		  var mMap;
-		  document.getElementById("loader_id").style.display = "none"; 
-		  document.getElementById("incorrect_data_div").style.visibility = "hidden";
-		  document.getElementById("incorrect_data_div_shadow").style.visibility = "hidden";
-		  
-		  document.getElementById("add_location_div").addEventListener('click', addLocation);
-        function initMap() {
-              
-			navigator.geolocation.getCurrentPosition(function(location){
-				var whereToCenter = {lat: location.coords.latitude, lng: location.coords.longitude};
-				mMap = new google.maps.Map(document.getElementById('map'), {
-                zoom: 8,
-                center: whereToCenter,
-                  mapTypeControlOptions: {
-                      position: google.maps.ControlPosition.BOTTOM_LEFT,
-					  fullscreenControl: false,
-          			  zoomControl: false
-                    }
-                });
-				
-				var locations = []
-                
-                var databaseRef = firebase.database().ref('locations');
-                databaseRef.on('value', function(snapshot){
-                    var array = snapshotToArray(snapshot);
-                    for(var i=0; i<array.length; i++){
-                        itemArray = array[i];
-                        
-                        var name = itemArray.firstAndLastName;
-                        var lat = itemArray.latitude;
-                        var long = itemArray.longitude;
-                        var id = itemArray.locationId;
-                        
-                        var newArray = new Array(name, lat, long, id);
-                        locations.push(newArray);
-                    }
+		<p id="fill_in_email_address"></p>
+		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
+		<p id="fill_in_password">Please fill in password.</p>
+		<input type="password" class="credentials" id="password" placeholder="Password"><br>
+		<div id="loader"></div>
+		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN">
+		<p id="error">There was an error signing in.</p>
+		
+    </div>
 
-                    
-                    for (var i = 0; i < locations.length; i++) {
-                        var location = locations[i];
-                        
-                        var marker = new google.maps.Marker({
-                            position: {lat: parseFloat(location[1]), lng: parseFloat(location[2])},
-                            map: mMap,
-                            title: location[0],
-                            locationId: location[3]
-                        });
-                        
-                        marker.addListener('click', function(){
-                            document.getElementById("names_found_list").innerHTML = "";
-							document.getElementById("name_details_div").style.visibility = "visible";
-                            var id = this.get("locationId");
-                            console.log(id);
-                            var databaseRef = firebase.database().ref("locations/" + id);
-                            databaseRef.once('value').then(function(snapshot){
-								var array = snapshot.val();
-								var firstName = array.firstName;
-								var lastName = array.lastName;
-								var address = array.address;
-								var city = array.city;
-								var state = array.state;
-								var cong = array.congregation;
-								var lat = array.latitude;
-								var long = array.longitude;
-                                document.getElementById("name").innerHTML = firstName + " " + lastName;
-								document.getElementById("h_address").innerHTML = address;
-								document.getElementById("h_cong").innerHTML = cong;
-								document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
-								var whereToZoom = {lat: lat, lng: long};
-								mMap.setZoom(16);
-								mMap.panTo(whereToZoom);
-                            })
-                        })
-                    }
-                });
-			})
-          }  
-		  
-		function notifyAsIncorrect(){
-			document.getElementById("incorrect_data_div").style.visibility = 'visible';
-		  	document.getElementById("incorrect_data_div_shadow").style.visibility = 'visible';
+	<script>
+
+		document.getElementById("sign_in_container").style.visibility = "hidden";
+		document.getElementById("loader").style.visibility = "hidden";
+		document.getElementById("fill_in_email_address").style.visibility = "hidden";
+		document.getElementById("fill_in_password").style.visibility = "hidden";
+		document.getElementById("error").style.visibility = "hidden";
+
+		function logIn() {
+			document.getElementById("error").style.visibility = "hidden";
+			var email_address = document.getElementById("email_address").value;
+			var input_password = document.getElementById("password").value;
+			if(email_address.length == 0 && input_password.length == 0){
+				document.getElementById("fill_in_password").style.visibility = "visible";
+				document.getElementById("fill_in_email_address").style.visibility = "visible";
+				setErrorEmailErrorText("Please fill in email address.")
+			}else if(input_password.length == 0){
+				document.getElementById("fill_in_password").style.visibility = "visible";
+				document.getElementById("fill_in_email_address").style.visibility = "hidden";
+			}else if(email_address.length == 0){
+				document.getElementById("fill_in_email_address").style.visibility = "visible";
+				setErrorEmailErrorText("Please fill in email address.")
+				document.getElementById("fill_in_password").style.visibility = "hidden";
+			}else{
+				document.getElementById("fill_in_email_address").style.visibility = "hidden";
+				document.getElementById("fill_in_password").style.visibility = "hidden";
+				if(validateEmail(email_address)){
+					document.getElementById("loader").style.visibility = "visible";
+					firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function(){
+						firebase.auth().signInWithEmailAndPassword(email_address, input_password).catch(function(error){
+							var errorCode = error.code;
+							var errorMessage = error.message;
+							document.getElementById("loader").style.visibility = "hidden";
+							document.getElementById("fill_in_email_address").style.visibility = "hidden";
+							document.getElementById("fill_in_password").style.visibility = "hidden";
+							document.getElementById("error").style.visibility = "visible";	
+						})
+					}).catch(function(error){
+						document.getElementById("loader").style.visibility = "hidden";
+						document.getElementById("fill_in_email_address").style.visibility = "hidden";
+						document.getElementById("fill_in_password").style.visibility = "hidden";
+						document.getElementById("error").style.visibility = "visible";
+					});
+				}else{
+					document.getElementById("fill_in_email_address").style.visibility = "visible";
+					setErrorEmailErrorText( email_address + " is not a valid email address.");
+				}
+			}
 		}
-		  
-		function cancelIncorrect(){
-			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
-		  	document.getElementById("incorrect_data_div_shadow").style.visibility = 'hidden';
+
+		function validateEmail(mail){  
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
+				return (true)  
+			}   
+			return (false)  
+		}  
+
+		function setErrorEmailErrorText(error_text) {
+			document.getElementById("fill_in_email_address").innerHTML = error_text;
 		}
-		  
-		function sendData(){
-			
-		}
-		  
-        function addLocation(){
-            location.href = "add_location.html";
-        }
-    
-        function searchForMatches(){
-			document.getElementById("names_found_list").innerHTML = "";
-            var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
-            if(equalTo.length == 0){
-                return;
-            }
-            document.getElementById("name_details_div").style.visibility = "hidden";
-			document.getElementById("loader_id").style.display = "block";
-            var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(5);
-            ref.once('value').then(function(snapshot){
-                var array = snapshotToArray(snapshot);
-                for(var j=0; array.length > j; j++){
-                    var itemArray = array[j];
-					var firstName = itemArray.firstName;
-					var lastName = itemArray.lastName;
-					var locationId = itemArray.locationId;
-                    var name = firstName + " " + lastName;
-                    
-                    var ul = document.getElementById('names_found_list');
-                    var li = document.createElement("li");
-                    li.appendChild(document.createTextNode(name));
-                    li.setAttribute("id", "li_items");
-					li.setAttribute("myLocationId", locationId);
-                    ul.appendChild(li);
-                    
-                }
-                
-                var list = document.getElementById("names_found_list");
-                
-                for(i=0;i<=list.childElementCount-1;i++){
-                    list.children[i].addEventListener("click",itemClicked);
-                }
-                
-				document.getElementById("loader_id").style.display = "none"; 
-				
-                function itemClicked(){
-					document.getElementById("search_input").value= "";
-					document.getElementById("names_found_list").innerHTML = "";
-					document.getElementById("name_details_div").style.visibility = "visible";
-                    var locationId = this.getAttribute("myLocationId");
-					var ref = firebase.database().ref("locations/" + locationId);
-					ref.once('value').then(function(snapshot){
-						var array = snapshot.val();
-							var firstName = array.firstName;
-							var lastName = array.lastName;
-							var address = array.address;
-							var city = array.city;
-							var state = array.state;
-							var cong = array.congregation;
-							var lat = array.latitude;
-							var long = array.longitude;
-                            document.getElementById("name").innerHTML = firstName + " " + lastName;
-							document.getElementById("h_address").innerHTML = address;
-							document.getElementById("h_cong").innerHTML = cong;
-							document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
-							var whereToZoom = {lat: lat, lng: long};
-							mMap.setZoom(16);
-							mMap.panTo(whereToZoom);
-					})
-                }
-                
-            })
-        }
-          
-        function listItemClicked(){
-              console.log("Clicked");
-          }
-          
-        function snapshotToArray(snapshot) {
-    	   var returnArr = [];
 
-    	   snapshot.forEach(function(childSnapshot) {
-        	   var item = childSnapshot.val();
-        	   item.key = childSnapshot.key;
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				// User is signed in.
+				var displayName = user.displayName;
+				var email = user.email;
+				var emailVerified = user.emailVerified;
+				var photoURL = user.photoURL;
+				var isAnonymous = user.isAnonymous;
+				var uid = user.uid;
+				var providerData = user.providerData;
 
-        	   returnArr.push(item);
-    	   });
+				location.href = "main_maps.html";
 
-    	   return returnArr;
-	     };
-		  
-		  function capitalizeFirstLetter(string) {
-    		return string.charAt(0).toUpperCase() + string.slice(1);
-		  }
-		  
-    </script>
+			} else {
+				document.getElementById("sign_in_container").style.visibility = "visible";
 
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA&callback=initMap">
-    </script>
-  </body>
+				console.log("User is signed out");
+			}
+		});
+
+	</script>
+	
+</body>
 </html>
