@@ -213,7 +213,7 @@
 			}
 			document.getElementById("name_details_div").style.visibility = "hidden";
 			document.getElementById("loader_id").style.display = "block";
-			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(5);
+			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(3);
 			ref.once('value').then(function(snapshot){
 				var array = snapshotToArray(snapshot);
 				for(var j=0; array.length > j; j++){
