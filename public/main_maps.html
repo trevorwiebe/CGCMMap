@@ -90,10 +90,10 @@
 			navigator.geolocation.getCurrentPosition(function(location){
 				var whereToCenter = {lat: location.coords.latitude, lng: location.coords.longitude};
 				mMap = new google.maps.Map(document.getElementById('map'), {
-					zoom: 8,
+					zoom: 7,
 					center: whereToCenter,
 					mapTypeControlOptions: {
-						position: google.maps.ControlPosition.BOTTOM_LEFT,
+						position: google.maps.ControlPosition.LEFT_BOTTOM,
 						fullscreenControl: false,
 					}
 				});
@@ -209,8 +209,14 @@
 			document.getElementById("names_found_list").innerHTML = "";
 			var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
 			if(equalTo.length == 0){
+				var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+				if(screenWidth < 615){
+					var container = document.getElementById('overlay');
+					container.style.height = (container.offsetHeight + -150) + "px";
+				}
 				return;
 			}
+			setOverlayDivHeight(150);
 			document.getElementById("name_details_div").style.visibility = "hidden";
 			document.getElementById("loader_id").style.display = "block";
 			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(3);
@@ -309,6 +315,24 @@
 			}
 		});
 
+		function setOverlayDivHeight(height){
+			var container = document.getElementById('overlay');
+			var currentHeight = container.style.height;
+			var currentHeightInt;
+			if(currentHeight.length == 5){
+				currentHeightInt = parseInt(currentHeight.substring(0, 3));
+			}else if(currentHeight.length == 4){
+				currentHeightInt = parseInt(currentHeight.substring(0, 2));
+			}else{
+				currentHeightInt = 0;
+			}
+			var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+			if(screenWidth < 615){
+				if(currentHeightInt < 205){
+					container.style.height = (container.offsetHeight + height) + "px";
+				}
+			}
+		}
 
 	</script>
 

@@ -178,7 +178,7 @@ h3{
 
 @media screen and (max-width: 1100px) {
 	#overlay{
-		width: 600px;
+		width: 400px;
 		margin-left: auto;
 		margin-right: auto;
 	}
@@ -187,8 +187,12 @@ h3{
 @media screen and (max-width: 615px){
 	#overlay{
 		width: auto;
-		margin-left: 5px;
-		margin-right: 5px;
+		border-radius: 0px;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		height: 55px;
 	}
 }
 
@@ -240,6 +244,7 @@ h3{
 #names_found_list{
     list-style: none;
     margin-right: 35px;
+	margin-left: 40px;
 }
 
 select{

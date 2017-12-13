@@ -72,7 +72,7 @@
 		var mCongregationMap = {};
 		var mCongregationArray = [];
 		
-		var mStatesMaps = {};
+		var mStatesMap = {};
 		var mStatesArray = [];
 		
 		var database = firebase.database();
@@ -114,16 +114,17 @@
             
 			var addressString = address.split(" ");
 			var finishedAddresString = "";
+			var cityAndStateString = "";
 			for(var i=0; addressString.length > i; i++){
 				var item = addressString[i];
 				finishedAddresString = finishedAddresString + item + "+";	
 			}
-
-			finishedAddresString = finishedAddresString.slice(0, -1);
+			
+			cityAndStateString = city + "+" + state;
 			
 			var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
 			var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-			var url = baseUrl + finishedAddresString + apiKey;
+			var url = baseUrl + finishedAddresString + cityAndStateString + apiKey;
 			var request = new XMLHttpRequest();
 			request.onreadystatechange = function(){
 				if(this.readyState == 4 && this.status == 200){
@@ -133,8 +134,13 @@
 					var lat = lat_n_long.lat;
 					var long = lat_n_long.lng;
 					
-					saveLocation(lat, long, firstName, lastName, city, state, address, cong);
+					var congId = mCongregationMap[cong];
+					var stateId = mStatesMap[state];
+						
+					saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, url);
 
+				}else{
+					
 				}
 			}
 			request.open('GET', url);
@@ -148,7 +154,7 @@
             
         });
 		
-	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong){
+	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUrl){
             var ref = firebase.database().ref('locations').push();
             var key = ref.getKey();
             ref.set({
@@ -160,7 +166,8 @@
 				city: varCity,
 				congregation: varCong,
 				state: varState,
-                locationId: key
+                locationId: key,
+				url: varUrl
             });
         }
         
@@ -205,7 +212,7 @@
 			   congUl.appendChild(node)
 			   
 			   mCongregationArray.push(name);
-			   mCongregationMap[nameId] = name;
+			   mCongregationMap[name] = nameId;
     	   });
 
 	     };
@@ -223,7 +230,9 @@
 				stateUl.appendChild(node);
 				
 				mStatesArray.push(name);
-				mStatesArray[nameId] = name;
+				
+				mStatesMap[name] = nameId;
+				
 			})
 		};
 		
