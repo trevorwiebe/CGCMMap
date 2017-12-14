@@ -41,10 +41,6 @@
 		<center><h2 class="name_details" id="loading_maps_text">Loading Mennonite Maps...</h2></center>
 	</div>
 	
-	<div id="add_location_div">
-		<img id="add_location_icon" src="res/add-plus-button.svg">
-	</div>
-	
 	<div id="overlay">
 		<div id="menu_and_search_container">
 			<div id="menu_container" onclick="openNav()">
@@ -67,6 +63,8 @@
 	
 	<div id="side_nav" class="sidenav">
 	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="#" onclick="addLocation()" id="add_new_location_href">Add New Location</a>
+		<div class="nav_divider_div" id="add_new_location_divider_div"></div>	
 	  <a href="#" onclick="congAgents()">Congregational Agents</a>
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="buyBeer()">Donate</a>
@@ -86,7 +84,6 @@
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("side_nav").style.visibility = "hidden";
 
-	document.getElementById("add_location_div").addEventListener('click', addLocation);
 		function initMap() {
 
 			navigator.geolocation.getCurrentPosition(function(location){
@@ -168,7 +165,6 @@
 		
 		function buyBeer(){
 			var windowObjectReference;
-
 			windowObjectReference = window.open("https://www.paypal.me/trevwiebe", "PayPal");
 		}
 		
@@ -242,9 +238,6 @@
 			})
 		}
 
-		function listItemClicked(){
-			console.log("Clicked");
-		}
 
 		function snapshotToArray(snapshot) {
 			var returnArr = [];
@@ -312,10 +305,12 @@
 		firebase.auth().onAuthStateChanged(function(user) {
 			mUser = user;
 			if (user) {
-				document.getElementById("add_location_div").style.visibility = "visible";
+				document.getElementById("add_new_location_href").style.display = "block";
+				document.getElementById("add_new_location_divider_div").style.display = "block";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
 			} else {
-				document.getElementById("add_location_div").style.visibility = "hidden";
+				document.getElementById("add_new_location_divider_div").style.display = "none";
+				document.getElementById("add_new_location_href").style.display = "none";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
 			}
 		});
