@@ -1,0 +1,64 @@
+[debug] [2017-12-14T18:10:32.889Z] ----------------------------------------------------------------------
+[debug] [2017-12-14T18:10:32.891Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\thisi\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2017-12-14T18:10:32.891Z] CLI Version:   3.16.0
+[debug] [2017-12-14T18:10:32.891Z] Platform:      win32
+[debug] [2017-12-14T18:10:32.892Z] Node Version:  v6.10.2
+[debug] [2017-12-14T18:10:32.892Z] Time:          Thu Dec 14 2017 12:10:32 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:10:32.892Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-12-14T18:10:32.903Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-12-14T18:10:32.903Z] > authorizing via signed-in user
+[debug] [2017-12-14T18:10:32.905Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/maps-ca38f  
+  
+ Thu Dec 14 2017 12:10:32 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:10:33.714Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-14T18:10:33.718Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/maps-ca38f/tokens  
+  
+ Thu Dec 14 2017 12:10:33 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:10:34.415Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\thisi\documents\webapps\maps'...
+[info] 
+[debug] [2017-12-14T18:10:34.427Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/maps-ca38f  
+  
+ Thu Dec 14 2017 12:10:34 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:10:35.196Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-14T18:10:35.197Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/6568625724/clients/_:getWebAppConfig  
+  
+ Thu Dec 14 2017 12:10:35 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:10:36.027Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+
+[debug] [2017-12-14T18:36:47.694Z] ----------------------------------------------------------------------
+[debug] [2017-12-14T18:36:47.696Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\thisi\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2017-12-14T18:36:47.697Z] CLI Version:   3.16.0
+[debug] [2017-12-14T18:36:47.697Z] Platform:      win32
+[debug] [2017-12-14T18:36:47.697Z] Node Version:  v6.10.2
+[debug] [2017-12-14T18:36:47.697Z] Time:          Thu Dec 14 2017 12:36:47 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:36:47.697Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-12-14T18:36:47.707Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-12-14T18:36:47.708Z] > authorizing via signed-in user
+[debug] [2017-12-14T18:36:47.710Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/maps-ca38f  
+  
+ Thu Dec 14 2017 12:36:47 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:36:48.607Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-14T18:36:48.612Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/maps-ca38f/tokens  
+  
+ Thu Dec 14 2017 12:36:48 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:36:49.250Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\thisi\documents\webapps\maps'...
+[info] 
+[debug] [2017-12-14T18:36:49.259Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/maps-ca38f  
+  
+ Thu Dec 14 2017 12:36:49 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:36:49.993Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-14T18:36:49.995Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/6568625724/clients/_:getWebAppConfig  
+  
+ Thu Dec 14 2017 12:36:49 GMT-0600 (Central Standard Time)
+[debug] [2017-12-14T18:36:50.972Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+

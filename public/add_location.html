@@ -5,21 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
     <link rel="stylesheet" href="add_location.css">
-      <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
-      <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyCF9ON6rwVZVm-QDQ-ngUi5vc8-NPLnP0M",
-            authDomain: "maps-ca38f.firebaseapp.com",
-            databaseURL: "https://maps-ca38f.firebaseio.com",
-            projectId: "maps-ca38f",
-            storageBucket: "",
-            messagingSenderId: "6568625724"
-        };
-          
-        firebase.initializeApp(config);
-          
-      </script>
+      
+	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
     
 </head>
 <body>
@@ -52,6 +51,14 @@
        
     <script>
     
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				
+			} else {
+				location.href = "sign_in.html";
+			}
+		});
+		
 		var mCongregationMap = {};
 		var mCongregationArray = [];
 		
@@ -66,7 +73,7 @@
 			parseCongSnapshot(snapshot);
 		});
 		
-		database.ref('stateOrProvidence').on('value', function(snapshot){
+		database.ref('stateOrProvince').on('value', function(snapshot){
 			var congSelect = document.getElementById("state_select");
 			congSelect.innerHTML = "";
 			parseStateSnapshot(snapshot);
@@ -151,7 +158,7 @@
 			if(state.length == 0){
 				return;
 			}
-			var ref = firebase.database().ref('stateOrProvidence').push();
+			var ref = firebase.database().ref('stateOrProvince').push();
 			var key = ref.getKey();
 			ref.set({
 				stateId: key,

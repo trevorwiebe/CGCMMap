@@ -1,123 +1,372 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Sign In</title>
+	<title>Mennonite Map</title>
 	<link rel="stylesheet" href="index.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
 	<script>
-	  // Initialize Firebase
-	  var config = {
-		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
-		authDomain: "maps-ca38f.firebaseapp.com",
-		databaseURL: "https://maps-ca38f.firebaseio.com",
-		projectId: "maps-ca38f",
-		storageBucket: "maps-ca38f.appspot.com",
-		messagingSenderId: "6568625724"
-	  };
-	  firebase.initializeApp(config);
+		// Initialize Firebase
+		var config = {
+			apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+			authDomain: "maps-ca38f.firebaseapp.com",
+			databaseURL: "https://maps-ca38f.firebaseio.com",
+			projectId: "maps-ca38f",
+			storageBucket: "maps-ca38f.appspot.com",
+			messagingSenderId: "6568625724"
+		};
+		firebase.initializeApp(config);
 	</script>
 </head>
 <body>
+	<div id="map"></div>
 	
-	<div id="sign_in_container">
-		<h1>Mennonite Maps</h1>
-
-		<h3>Please sign in to continue.</h3>
-
-		<p id="fill_in_email_address"></p>
-		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
-		<p id="fill_in_password">Please fill in password.</p>
-		<input type="password" class="credentials" id="password" placeholder="Password"><br>
-		<div id="loader"></div>
-		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN">
-		<p id="error">There was an error signing in.</p>
-		
-    </div>
+	<div id="incorrect_data_div">
+		<h3>Select type of problem</h3>
+		<select>
+			<option value="incorrect_address">Location is incorrect</option>
+			<option value="typo">Typo</option>
+		</select>
+		<h3>Notes</h3>
+		<textarea id="incorrect_data_notes"></textarea>
+		<input type="button" value="Cancel" class="button" id="incorrect_cancel_btn" onclick="cancelIncorrect()">
+		<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendData()">
+	</div>
+	
+	<div id="shadow_div"></div>
+	<div id="loading_div">
+		<div class="loader" id="loader_id"></div>
+		<center><h2 class="name_details" id="loading_maps_text">Loading Mennonite Maps...</h2></center>
+	</div>
+	
+	<div id="add_location_div">
+		<img id="add_location_icon" src="res/add-plus-button.svg">
+	</div>
+	
+	<div id="overlay">
+		<div id="menu_and_search_container">
+			<div id="menu_container" onclick="openNav()">
+				<div class="menu_style"></div>
+				<div class="menu_style"></div>
+				<div class="menu_style"></div>
+			</div>
+			<input type="text" placeholder="Search Maps" id="search_input" onkeyup="searchForMatches()">
+		</div>
+		<ul id="names_found_list"></ul>
+		<div id="name_details_div">
+			<h3 id="name"></h3>
+			<h4 id="h_cong" class="name_details"></h4>
+			<h4 id="h_address" class="name_details"></h4>
+			<h4 id="h_city_and_state" class="name_details"></h4>
+			<h4></h4>
+			<a href="#" onclick="notifyAsIncorrect()" class="send_feed_back_link">Send feedback on this location</a>
+		</div>
+	</div> 
+	
+	<div id="side_nav" class="sidenav">
+	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+	  <a href="#" onclick="congAgents()">Congregational Agents</a>
+		<div class="nav_divider_div"></div>
+	  <a href="#" onclick="buyBeer()">Donate</a>
+		<div class="nav_divider_div"></div>
+	  <a href="#" onclick="sendFeedback()">Send Feedback</a>
+		<div class="nav_divider_div"></div>
+	  <a href="#" onclick="signOut()" id="sign_in_out_href"></a>
+	</div>
 
 	<script>
 
-		document.getElementById("sign_in_container").style.visibility = "hidden";
-		document.getElementById("loader").style.visibility = "hidden";
-		document.getElementById("fill_in_email_address").style.visibility = "hidden";
-		document.getElementById("fill_in_password").style.visibility = "hidden";
-		document.getElementById("error").style.visibility = "hidden";
+		var mMap;
+		var mUser;
+		
+		document.getElementById("name_details_div").style.visibility = "hidden";
+		document.getElementById("incorrect_data_div").style.visibility = "hidden";
+		document.getElementById("shadow_div").style.visibility = "hidden";
+		document.getElementById("side_nav").style.visibility = "hidden";
 
-		function logIn() {
-			document.getElementById("error").style.visibility = "hidden";
-			var email_address = document.getElementById("email_address").value;
-			var input_password = document.getElementById("password").value;
-			if(email_address.length == 0 && input_password.length == 0){
-				document.getElementById("fill_in_password").style.visibility = "visible";
-				document.getElementById("fill_in_email_address").style.visibility = "visible";
-				setErrorEmailErrorText("Please fill in email address.")
-			}else if(input_password.length == 0){
-				document.getElementById("fill_in_password").style.visibility = "visible";
-				document.getElementById("fill_in_email_address").style.visibility = "hidden";
-			}else if(email_address.length == 0){
-				document.getElementById("fill_in_email_address").style.visibility = "visible";
-				setErrorEmailErrorText("Please fill in email address.")
-				document.getElementById("fill_in_password").style.visibility = "hidden";
-			}else{
-				document.getElementById("fill_in_email_address").style.visibility = "hidden";
-				document.getElementById("fill_in_password").style.visibility = "hidden";
-				if(validateEmail(email_address)){
-					document.getElementById("loader").style.visibility = "visible";
-					firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function(){
-						firebase.auth().signInWithEmailAndPassword(email_address, input_password).catch(function(error){
-							var errorCode = error.code;
-							var errorMessage = error.message;
-							document.getElementById("loader").style.visibility = "hidden";
-							document.getElementById("fill_in_email_address").style.visibility = "hidden";
-							document.getElementById("fill_in_password").style.visibility = "hidden";
-							document.getElementById("error").style.visibility = "visible";	
+	document.getElementById("add_location_div").addEventListener('click', addLocation);
+		function initMap() {
+
+			navigator.geolocation.getCurrentPosition(function(location){
+				var whereToCenter = {lat: location.coords.latitude, lng: location.coords.longitude};
+				mMap = new google.maps.Map(document.getElementById('map'), {
+					zoom: 6,
+					center: whereToCenter,
+					mapTypeControlOptions: {
+						position: google.maps.ControlPosition.LEFT_BOTTOM,
+						fullscreenControl: false,
+					}
+				});
+
+				mMap.setOptions({streetViewControl: false, zoomControl: false, fullscreenControl: false});
+
+				var locations = []
+
+				var databaseRef = firebase.database().ref('locations');
+				databaseRef.on('value', function(snapshot){
+					var array = snapshotToArray(snapshot);
+					for(var i=0; i<array.length; i++){
+						itemArray = array[i];
+
+						var name = itemArray.firstAndLastName;
+						var lat = itemArray.latitude;
+						var long = itemArray.longitude;
+						var id = itemArray.locationId;
+
+						var newArray = new Array(name, lat, long, id);
+						locations.push(newArray);
+					}
+
+
+					for (var i = 0; i < locations.length; i++) {
+						var location = locations[i];
+
+						var marker = new google.maps.Marker({
+							position: {lat: parseFloat(location[1]), lng: parseFloat(location[2])},
+							map: mMap,
+							title: location[0],
+							locationId: location[3]
+						});
+
+						marker.addListener('click', function(){
+							document.getElementById("names_found_list").innerHTML = "";
+							document.getElementById("name_details_div").style.visibility = "visible";
+							var id = this.get("locationId");
+							var databaseRef = firebase.database().ref("locations/" + id);
+							databaseRef.once('value').then(function(snapshot){
+								parseAndRenderSnapshot(snapshot);
+							})
 						})
-					}).catch(function(error){
-						document.getElementById("loader").style.visibility = "hidden";
-						document.getElementById("fill_in_email_address").style.visibility = "hidden";
-						document.getElementById("fill_in_password").style.visibility = "hidden";
-						document.getElementById("error").style.visibility = "visible";
-					});
-				}else{
-					document.getElementById("fill_in_email_address").style.visibility = "visible";
-					setErrorEmailErrorText( email_address + " is not a valid email address.");
-				}
-			}
-		}
-
-		function validateEmail(mail){  
-			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
-				return (true)  
-			}   
-			return (false)  
+					}
+					
+					// Fade out loading div
+					var loading_div = document.getElementById("loading_div");
+					fade(loading_div);
+				});
+			})
 		}  
 
-		function setErrorEmailErrorText(error_text) {
-			document.getElementById("fill_in_email_address").innerHTML = error_text;
+		function notifyAsIncorrect(){
+			document.getElementById("incorrect_data_div").style.visibility = 'visible';
+			document.getElementById("shadow_div").style.visibility = 'visible';
 		}
 
+		function cancelIncorrect(){
+			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
+			document.getElementById("shadow_div").style.visibility = 'hidden';
+		}
+
+		function sendData(){
+
+		}
+
+		function addLocation(){
+			location.href = "add_location.html";
+		}
+		
+		function buyBeer(){
+			var windowObjectReference;
+
+			windowObjectReference = window.open("https://www.paypal.me/trevwiebe", "PayPal");
+		}
+		
+		function sendFeedback(){
+			alert("Send Feedback");
+		}
+		
+		function signOut(){
+			if(mUser){
+				firebase.auth().signOut().then(function() {
+					console.log('Signed Out');
+				}, function(error) {
+					console.error('Sign Out Error', error);
+				});	
+				closeNav();
+			}else{
+				location.href = "sign_in.html";
+			}
+		}
+	
+
+		function searchForMatches(){
+			document.getElementById("names_found_list").innerHTML = "";
+			var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
+			if(equalTo.length == 0){
+				document.getElementById("name_details_div").style.visibility = "hidden";
+				var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+				if(screenWidth < 615){
+					var container = document.getElementById('overlay');
+					container.style.height = (container.offsetHeight + -150) + "px";
+				}
+				return;
+			}
+			setOverlayDivHeight(150);
+			document.getElementById("name_details_div").style.visibility = "hidden";
+			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(3);
+			ref.once('value').then(function(snapshot){
+				var array = snapshotToArray(snapshot);
+				for(var j=0; array.length > j; j++){
+					var itemArray = array[j];
+					var firstName = itemArray.firstName;
+					var lastName = itemArray.lastName;
+					var locationId = itemArray.locationId;
+					var name = firstName + " " + lastName;
+
+					var ul = document.getElementById('names_found_list');
+					var li = document.createElement("li");
+					li.appendChild(document.createTextNode(name));
+					li.setAttribute("id", "li_items");
+					li.setAttribute("myLocationId", locationId);
+					ul.appendChild(li);
+				}
+
+				var list = document.getElementById("names_found_list");
+
+				for(i=0;i<=list.childElementCount-1;i++){
+					list.children[i].addEventListener("click",itemClicked);
+				}
+
+
+				function itemClicked(){
+					document.getElementById("search_input").value= "";
+					document.getElementById("names_found_list").innerHTML = "";
+					document.getElementById("name_details_div").style.visibility = "visible";
+					var locationId = this.getAttribute("myLocationId");
+					var ref = firebase.database().ref("locations/" + locationId);
+					ref.once('value').then(function(snapshot){
+						parseAndRenderSnapshot(snapshot);
+					})
+				}
+			})
+		}
+
+		function listItemClicked(){
+			console.log("Clicked");
+		}
+
+		function snapshotToArray(snapshot) {
+			var returnArr = [];
+
+			snapshot.forEach(function(childSnapshot) {
+				var item = childSnapshot.val();
+				item.key = childSnapshot.key;
+
+				returnArr.push(item);
+			});
+
+			return returnArr;
+		};
+
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+
+		function smoothZoom (map, max, cnt) {
+			if (cnt >= max) {
+				return;
+			}
+			else {
+				z = google.maps.event.addListener(map, 'zoom_changed', function(event){
+					google.maps.event.removeListener(z);
+					smoothZoom(map, max, cnt + 1);
+				});
+				setTimeout(function(){map.setZoom(cnt)}, 80); 
+			}
+		}  
+
+		function parseAndRenderSnapshot(snapshot){
+			var array = snapshot.val();
+			var firstName = array.firstName;
+			var lastName = array.lastName;
+			var address = array.address;
+			var city = array.city;
+			var stateId = array.state;
+			var congId = array.congregation;
+			var lat = array.latitude;
+			var long = array.longitude;
+			
+			var ref = firebase.database().ref("congregations/" + congId + "/congregation");
+			ref.once('value').then(function(snapshot){
+				
+				var cong = snapshot.val();
+				
+				var stateRef = firebase.database().ref("stateOrProvince/" + stateId + "/state");
+				stateRef.once('value').then(function(snapshot){
+					var state = snapshot.val();
+					document.getElementById("name").innerHTML = firstName + " " + lastName;
+					document.getElementById("h_address").innerHTML = address;
+					document.getElementById("h_cong").innerHTML = cong;
+					document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
+					var whereToZoom = {lat: lat, lng: long};
+					smoothZoom(mMap, 16, mMap.getZoom());
+					mMap.panTo(whereToZoom);
+					setOverlayDivHeight(150);
+				})
+
+			})
+			
+		}
+		
 		firebase.auth().onAuthStateChanged(function(user) {
+			mUser = user;
 			if (user) {
-				// User is signed in.
-				var displayName = user.displayName;
-				var email = user.email;
-				var emailVerified = user.emailVerified;
-				var photoURL = user.photoURL;
-				var isAnonymous = user.isAnonymous;
-				var uid = user.uid;
-				var providerData = user.providerData;
-
-				location.href = "main_maps.html";
-
+				document.getElementById("add_location_div").style.visibility = "visible";
+				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
 			} else {
-				document.getElementById("sign_in_container").style.visibility = "visible";
-
-				console.log("User is signed out");
+				document.getElementById("add_location_div").style.visibility = "hidden";
+				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
 			}
 		});
 
+		function setOverlayDivHeight(height){
+			var container = document.getElementById('overlay');
+			var currentHeight = container.style.height;
+			var currentHeightInt;
+			if(currentHeight.length == 5){
+				currentHeightInt = parseInt(currentHeight.substring(0, 3));
+			}else if(currentHeight.length == 4){
+				currentHeightInt = parseInt(currentHeight.substring(0, 2));
+			}else{
+				currentHeightInt = 0;
+			}
+			var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+			if(screenWidth < 615){
+				if(currentHeightInt < 205){
+					container.style.height = (container.offsetHeight + height) + "px";
+				}
+			}
+		}
+		
+		function fade(element) {
+			var op = 1;  // initial opacity
+			var timer = setInterval(function () {
+				if (op <= 0.1){
+					clearInterval(timer);
+					element.style.display = 'none';
+				}
+				element.style.opacity = op;
+				element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+				op -= op * 0.1;
+			}, 30);
+		}
+		
+		function openNav() {
+			document.getElementById("shadow_div").style.visibility = "visible";
+			document.getElementById("side_nav").style.visibility = "visible";
+			document.getElementById("side_nav").style.width = "350px";
+		}
+
+		function closeNav() {
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("side_nav").style.width = "0";
+		}
+
 	</script>
-	
+
+	<script async defer
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA&callback=initMap">
+	</script>
 </body>
 </html>

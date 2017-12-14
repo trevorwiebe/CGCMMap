@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sign In</title>
+	<link rel="stylesheet" href="sign_in.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="sign_in.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+</head>
+<body>
+	
+	<div id="sign_in_container">
+		<h1>Mennonite Maps</h1>
+
+		<h3>Please sign in to continue.</h3>
+
+		<p id="fill_in_email_address"></p>
+		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
+		<p id="fill_in_password">Please fill in password.</p>
+		<input type="password" class="credentials" id="password" placeholder="Password"><br>
+		<div id="loader"></div>
+		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN">
+		<p id="error">There was an error signing in.</p>
+		
+    </div>
+
+	<script>
+
+		document.getElementById("sign_in_container").style.visibility = "hidden";
+		document.getElementById("loader").style.visibility = "hidden";
+		document.getElementById("fill_in_email_address").style.visibility = "hidden";
+		document.getElementById("fill_in_password").style.visibility = "hidden";
+		document.getElementById("error").style.visibility = "hidden";
+
+		function logIn() {
+			document.getElementById("error").style.visibility = "hidden";
+			var email_address = document.getElementById("email_address").value;
+			var input_password = document.getElementById("password").value;
+			if(email_address.length == 0 && input_password.length == 0){
+				document.getElementById("fill_in_password").style.visibility = "visible";
+				document.getElementById("fill_in_email_address").style.visibility = "visible";
+				setErrorEmailErrorText("Please fill in email address.")
+			}else if(input_password.length == 0){
+				document.getElementById("fill_in_password").style.visibility = "visible";
+				document.getElementById("fill_in_email_address").style.visibility = "hidden";
+			}else if(email_address.length == 0){
+				document.getElementById("fill_in_email_address").style.visibility = "visible";
+				setErrorEmailErrorText("Please fill in email address.")
+				document.getElementById("fill_in_password").style.visibility = "hidden";
+			}else{
+				document.getElementById("fill_in_email_address").style.visibility = "hidden";
+				document.getElementById("fill_in_password").style.visibility = "hidden";
+				if(validateEmail(email_address)){
+					document.getElementById("loader").style.visibility = "visible";
+					firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function(){
+						firebase.auth().signInWithEmailAndPassword(email_address, input_password).catch(function(error){
+							var errorCode = error.code;
+							var errorMessage = error.message;
+							document.getElementById("loader").style.visibility = "hidden";
+							document.getElementById("fill_in_email_address").style.visibility = "hidden";
+							document.getElementById("fill_in_password").style.visibility = "hidden";
+							document.getElementById("error").style.visibility = "visible";	
+						})
+					}).catch(function(error){
+						document.getElementById("loader").style.visibility = "hidden";
+						document.getElementById("fill_in_email_address").style.visibility = "hidden";
+						document.getElementById("fill_in_password").style.visibility = "hidden";
+						document.getElementById("error").style.visibility = "visible";
+					});
+				}else{
+					document.getElementById("fill_in_email_address").style.visibility = "visible";
+					setErrorEmailErrorText( email_address + " is not a valid email address.");
+				}
+			}
+		}
+
+		function validateEmail(mail){  
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
+				return (true)  
+			}   
+			return (false)  
+		}  
+
+		function setErrorEmailErrorText(error_text) {
+			document.getElementById("fill_in_email_address").innerHTML = error_text;
+		}
+
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+
+				location.href = "index.html";
+
+			} else {
+				document.getElementById("sign_in_container").style.visibility = "visible";
+
+				console.log("User is signed out");
+			}
+		});
+
+	</script>
+	
+</body>
+</html>
