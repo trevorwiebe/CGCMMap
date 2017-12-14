@@ -36,6 +36,10 @@
 	</div>
 	
 	<div id="shadow_div"></div>
+	<div id="loading_div">
+		<div class="loader" id="loader_id"></div>
+		<center><h2 class="name_details" id="loading_maps_text">Loading Mennonite Maps...</h2></center>
+	</div>
 	
 	<div id="add_location_div">
 		<img id="add_location_icon" src="res/add-plus-button.svg">
@@ -50,7 +54,6 @@
 			</div>
 			<input type="text" placeholder="Search Maps" id="search_input" onkeyup="searchForMatches()">
 		</div>
-		<center><div class="loader" id="loader_id"></div></center>
 		<ul id="names_found_list"></ul>
 		<div id="name_details_div">
 			<h3 id="name"></h3>
@@ -79,7 +82,6 @@
 		var mMap;
 		
 		document.getElementById("name_details_div").style.visibility = "hidden";
-		document.getElementById("loader_id").style.display = "none"; 
 		document.getElementById("incorrect_data_div").style.visibility = "hidden";
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("side_nav").style.visibility = "hidden";
@@ -148,11 +150,17 @@
 								document.getElementById("h_cong").innerHTML = cong;
 								document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
 								var whereToZoom = {lat: lat, lng: long};
-								smoothZoom(mMap, 16, mMap.getZoom());
+								mMap.setZoom(16);
+//								smoothZoom(mMap, 16, mMap.getZoom());
 								mMap.panTo(whereToZoom);
+								setOverlayDivHeight(150);
 							})
 						})
 					}
+					
+					// Insert fade here
+					var loading_div = document.getElementById("loading_div");
+					fade(loading_div);
 				});
 			})
 		}  
@@ -209,6 +217,7 @@
 			document.getElementById("names_found_list").innerHTML = "";
 			var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
 			if(equalTo.length == 0){
+				document.getElementById("name_details_div").style.visibility = "hidden";
 				var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 				if(screenWidth < 615){
 					var container = document.getElementById('overlay');
@@ -218,7 +227,6 @@
 			}
 			setOverlayDivHeight(150);
 			document.getElementById("name_details_div").style.visibility = "hidden";
-			document.getElementById("loader_id").style.display = "block";
 			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(3);
 			ref.once('value').then(function(snapshot){
 				var array = snapshotToArray(snapshot);
@@ -243,7 +251,6 @@
 					list.children[i].addEventListener("click",itemClicked);
 				}
 
-				document.getElementById("loader_id").style.display = "none"; 
 
 				function itemClicked(){
 					document.getElementById("search_input").value= "";
@@ -268,6 +275,7 @@
 						var whereToZoom = {lat: lat, lng: long};
 						smoothZoom(mMap, 16, mMap.getZoom());
 						mMap.panTo(whereToZoom);
+						setOverlayDivHeight(150);
 					})
 				}
 			})
@@ -332,6 +340,19 @@
 					container.style.height = (container.offsetHeight + height) + "px";
 				}
 			}
+		}
+		
+		function fade(element) {
+			var op = 1;  // initial opacity
+			var timer = setInterval(function () {
+				if (op <= 0.1){
+					clearInterval(timer);
+					element.style.display = 'none';
+				}
+				element.style.opacity = op;
+				element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+				op -= op * 0.1;
+			}, 30);
 		}
 
 	</script>

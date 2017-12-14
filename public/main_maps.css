@@ -151,8 +151,41 @@ h3{
     left: 0px;
     right: 0px;
     bottom: 0px;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 4;
+}
+
+#loading_div{
+	position: fixed;
+	width: auto;
+	height: auto;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 4;
+}
+
+.loader {
+    border: 10px solid #f3f3f3;
+    border-top: 10px solid #FFC107;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+	margin-top: 300px;
+	margin-left: auto;
+	margin-right: auto;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loading_maps_text{
+	margin-top: 20px;
 }
 
 #name_details_div{
@@ -266,20 +299,6 @@ select{
     padding-left: 10px;
     padding-bottom: 10px;
     padding-top: 10px;
-}
-
-.loader {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #FFC107;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 .name_details{

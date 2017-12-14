@@ -16,6 +16,14 @@ body, html{
 	background-color: white;;
 }
 
+.select{
+	width: 230px;
+	padding: 10px;
+	font-family: Roboto, sans-serif;
+	font-size: 15px;
+	margin-bottom: 20px;
+}
+
 .input{
 	text-align: center;
     border-style: solid;
