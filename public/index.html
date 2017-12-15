@@ -24,6 +24,14 @@
 	
 	<div id="map"></div>
 	
+	<div id="total_feedback">
+		<h2>Feedback:</h2>
+		<textarea id="total_feedback_text_area"></textarea>
+		<center><h4 id="feedback_error">Please type some feedback before sending.</h4></center>
+		<input type="button" class="button" id="total_feedback_cancel" onclick="cancelSendWholeFeedback()" value="Cancel">
+		<input type="button"  class="button" value="Send" onclick="sendFeedbackOnWholeSite()">
+	</div>
+	
 	<div id="incorrect_data_div">
 		<h3>Select type of problem</h3>
 		<select id="whats_wrong">
@@ -72,7 +80,7 @@
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="buyBeer()">Donate</a>
 		<div class="nav_divider_div"></div>
-	  <a href="#" onclick="sendFeedbackOnWholeSite()">Send Feedback</a>
+	  <a href="#" onclick="showSendFeedbackOnWholeSite()">Send Feedback</a>
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="signOut()" id="sign_in_out_href"></a>
 	</div>
@@ -81,8 +89,10 @@
 
 		var mMap;
 		var mUser;
-		var mSelectedLocationId;
+		var mWhoAddedIt;
 		
+		document.getElementById("feedback_error").style.visibility = "hidden";
+		document.getElementById("total_feedback").style.visibility = "hidden";
 		document.getElementById("name_details_div").style.visibility = "hidden";
 		document.getElementById("incorrect_data_div").style.visibility = "hidden";
 		document.getElementById("shadow_div").style.visibility = "hidden";
@@ -134,8 +144,9 @@
 						marker.addListener('click', function(){
 							document.getElementById("names_found_list").innerHTML = "";
 							document.getElementById("name_details_div").style.visibility = "visible";
-							mSelectedLocationId = this.get("locationId");
-							var databaseRef = firebase.database().ref("locations/" + mSelectedLocationId);
+							var locationId = this.get("locationId");
+							mWhoAddedIt = this.get("userId");
+							var databaseRef = firebase.database().ref("locations/" + locationId);
 							databaseRef.once('value').then(function(snapshot){
 								parseAndRenderSnapshot(snapshot);
 							})
@@ -162,7 +173,7 @@
 		function sendFeedbackOnLocation(){
 			var notes = document.getElementById("incorrect_data_notes").value;
 			var whatsWrong = getSelectedText("whats_wrong");
-			var ref = firebase.database().ref("locationFeedback/" + mSelectedLocationId).push();
+			var ref = firebase.database().ref("locationFeedback/" + mWhoAddedIt).push();
 			var key = ref.getKey();
 			ref.set({
 				locationFeebackKey: key,
@@ -183,7 +194,33 @@
 		}
 		
 		function sendFeedbackOnWholeSite(){
-			alert("Send Feedback");
+			var ref = firebase.database().ref("totalFeedback").push();
+			var key = ref.getKey();
+			var feedback = document.getElementById("total_feedback_text_area").value;
+			if(feedback.length == 0){
+				document.getElementById("feedback_error").style.visibility = "visible";
+				return;
+			}
+			ref.set({
+				feedbackId: key,
+				feedback: feedback
+			})
+			document.getElementById("feedback_error").style.visibility = "hidden";
+			document.getElementById("total_feedback").style.visibility = "hidden";
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("total_feedback_text_area").value = "";
+		}
+		
+		function cancelSendWholeFeedback(){
+			document.getElementById("feedback_error").style.visibility = "hidden";
+			document.getElementById("total_feedback").style.visibility = "hidden";
+			document.getElementById("shadow_div").style.visibility = "hidden";
+		}
+		
+		function showSendFeedbackOnWholeSite(){
+			closeNav();
+			document.getElementById("total_feedback").style.visibility = "visible";
+			document.getElementById("shadow_div").style.visibility = "visible";
 		}
 		
 		function signOut(){
@@ -221,6 +258,7 @@
 					var firstName = itemArray.firstName;
 					var lastName = itemArray.lastName;
 					var locationId = itemArray.locationId;
+					var userId = itemArray.userId;
 					var name = firstName + " " + lastName;
 
 					var ul = document.getElementById('names_found_list');
@@ -228,6 +266,7 @@
 					li.appendChild(document.createTextNode(name));
 					li.setAttribute("id", "li_items");
 					li.setAttribute("myLocationId", locationId);
+					li.setAttribute("myWhoAddedItId", userId);
 					ul.appendChild(li);
 				}
 
@@ -242,8 +281,9 @@
 					document.getElementById("search_input").value= "";
 					document.getElementById("names_found_list").innerHTML = "";
 					document.getElementById("name_details_div").style.visibility = "visible";
-					mSelectedLocationId = this.getAttribute("myLocationId");
-					var ref = firebase.database().ref("locations/" + mSelectedLocationId);
+					var locationId = this.getAttribute("myLocationId");
+					mWhoAddedIt = this.getAttribute("myWhoAddedItId");
+					var ref = firebase.database().ref("locations/" + locationId);
 					ref.once('value').then(function(snapshot){
 						parseAndRenderSnapshot(snapshot);
 					})
