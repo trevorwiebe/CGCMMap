@@ -1,0 +1,88 @@
+html, body{
+	margin: 0px;
+	width: 100%;
+	font-family: Roboto, sans-serif;
+}
+
+#container{
+	padding: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 50px;
+	margin-bottom: 0px;
+}
+
+@media screen and (min-width: 900px){
+	#container{
+		width: 900px;
+	}
+}
+
+.button{
+	background-color: #303F9F;
+	border-width: 0px;
+	font-family: 'Roboto', sans-serif;
+	margin: 20px;
+	color: white;
+	font-size: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right:45px;
+	padding-left: 45px;
+	border-radius: 3px;
+	font-weight: bold;
+}
+
+.button:hover{
+	background-color: #293689;
+}
+
+p{
+	text-indent: 30px;
+	font-size: 17px;
+}
+
+#input_container{
+	justify-content: center;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#cont_1{
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#cont_2{
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.input{
+	margin: 20px;
+	border-radius: 1px;
+	border-color: #303F9F;
+	padding: 10px;
+	border-style: solid;
+	font-size: 16px;
+}
+
+#error_text{
+	color: firebrick;
+}
+
+#thanks_text{
+	color: darkgreen;
+	padding: 20px;
+	background-color: yellowgreen;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}

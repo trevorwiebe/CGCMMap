@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Register</title>
+	<link rel="stylesheet" href="register.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="register.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+</head>
+<body>
+
+	<div id="container">
+		<center><h1>Become a Register User</h1></center>
+		<p>Some of us here at Morning Star Congregation in Kansas, have been thinking about and now building a congregational map website, and we are now looking to you for your help.
+		We would like at least one member from every congregation in North America to become a 'Registered User'.
+		Being a 'Register User' allows you to add and edit the locations of the people in your congregation.</p> 
+		<p>To become a registered user you need to apply below.
+		Then in about 3 to 4 days you will get an email with a passcode that you can use to sign into your account. Once registered you would be expected to maintain the location you have added.</p>
+		<p>Thanks so much for your support!</p>
+		<center><h3>Fill in the blanks and submit</h3></center>
+		<div id="input_container">
+			<div id="cont_1">
+				<input type="text" id="first_name" placeholder="First Name" class="input"><br>
+				<input type="text" id="last_name" placeholder="Last Name" class="input"><br>
+				<input type="text" id="address" placeholder="Address" class="input"><br>
+				<input type="text" id="city" placeholder="City" class="input"><br>
+			</div>
+			<div id="cont_2">
+				<input type="text" id="state" placeholder="State" class="input"><br>
+				<input type="text" id="email" placeholder="Email" class="input"><br>
+				<input type="text" id="cong" placeholder="Congregation" class="input"><br>
+			</div>
+		</div>
+		<center><h4 id="error_text"></h4></center>
+		<center><input type="button" onclick="submit()" value="Submit" class="button"></center>
+		<center><h4 id="thanks_text">Thanks for registering. You should get an email with your password in about 3 to 4 days.</h4></center>
+		
+		<p>Mennonite Maps was designed to be used by the members of the <a href="https://en.wikipedia.org/wiki/Church_of_God_in_Christ,_Mennonite" target="_blank">Church of God in Christ Mennonite.</a></p>
+
+	</div>
+	
+	<script>
+		
+		document.getElementById("thanks_text").style.visibility = "hidden";
+		function submit(){
+			var firstName = document.getElementById("first_name").value;
+			var lastName = document.getElementById("last_name").value;
+			var address = document.getElementById("address").value;
+			var email = document.getElementById("email").value;
+			var city = document.getElementById("city").value;
+			var state = document.getElementById("state").value;
+			var cong = document.getElementById("cong").value;
+			
+			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || email.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
+				return;
+			}
+			
+			if(!validateEmail(email)){
+				document.getElementById("error_text").innerHTML = "Email address is not formatted correctly";
+				return;
+			}
+			
+			var ref = firebase.database().ref("applicants").push();
+			var key = ref.getKey();
+			ref.set({
+				firstName: firstName,
+				lastName: lastName,
+				address: address,
+				email: email,
+				city: city,
+				state: state,
+				cong: cong,
+				aplicantId: key
+			})
+			
+			document.getElementById("first_name").value = "";
+			document.getElementById("last_name").value = "";
+			document.getElementById("address").value = "";
+			document.getElementById("email").value = "";
+			document.getElementById("city").value = "";
+			document.getElementById("state").value = "";
+			document.getElementById("cong").value = "";
+			document.getElementById("error_text").innerHTML = "";
+			
+			document.getElementById("thanks_text").style.visibility = "visible";
+
+		}
+		
+		function validateEmail(mail){  
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
+				return (true)  
+			}   
+			return (false)  
+		}  
+
+	</script>
+	
+
+</body>
+</html> 

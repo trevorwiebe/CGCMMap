@@ -33,6 +33,7 @@
 		<div id="loader"></div>
 		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN">
 		<p id="error">There was an error signing in.</p>
+		<input type="button" class="register_button" onclick="register();" value="REGISTER">
 		
     </div>
 
@@ -86,6 +87,10 @@
 			}
 		}
 
+		function register(){
+			location.href = "register.html";
+		}
+		
 		function validateEmail(mail){  
 			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
 				return (true)  

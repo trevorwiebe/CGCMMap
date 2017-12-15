@@ -77,6 +77,27 @@ p{
 	background-color: #293689;
 }
 
+.register_button{
+	background-color: white;
+	border-width: 2px;
+	border-color: #303F9F;
+	border-style: solid;
+	font-family: 'Roboto', sans-serif;
+	color: #303F9F;
+	font-size: 15px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-right: 62px;
+	padding-left: 62px;
+	border-radius: 3px;
+	font-weight: bold;
+}
+
+.register_button:hover{
+	border-color: #293689;
+	color: #293689;
+}
+
 #loader{
 	border: 6px solid #f3f3f3; /* Light grey */
     border-top: 6px solid #ffc400; 

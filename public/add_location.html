@@ -50,6 +50,8 @@
 	</div>
        
     <script>
+		
+		var mUser;
     
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
@@ -118,8 +120,10 @@
 					
 					var congId = mCongregationMap[cong];
 					var stateId = mStatesMap[state];
+					
+					var userId = firebase.auth().currentUser.uid;
 						
-					saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, url);
+					saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, url, userId);
 
 				}else{
 					
@@ -136,7 +140,7 @@
             
         });
 		
-	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUrl){
+	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUrl, varUserId){
             var ref = firebase.database().ref('locations').push();
             var key = ref.getKey();
             ref.set({
@@ -149,7 +153,8 @@
 				congregation: varCong,
 				state: varState,
                 locationId: key,
-				url: varUrl
+				url: varUrl,
+				userId: varUserId
             });
         }
         

@@ -65,7 +65,7 @@
 	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<a href="#" onclick="addLocation()" id="add_new_location_href">Add New Location</a>
 		<div class="nav_divider_div" id="add_new_location_divider_div"></div>	
-	  <a href="#" onclick="congAgents()">Congregational Agents</a>
+	  <a href="#" onclick="congAgents()">Congregations Represented</a>
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="buyBeer()">Donate</a>
 		<div class="nav_divider_div"></div>
@@ -89,7 +89,7 @@
 			navigator.geolocation.getCurrentPosition(function(location){
 				var whereToCenter = {lat: location.coords.latitude, lng: location.coords.longitude};
 				mMap = new google.maps.Map(document.getElementById('map'), {
-					zoom: 6,
+					zoom: 10,
 					center: whereToCenter,
 					mapTypeControlOptions: {
 						position: google.maps.ControlPosition.LEFT_BOTTOM,
@@ -200,7 +200,7 @@
 			}
 			setOverlayDivHeight(150);
 			document.getElementById("name_details_div").style.visibility = "hidden";
-			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToLast(3);
+			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToFirst(3);
 			ref.once('value').then(function(snapshot){
 				var array = snapshotToArray(snapshot);
 				for(var j=0; array.length > j; j++){
@@ -293,7 +293,7 @@
 					document.getElementById("h_cong").innerHTML = cong;
 					document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
 					var whereToZoom = {lat: lat, lng: long};
-					smoothZoom(mMap, 16, mMap.getZoom());
+					smoothZoom(mMap, 20, mMap.getZoom());
 					mMap.panTo(whereToZoom);
 					setOverlayDivHeight(150);
 				})
