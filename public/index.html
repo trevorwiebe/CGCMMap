@@ -21,18 +21,21 @@
 	</script>
 </head>
 <body>
+	
 	<div id="map"></div>
 	
 	<div id="incorrect_data_div">
 		<h3>Select type of problem</h3>
-		<select>
+		<select id="whats_wrong">
 			<option value="incorrect_address">Location is incorrect</option>
-			<option value="typo">Typo</option>
+			<option value="incorrect_address">Address is incorrect</option>
+			<option value="typo">Name Typo</option>
+			<option value="other">Other</option>
 		</select>
-		<h3>Notes</h3>
+		<h3>What should it be?</h3>
 		<textarea id="incorrect_data_notes"></textarea>
 		<input type="button" value="Cancel" class="button" id="incorrect_cancel_btn" onclick="cancelIncorrect()">
-		<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendData()">
+		<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendFeedbackOnLocation()">
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -69,7 +72,7 @@
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="buyBeer()">Donate</a>
 		<div class="nav_divider_div"></div>
-	  <a href="#" onclick="sendFeedback()">Send Feedback</a>
+	  <a href="#" onclick="sendFeedbackOnWholeSite()">Send Feedback</a>
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="signOut()" id="sign_in_out_href"></a>
 	</div>
@@ -78,6 +81,7 @@
 
 		var mMap;
 		var mUser;
+		var mSelectedLocationId;
 		
 		document.getElementById("name_details_div").style.visibility = "hidden";
 		document.getElementById("incorrect_data_div").style.visibility = "hidden";
@@ -130,8 +134,8 @@
 						marker.addListener('click', function(){
 							document.getElementById("names_found_list").innerHTML = "";
 							document.getElementById("name_details_div").style.visibility = "visible";
-							var id = this.get("locationId");
-							var databaseRef = firebase.database().ref("locations/" + id);
+							mSelectedLocationId = this.get("locationId");
+							var databaseRef = firebase.database().ref("locations/" + mSelectedLocationId);
 							databaseRef.once('value').then(function(snapshot){
 								parseAndRenderSnapshot(snapshot);
 							})
@@ -155,8 +159,18 @@
 			document.getElementById("shadow_div").style.visibility = 'hidden';
 		}
 
-		function sendData(){
-
+		function sendFeedbackOnLocation(){
+			var notes = document.getElementById("incorrect_data_notes").value;
+			var whatsWrong = getSelectedText("whats_wrong");
+			var ref = firebase.database().ref("locationFeedback/" + mSelectedLocationId).push();
+			var key = ref.getKey();
+			ref.set({
+				locationFeebackKey: key,
+				whatsWrong: whatsWrong,
+				notes: notes
+			})
+			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
+			document.getElementById("shadow_div").style.visibility = 'hidden';
 		}
 
 		function addLocation(){
@@ -168,7 +182,7 @@
 			windowObjectReference = window.open("https://www.paypal.me/trevwiebe", "PayPal");
 		}
 		
-		function sendFeedback(){
+		function sendFeedbackOnWholeSite(){
 			alert("Send Feedback");
 		}
 		
@@ -183,8 +197,7 @@
 			}else{
 				location.href = "sign_in.html";
 			}
-		}
-	
+		}	
 
 		function searchForMatches(){
 			document.getElementById("names_found_list").innerHTML = "";
@@ -229,15 +242,14 @@
 					document.getElementById("search_input").value= "";
 					document.getElementById("names_found_list").innerHTML = "";
 					document.getElementById("name_details_div").style.visibility = "visible";
-					var locationId = this.getAttribute("myLocationId");
-					var ref = firebase.database().ref("locations/" + locationId);
+					mSelectedLocationId = this.getAttribute("myLocationId");
+					var ref = firebase.database().ref("locations/" + mSelectedLocationId);
 					ref.once('value').then(function(snapshot){
 						parseAndRenderSnapshot(snapshot);
 					})
 				}
 			})
 		}
-
 
 		function snapshotToArray(snapshot) {
 			var returnArr = [];
@@ -279,6 +291,7 @@
 			var congId = array.congregation;
 			var lat = array.latitude;
 			var long = array.longitude;
+			var locationId = array.locationId;
 			
 			var ref = firebase.database().ref("congregations/" + congId + "/congregation");
 			ref.once('value').then(function(snapshot){
@@ -301,19 +314,6 @@
 			})
 			
 		}
-		
-		firebase.auth().onAuthStateChanged(function(user) {
-			mUser = user;
-			if (user) {
-				document.getElementById("add_new_location_href").style.display = "block";
-				document.getElementById("add_new_location_divider_div").style.display = "block";
-				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
-			} else {
-				document.getElementById("add_new_location_divider_div").style.display = "none";
-				document.getElementById("add_new_location_href").style.display = "none";
-				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
-			}
-		});
 
 		function setOverlayDivHeight(height){
 			var container = document.getElementById('overlay');
@@ -357,6 +357,28 @@
 			document.getElementById("shadow_div").style.visibility = "hidden";
 			document.getElementById("side_nav").style.width = "0";
 		}
+		
+		function getSelectedText(elementId) {
+			var elt = document.getElementById(elementId);
+
+			if (elt.selectedIndex == -1)
+				return null;
+
+			return elt.options[elt.selectedIndex].text;
+		}
+		
+		firebase.auth().onAuthStateChanged(function(user) {
+			mUser = user;
+			if (user) {
+				document.getElementById("add_new_location_href").style.display = "block";
+				document.getElementById("add_new_location_divider_div").style.display = "block";
+				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
+			} else {
+				document.getElementById("add_new_location_divider_div").style.display = "none";
+				document.getElementById("add_new_location_href").style.display = "none";
+				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
+			}
+		});
 
 	</script>
 
