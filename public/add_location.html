@@ -38,13 +38,13 @@
 			<h4 class="tags">Select Congregation</h4>
 			<select id="cong_select" class="select"></select>
 			<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
-			<center><input type="button" id="save_location" class="save_button" value="Save Location"></center>
 		</div>
 	</div>
+	<center><h3 id="location_saved_successfully">Location save successfully!</h3></center>
 	<div id="maps_div">
-		<center><h3 id="verify_title">Verify that location is correct</h3></center>
-		<center><input type="button" onclick="resetLocation()" value="Reset Location" id="reset_location"></center>
 		<div id="maps_container"></div>
+		<center><input type="button" onclick="resetLocation()" value="Reset Pin" id="reset_location">
+		<input type="button" id="save_location" class="save_button" value="Save Location"></center>
 	</div>
 	<div id="add_location_divider"></div>
 	<div id="add_state_province_cong_container">
@@ -70,7 +70,7 @@
 		var markersArray = [];
 		
 		document.getElementById("maps_div").style.display = "none";
-		document.getElementById("save_location").style.visibility = "hidden";
+		document.getElementById("location_saved_successfully").style.display = "none";
     
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
@@ -122,16 +122,13 @@
 			var lat;
 			var long;
 			
-			if(mNewLatnLngFromMap.lat == null || ){
+			if(mNewLatnLngFromMap.lat == null || mNewLatnLngFromMap.lng == null){
 				lat = mLatnLngFromAddress.lat;
 				long = mLatnLngFromAddress.lng;
 			}else{
 				lat = mNewLatnLngFromMap.lat;
 				long = mNewLatnLngFromMap.lng;
 			}
-			
-			console.log(lat);
-			console.log(long);
 			
 			saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, userId);
          
@@ -141,6 +138,17 @@
 			document.getElementById('city').value = ""
 			
 			document.getElementById("maps_div").style.display = "none";
+			document.getElementById("location_saved_successfully").style.display = "block";
+			
+			var location_saved = document.getElementById("location_saved_successfully");
+			location_saved.style.opacity = 1;
+			location_saved.style.filter = 'alpha(opacity=' + 1 * 100 + ")";
+			
+			setTimeout(function(){ 
+				fade(location_saved); 
+			}, 1000);
+			
+			deleteMarkers();
             
         });
 		
@@ -247,7 +255,6 @@
             }
             
 			document.getElementById("maps_div").style.display = "block";
-			document.getElementById("save_location").style.visibility = "visible";
 			
 			var addressString = address.split(" ");
 			var finishedAddresString = "";
@@ -325,6 +332,7 @@
 			});
 			markersArray.push(marker);
 			setMapOnAll(mMap);
+			mMap.panTo(mLatnLngFromAddress);
 		}
        
 		function setMapOnAll(map) {
@@ -337,6 +345,19 @@
 			setMapOnAll(null);
 			markersArray = [];
 		  }
+		
+		function fade(element) {
+			var op = 1;  // initial opacity
+			var timer = setInterval(function () {
+				if (op <= 0.1){
+					clearInterval(timer);
+					element.style.display = 'none';
+				}
+				element.style.opacity = op;
+				element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+				op -= op * 0.1;
+			}, 30);
+		}
 		
     </script>
 	<script 
