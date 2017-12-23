@@ -23,35 +23,54 @@
 </head>
 <body>
     
-	<div id="container">
-		<div id="add_location">
-			<center><h2 class="tags">Add new Location</h2></center>
+<div id="container">
+	<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
+	<div id="add_location_container">
+		<div id="add_location_1">
 			<input type="text" id="first_name" class="input" placeholder="First Name"><br>
 			<input type="text" id="last_name" class="input" placeholder="Last Name"><br>
 			<input type="text" id="address" class="input" placeholder="Address"><br>
 			<input type="text" id="city" class="input" placeholder="City"><br>
-			
+		</div>
+		<div id="add_location_2">
 			<h4 class="tags">Select State or Province</h4>
 			<select id="state_select" class="select"></select>
-			
 			<h4 class="tags">Select Congregation</h4>
 			<select id="cong_select" class="select"></select>
-		
+			<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
 			<center><input type="button" id="save_location" class="save_button" value="Save Location"></center>
 		</div>
-		<div id="add_state_and_congregation">
+	</div>
+	<div id="maps_div">
+		<center><h3 id="verify_title">Verify that location is correct</h3></center>
+		<center><input type="button" onclick="resetLocation()" value="Reset Location" id="reset_location"></center>
+		<div id="maps_container"></div>
+	</div>
+	<div id="add_location_divider"></div>
+	<div id="add_state_province_cong_container">
+		<div id="add_s_p_c_1">
 			<center><h2 class="tags">Add new State or Province</h2></center>
 			<input type="text" id="state" class="input" placeholder="State or Province"><br>
 			<center><input type="button" id="save_state" class="save_button" value="Save State or Province" onclick="saveState()"></center>
+		</div>
+		<div id="add_s_p_c_2">
 			<center><h2 class="tags">Add new Congregation</h2></center>
 			<input type="text" id="congregation" class="input" placeholder="Congregation"><br>
 			<center><input type="button" id="save_congregation" class="save_button" value="Save Congregation" onclick="saveCongregation()"></center>
 		</div>
 	</div>
+</div>
        
     <script>
 		
 		var mUser;
+		var mMap;
+		var mLatnLngFromAddress = {};
+		var mNewLatnLngFromMap = {};
+		var markersArray = [];
+		
+		document.getElementById("maps_div").style.display = "none";
+		document.getElementById("save_location").style.visibility = "hidden";
     
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
@@ -81,7 +100,6 @@
 			parseStateSnapshot(snapshot);
 		});
 		
-		
         document.getElementById("save_location").addEventListener("click", function(){
             
             var firstName = document.getElementById('first_name').value;
@@ -96,51 +114,37 @@
                 return;
             }
             
-			var addressString = address.split(" ");
-			var finishedAddresString = "";
-			var cityAndStateString = "";
-			for(var i=0; addressString.length > i; i++){
-				var item = addressString[i];
-				finishedAddresString = finishedAddresString + item + "+";	
-			}
-			
-			cityAndStateString = city + "+" + state;
-			
-			var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
-			var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-			var url = baseUrl + finishedAddresString + cityAndStateString + apiKey;
-			var request = new XMLHttpRequest();
-			request.onreadystatechange = function(){
-				if(this.readyState == 4 && this.status == 200){
-					var json = JSON.parse(this.responseText);
-					var lat_n_long = json.results[0].geometry.location;
-					
-					var lat = lat_n_long.lat;
-					var long = lat_n_long.lng;
-					
-					var congId = mCongregationMap[cong];
-					var stateId = mStatesMap[state];
-					
-					var userId = firebase.auth().currentUser.uid;
-						
-					saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, url, userId);
+			var congId = mCongregationMap[cong];
+			var stateId = mStatesMap[state];
 
-				}else{
-					
-				}
+			var userId = firebase.auth().currentUser.uid;
+			
+			var lat;
+			var long;
+			
+			if(mNewLatnLngFromMap.lat == null || ){
+				lat = mLatnLngFromAddress.lat;
+				long = mLatnLngFromAddress.lng;
+			}else{
+				lat = mNewLatnLngFromMap.lat;
+				long = mNewLatnLngFromMap.lng;
 			}
-			request.open('GET', url);
-			request.send();
+			
+			console.log(lat);
+			console.log(long);
+			
+			saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, userId);
          
             document.getElementById('first_name').value = "";
 			document.getElementById('last_name').value = "";
 			document.getElementById('address').value = "";
 			document.getElementById('city').value = ""
-
+			
+			document.getElementById("maps_div").style.display = "none";
             
         });
 		
-	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUrl, varUserId){
+	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUserId){
             var ref = firebase.database().ref('locations').push();
             var key = ref.getKey();
             ref.set({
@@ -153,7 +157,6 @@
 				congregation: varCong,
 				state: varState,
                 locationId: key,
-				url: varUrl,
 				userId: varUserId
             });
         }
@@ -228,8 +231,117 @@
 
 			return elt.options[elt.selectedIndex].text;
 		}
+		
+		function verify_location(){
+			
+			var firstName = document.getElementById('first_name').value;
+			var lastName = document.getElementById('last_name').value;
+			var address = document.getElementById('address').value;
+			var city = document.getElementById('city').value;
+			var state = getSelectedText('state_select');
+			var cong = getSelectedText('cong_select');
+            
+            if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
+				console.log("Please fill the blanks");
+                return;
+            }
+            
+			document.getElementById("maps_div").style.display = "block";
+			document.getElementById("save_location").style.visibility = "visible";
+			
+			var addressString = address.split(" ");
+			var finishedAddresString = "";
+			var cityAndStateString = "";
+			for(var i=0; addressString.length > i; i++){
+				var item = addressString[i];
+				finishedAddresString = finishedAddresString + item + "+";	
+			}
+			
+			cityAndStateString = city + "+" + state;
+			
+			var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
+			var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+			var url = baseUrl + finishedAddresString + cityAndStateString + apiKey;
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					var json = JSON.parse(this.responseText);
+					var lat_n_long = json.results[0].geometry.location;
+					
+					var lat = lat_n_long.lat;
+					var long = lat_n_long.lng;
+					
+					var congId = mCongregationMap[cong];
+					var stateId = mStatesMap[state];
+					
+					var userId = firebase.auth().currentUser.uid;
+						
+					mLatnLngFromAddress = {lat: lat, lng: long};
+					
+					mMap= new google.maps.Map(document.getElementById('maps_container'), {
+					  zoom: 18,
+					  center: mLatnLngFromAddress,
+						mapTypeId: 'satellite'
+					});
+					
+					var marker = new google.maps.Marker({
+					  position: mLatnLngFromAddress,
+					  map: mMap
+					});
+					markersArray.push(marker);
+					setMapOnAll(mMap);
+					
+					google.maps.event.addListener(mMap, "click", function (e) {
 
-        
+						deleteMarkers();
+						
+						//lat and lng is available in e object
+						var latLng = e.latLng;
+						mNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
+						
+						var marker = new google.maps.Marker({
+						  position: mNewLatnLngFromMap,
+						  map: mMap
+						});
+						markersArray.push(marker);
+						setMapOnAll(mMap);
+						
+					});
+					
+				}else{
+					
+				}
+			}
+			request.open('GET', url);
+			request.send();
+		
+		}
+		
+		function resetLocation(){
+			deleteMarkers();
+			var marker = new google.maps.Marker({
+			  position: mLatnLngFromAddress,
+			  map: mMap
+			});
+			markersArray.push(marker);
+			setMapOnAll(mMap);
+		}
+       
+		function setMapOnAll(map) {
+			for (var i = 0; i < markersArray.length; i++) {
+			  markersArray[i].setMap(map);
+			}
+		  }
+
+		function deleteMarkers() {
+			setMapOnAll(null);
+			markersArray = [];
+		  }
+		
     </script>
+	<script 
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA">
+	</script>
+
 </body>
 </html> 

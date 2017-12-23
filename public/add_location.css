@@ -2,24 +2,45 @@ body, html{
     width: 100%;
     margin: 0px;
 	background-color: #eeeeee;
+	font-family: Roboto, sans-serif;
 }
 
-#container{
+#add_location_container{
 	justify-content: center;
 	display: flex;
 	flex-wrap: wrap;
-	box-shadow: 3px 3px 5px #888;
+}
+
+#add_state_province_cong_container{
+	justify-content: center;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#container{
+	background-color: white;
+	box-shadow: 1px 1px 2px #888;
 	margin-top: 30px;
 	margin-bottom: 30px;
 	margin-left: 200px;
 	margin-right: 200px;
-	background-color: white;;
+}
+
+#shadow_div{
+	position: fixed;
+	width: auto;
+	height: auto;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 2;
 }
 
 .select{
 	width: 230px;
 	padding: 10px;
-	font-family: Roboto, sans-serif;
 	font-size: 15px;
 	margin-bottom: 20px;
 }
@@ -34,36 +55,103 @@ body, html{
     margin: 20px;
     border-radius: 2px;
     padding: 5px;
-	font-family: Roboto, sans-serif;
 }
 
-#add_state_and_congregation{
-	margin: 50px;
+#add_new_location_title{
+	padding-top: 50px;
 }
 
-#add_location{
-	margin: 50px;
+#add_location_1{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+
+#add_location_2{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 25px;
+	margin-bottom: 0px;
+}
+
+#add_s_p_c_1{
+	margin-top: 50px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 50px;
+}
+
+#add_s_p_c_2{
+	margin-top: 50px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 50px;
+}
+	
+#maps_div{
+	width: 100%;
+	height: 550px;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+#maps_container{
+	background-color: antiquewhite;
+	width: 85%;
+	height: 500px;
+	margin-top: 25px;
+	margin-left: auto;
+	margin-right: auto;
+	cursor: pointer;
+}
+
+#reset_location{
+	border: none;
+	background-color: white;
+	color: #3F51B5;
+	font-weight: 700;
+	font-size: 16px;
+}
+
+#verify_location_btn{
+	background-color: #3F51B5;
+    padding: 10px;
+	color: white;
+    border-style: none;
+    border-radius: 2px;
+	box-shadow: 1px 1px 2px #888;
+}
+
+#verify_title{
+	margin-top: 50px;
+}
+
+#add_location_divider{
+	height: 1.5px;
+	width: 95%;
+	margin-top: 60px;
+	background-color: #3b3b3b;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 @media only screen and (max-width: 800px)  {
-	#container{
-		margin-left: 0px;
-		margin-right: 0px;
+	
+	#add_location_1{
 		margin-top: 0px;
-		margin-bottom: 0px;
-		box-shadow: none;
-	}
-/*
-	#add_state_and_congregation{
-		margin-top: 50px;
-		margin: auto;
+		margin-left: 40px;
+		margin-right: 40px;
+		margin-bottom: 50px;
 	}
 
-	#add_location{
-		margin-top: 50px;
-		margin: auto;
+	#add_location_2{
+		margin-bottom: 50px;
+		margin-left: 40px;
+		margin-right: 40px;
+		margin-top: 0px;
 	}
-*/
+	
 }
 
 .dropdown-content {
@@ -83,13 +171,11 @@ body, html{
 	color: white;
     border-style: none;
     border-radius: 2px;
-    font-family: Roboto, sans-serif;
 	box-shadow: 1px 1px 2px #888;
 }
 
 
 .tags{
-	font-family: Roboto, sans-serif;
 	margin-left: 20px;
 	margin-right: 20px;
 	margin-top: 10px;
@@ -143,7 +229,6 @@ body, html{
 }
 
 #state_li, #cong_li{
-	font-family: Roboto, sans-serif;
 	margin-top: 15px;
 	margin-bottom: 15px;
 	cursor: pointer;
