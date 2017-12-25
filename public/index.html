@@ -24,6 +24,19 @@
 	
 	<div id="map"></div>
 	
+	<div id="sign_in">
+		<h1>Mennonite Maps</h1>
+		<h3>Please sign in to continue.</h3>
+		<p id="fill_in_email_address"></p>
+		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
+		<p id="fill_in_password">Please fill in password.</p>
+		<input type="password" class="credentials" id="password" placeholder="Password"><br>
+		<div id="loader"></div>
+		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN">
+		<p id="error">There was an error signing in.</p>
+		<input type="button" class="register_button" onclick="register();" value="REGISTER">
+	</div>
+	
 	<div id="total_feedback">
 		<h2>Feedback:</h2>
 		<textarea id="total_feedback_text_area"></textarea>
@@ -47,6 +60,7 @@
 	</div>
 	
 	<div id="shadow_div"></div>
+	
 	<div id="loading_div">
 		<div class="loader" id="loader_id"></div>
 		<center><h2 class="name_details" id="loading_maps_text">Loading Mennonite Maps...</h2></center>
@@ -76,13 +90,13 @@
 	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<a href="#" onclick="addLocation()" id="add_new_location_href">Add New Location</a>
 		<div class="nav_divider_div" id="add_new_location_divider_div"></div>	
-	  <a href="#" onclick="congAgents()">Congregations Represented</a>
+	  <a href="#" onclick="information()">Information</a>
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="buyBeer()">Donate</a>
 		<div class="nav_divider_div"></div>
 	  <a href="#" onclick="showSendFeedbackOnWholeSite()">Send Feedback</a>
 		<div class="nav_divider_div"></div>
-	  <a href="#" onclick="signOut()" id="sign_in_out_href"></a>
+	  <a href="#" onclick="signInAndOut()" id="sign_in_out_href"></a>
 	</div>
 
 	<script>
@@ -97,6 +111,13 @@
 		document.getElementById("incorrect_data_div").style.visibility = "hidden";
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("side_nav").style.visibility = "hidden";
+		document.getElementById("sign_in").style.visibility = "hidden";
+		document.getElementById("loader").style.visibility = "hidden";
+		document.getElementById("fill_in_email_address").style.visibility = "hidden";
+		document.getElementById("fill_in_password").style.visibility = "hidden";
+		document.getElementById("error").style.visibility = "hidden";
+		
+		document.onclick = close_menus;
 
 		function initMap() {
 
@@ -189,6 +210,7 @@
 		}
 		
 		function buyBeer(){
+			closeNav();
 			var windowObjectReference;
 			windowObjectReference = window.open("https://www.paypal.me/trevwiebe", "PayPal");
 		}
@@ -217,13 +239,17 @@
 			document.getElementById("shadow_div").style.visibility = "hidden";
 		}
 		
+		function information(){
+			closeNav();	
+		}
+		
 		function showSendFeedbackOnWholeSite(){
 			closeNav();
 			document.getElementById("total_feedback").style.visibility = "visible";
 			document.getElementById("shadow_div").style.visibility = "visible";
 		}
 		
-		function signOut(){
+		function signInAndOut(){
 			if(mUser){
 				firebase.auth().signOut().then(function() {
 					console.log('Signed Out');
@@ -232,7 +258,10 @@
 				});	
 				closeNav();
 			}else{
-				location.href = "sign_in.html";
+				closeNav();
+				document.getElementById("sign_in").style.visibility = "visible";
+				document.getElementById("shadow_div").style.visibility = "visible";
+				mJustClickedSignIn = true;
 			}
 		}	
 
@@ -407,19 +436,115 @@
 			return elt.options[elt.selectedIndex].text;
 		}
 		
+		function logIn() {
+			document.getElementById("error").style.visibility = "hidden";
+			var email_address = document.getElementById("email_address").value;
+			var input_password = document.getElementById("password").value;
+			if(email_address.length == 0 && input_password.length == 0){
+				document.getElementById("fill_in_password").style.visibility = "visible";
+				document.getElementById("fill_in_email_address").style.visibility = "visible";
+				setErrorEmailErrorText("Please fill in email address.")
+			}else if(input_password.length == 0){
+				document.getElementById("fill_in_password").style.visibility = "visible";
+				document.getElementById("fill_in_email_address").style.visibility = "hidden";
+			}else if(email_address.length == 0){
+				document.getElementById("fill_in_email_address").style.visibility = "visible";
+				setErrorEmailErrorText("Please fill in email address.")
+				document.getElementById("fill_in_password").style.visibility = "hidden";
+			}else{
+				document.getElementById("fill_in_email_address").style.visibility = "hidden";
+				document.getElementById("fill_in_password").style.visibility = "hidden";
+				if(validateEmail(email_address)){
+					document.getElementById("loader").style.visibility = "visible";
+					firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function(){
+						firebase.auth().signInWithEmailAndPassword(email_address, input_password).catch(function(error){
+							var errorCode = error.code;
+							var errorMessage = error.message;
+							document.getElementById("loader").style.visibility = "hidden";
+							document.getElementById("fill_in_email_address").style.visibility = "hidden";
+							document.getElementById("fill_in_password").style.visibility = "hidden";
+							document.getElementById("error").style.visibility = "visible";	
+						})
+					}).catch(function(error){
+						document.getElementById("loader").style.visibility = "hidden";
+						document.getElementById("fill_in_email_address").style.visibility = "hidden";
+						document.getElementById("fill_in_password").style.visibility = "hidden";
+						document.getElementById("error").style.visibility = "visible";
+					});
+				}else{
+					document.getElementById("fill_in_email_address").style.visibility = "visible";
+					setErrorEmailErrorText( email_address + " is not a valid email address.");
+				}
+			}
+		}
+
+		function register(){
+			location.href = "register.html";
+		}
+		
+		function validateEmail(mail){  
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
+				return (true)  
+			}   
+			return (false)  
+		}  
+
+		function setErrorEmailErrorText(error_text) {
+			document.getElementById("fill_in_email_address").innerHTML = error_text;
+		}
+		
+		function close_menus(e){
+			if(e.target.id === "shadow_div"){
+				
+				// close sign in dialog
+				var sign_in = document.getElementById("sign_in");
+				var style = window.getComputedStyle(sign_in);
+				if(style.visibility === 'visible'){
+					document.getElementById("shadow_div").style.visibility = "hidden";
+					document.getElementById("sign_in").style.visibility = "hidden";	
+				}
+				
+				// close nav drawer
+				var nav_drawer = document.getElementById("side_nav");
+				var nav_style = window.getComputedStyle(nav_drawer);
+				if(nav_style.width !== '0px'){
+					closeNav();
+				}
+				
+				// close main feedback
+				var main_feed_back_div = document.getElementById("total_feedback");
+				var main_feed_back_style = window.getComputedStyle(main_feed_back_div);
+				if(main_feed_back_style.visibility === 'visible'){
+					main_feed_back_div.style.visibility = "hidden";
+					document.getElementById("shadow_div").style.visibility = "hidden";
+				}
+				
+				// close feedback on location
+				var location_feed_back_div = document.getElementById("incorrect_data_div");
+				var location_feed_back_style = window.getComputedStyle(location_feed_back_div);
+				if(location_feed_back_style.visibility === 'visible'){
+					location_feed_back_div.style.visibility = "hidden";
+					document.getElementById("shadow_div").style.visibility = "hidden";
+				}
+			}	
+		}
+	
 		firebase.auth().onAuthStateChanged(function(user) {
 			mUser = user;
 			if (user) {
 				document.getElementById("add_new_location_href").style.display = "block";
 				document.getElementById("add_new_location_divider_div").style.display = "block";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
+				document.getElementById("shadow_div").style.visibility = "hidden";
+				document.getElementById("sign_in").style.visibility = "hidden";
+				document.getElementById("loader").style.visibility = "hidden";
 			} else {
 				document.getElementById("add_new_location_divider_div").style.display = "none";
 				document.getElementById("add_new_location_href").style.display = "none";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
 			}
 		});
-
+		
 	</script>
 
 	<script 
