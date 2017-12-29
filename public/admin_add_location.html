@@ -1,10 +1,10 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Add Location</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
-    <link rel="stylesheet" href="add_location.css">
+	<title>Add Location</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="admin_add_location.css">
+    <link rel="stylesheet" href="admin_add_location.css">
       
 	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
 	<script>
@@ -19,50 +19,68 @@
 	  };
 	  firebase.initializeApp(config);
 	</script>
-    
 </head>
 <body>
-    
-<div id="container">
-	<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
-	<div id="add_location_container">
-		<div id="add_location_1">
-			<input type="text" id="first_name" class="input" placeholder="First Name"><br>
-			<input type="text" id="last_name" class="input" placeholder="Last Name"><br>
-			<input type="text" id="address" class="input" placeholder="Address"><br>
-			<input type="text" id="city" class="input" placeholder="City"><br>
+
+	<div id="container_div">
+		
+		
+		<div id="left_header_div"></div>
+		<div id="header_content_div">
+			<ul id="header_ul">
+				<li class="header_li" ><a href="#" onclick="checkFeedback()">Check Feedback</a></li>
+				<li class="header_li" id="selected_li"><a href="#">Add Location</a></li>
+				<li class="header_li"><a href="#" onclick="editLocation()">Edit Locations</a></li>
+			</ul>
 		</div>
-		<div id="add_location_2">
-			<h4 class="tags">Select State or Province</h4>
-			<select id="state_select" class="select"></select>
-			<h4 class="tags">Select Congregation</h4>
-			<select id="cong_select" class="select"></select>
-			<p>You must verify location before adding to database.</p>
-			<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
+		<div id="right_header_div"></div>
+		
+		
+		<div id="right_content_div"></div>
+		
+		<div id="container">
+			<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
+			<div id="add_location_container">
+				<div id="add_location_1">
+					<input type="text" id="first_name" class="input" placeholder="First Name"><br>
+					<input type="text" id="last_name" class="input" placeholder="Last Name"><br>
+					<input type="text" id="address" class="input" placeholder="Address"><br>
+					<input type="text" id="city" class="input" placeholder="City"><br>
+				</div>
+				<div id="add_location_2">
+					<h4 class="tags">Select State or Province</h4>
+					<select id="state_select" class="select"></select>
+					<h4 class="tags">Select Congregation</h4>
+					<select id="cong_select" class="select"></select>
+					<p>You must verify location before adding to database.</p>
+					<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
+				</div>
+			</div>
+			<center><h3 id="location_saved_successfully">Location save successfully!</h3></center>
+			<div id="maps_div">
+				<div id="maps_container"></div>
+				<center><input type="button" onclick="resetLocation()" value="Reset Pin" id="reset_location">
+				<input type="button" id="save_location" class="save_button" value="Save Location"></center>
+			</div>
+			<div id="add_location_divider"></div>
+			<div id="add_state_province_cong_container">
+				<div id="add_s_p_c_1">
+					<center><h2 class="tags">Add new State or Province</h2></center>
+					<input type="text" id="state" class="input" placeholder="State or Province"><br>
+					<center><input type="button" id="save_state" class="save_button" value="Save State or Province" onclick="saveState()"></center>
+				</div>
+				<div id="add_s_p_c_2">
+					<center><h2 class="tags">Add new Congregation</h2></center>
+					<input type="text" id="congregation" class="input" placeholder="Congregation"><br>
+					<center><input type="button" id="save_congregation" class="save_button" value="Save Congregation" onclick="saveCongregation()"></center>
+				</div>
+			</div>
 		</div>
-	</div>
-	<center><h3 id="location_saved_successfully">Location save successfully!</h3></center>
-	<div id="maps_div">
-		<div id="maps_container"></div>
-		<center><input type="button" onclick="resetLocation()" value="Reset Pin" id="reset_location">
-		<input type="button" id="save_location" class="save_button" value="Save Location"></center>
-	</div>
-	<div id="add_location_divider"></div>
-	<div id="add_state_province_cong_container">
-		<div id="add_s_p_c_1">
-			<center><h2 class="tags">Add new State or Province</h2></center>
-			<input type="text" id="state" class="input" placeholder="State or Province"><br>
-			<center><input type="button" id="save_state" class="save_button" value="Save State or Province" onclick="saveState()"></center>
-		</div>
-		<div id="add_s_p_c_2">
-			<center><h2 class="tags">Add new Congregation</h2></center>
-			<input type="text" id="congregation" class="input" placeholder="Congregation"><br>
-			<center><input type="button" id="save_congregation" class="save_button" value="Save Congregation" onclick="saveCongregation()"></center>
-		</div>
-	</div>
-</div>
-       
-    <script>
+	</div>	
+	
+	<div id="left_content_div"></div>
+
+	<script>
 		
 		var mUser;
 		var mMap;
@@ -360,7 +378,15 @@
 			}, 30);
 		}
 		
-    </script>
+		function checkFeedback(){
+			location.href = "admin_check_feedback.html"
+		}
+		
+		function editLocation(){
+			location.href = "admin_edit_location.html"
+		}
+	</script>
+	
 	<script 
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA">
 	</script>

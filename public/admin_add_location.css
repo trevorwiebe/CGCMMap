@@ -1,8 +1,82 @@
 body, html{
-    width: 100%;
-    margin: 0px;
-	background-color: white;
+	margin: 0;
+	height: 100%;
 	font-family: Roboto, sans-serif;
+}
+
+#container_div{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#left_header_div{
+	height: 75px;
+	width: 20%;
+	background-color: #303F9F;
+	box-shadow: 2px 2px 4px #888;
+}
+
+#header_content_div{
+	height: 75px;
+	width: 60%;
+	background-color: #303F9F;
+	box-shadow: 2px 2px 4px #888;
+}
+
+#right_header_div{
+	height: 75px;
+	width: 20%;
+	background-color: #303F9F;
+	box-shadow: 2px 2px 4px #888;
+}
+
+#container{
+	width: 60%;
+}
+
+#left_content_div{
+	width: 20%;
+}
+
+#right_content_div{
+	width: 20%;
+}
+
+#header_ul{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.header_li{
+	float: left;
+}
+
+.header_li a{
+	border-bottom: 2px solid white;
+	font-family: Roboto, sans-serif;
+    display: block;
+    color: white;
+    text-align: center;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 16px;
+	margin-top: 30px;
+    margin-right: 16px;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.header_li a:hover{
+	background-color: #283482;
+	cursor: pointer;
+}
+
+#selected_li a{
+	border-bottom: 2px solid #FFC107;
 }
 
 #add_location_container{
@@ -15,14 +89,6 @@ body, html{
 	justify-content: center;
 	display: flex;
 	flex-wrap: wrap;
-}
-
-#container{
-	background-color: white;
-	margin-top: 30px;
-	margin-bottom: 30px;
-	margin-left: 200px;
-	margin-right: 200px;
 }
 
 #location_saved_successfully{
@@ -176,57 +242,3 @@ body, html{
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-
-/*
-#state_drop_down_btn{
-	background-color: #3F51B5;
-    color: white;
-	padding-left: 40px;
-	padding-right: 40px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	margin-top: 10px;
-	border-radius: 2px;
-	box-shadow: 1px 1px 2px #888;
-	font-size: 16px;
-    border: none;
-    cursor: pointer;
-	margin-left: 16px;
-	margin-right: 16px;
-}
-
-#cong_drop_down_btn {
-    background-color: #3F51B5;
-    color: white;
-	padding-left: 55px;
-	padding-right: 55px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	margin-top: 10px;
-	border-radius: 2px;
-	box-shadow: 1px 1px 2px #888;
-	font-size: 16px;
-    border: none;
-    cursor: pointer;
-	margin-left: 16px;
-	margin-right: 16px;
-}
-
-.show {display:block;}
-
-#cong_ul{
-	list-style-type: none;
-}
-
-#state_ul{
-	list-style-type: none;
-}
-
-#state_li, #cong_li{
-	margin-top: 15px;
-	margin-bottom: 15px;
-	cursor: pointer;
-}
-*/
-
-

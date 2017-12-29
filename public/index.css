@@ -301,6 +301,11 @@ h3{
 		background-color: white;
 		color: firebrick;
 	}
+	
+	#sign_in{
+		width: 325px;
+		height: 450px;
+	}
 }
 
 @media screen and (max-width: 650px){
