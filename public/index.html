@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Mennonite Map</title>
+	<title>Address Book</title>
 	<link rel="stylesheet" href="index.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -94,8 +94,6 @@
 		<div class="nav_divider_div"></div>
 		<a href="#" onclick="admin()" id="registered_user_href">Registered User</a>
 		<div class="nav_divider_div" id="registered_user_div"></div>
-		<a href="#" onclick="buyBeer()">Donate</a>
-		<div class="nav_divider_div"></div>
 		<a href="#" onclick="signInAndOut()" id="sign_in_out_href"></a>
 	</div>
 
@@ -146,8 +144,9 @@
 						var lat = itemArray.latitude;
 						var long = itemArray.longitude;
 						var id = itemArray.locationId;
+						var userId = itemArray.userId;
 
-						var newArray = new Array(name, lat, long, id);
+						var newArray = new Array(name, lat, long, id, userId);
 						locations.push(newArray);
 					}
 
@@ -167,6 +166,7 @@
 							document.getElementById("name_details_div").style.visibility = "visible";
 							var locationId = this.get("locationId");
 							mWhoAddedIt = this.get("userId");
+							console.log(mWhoAddedIt);
 							var databaseRef = firebase.database().ref("locations/" + locationId);
 							databaseRef.once('value').then(function(snapshot){
 								parseAndRenderSnapshot(snapshot);
@@ -207,12 +207,6 @@
 
 		function admin(){
 			location.href = "admin_check_feedback.html";
-		}
-		
-		function buyBeer(){
-			closeNav();
-			var windowObjectReference;
-			windowObjectReference = window.open("https://www.paypal.me/trevwiebe", "PayPal");
 		}
 		
 		function sendFeedbackOnWholeSite(){
