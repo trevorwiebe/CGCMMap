@@ -69,14 +69,14 @@ h3{
 #menu_container{
 	float: left;
 	margin-left: 20px;
-	margin-top: 3px;
+	margin-top: 10px;
 	margin-right: 20px;
 }
 
 #menu_and_search_container{
 	margin-left: 20px;
 	margin-right: 20px;
-	margin-top: 10px;
+	margin-top: 7px;
 	margin-bottom: 10px;
 }
 
@@ -123,8 +123,8 @@ h3{
 
 #overlay {
     position: fixed; 
-    width: 350px; 
-    height: 55px;
+    width: 395px; 
+    height: 60px;
     top: 10px;
     left: 10px;
     right: 10px;
@@ -278,15 +278,7 @@ h3{
 }
 
 @media screen and (max-width: 615px){
-	#overlay{
-		width: auto;
-		border-radius: 0px;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0px;
-	}
-	
+
 	#total_feedback{
 		width: 250px;
 	}
@@ -330,13 +322,24 @@ h3{
 		margin-right: 20px;
 		margin-bottom: 20px;
 	}
+	
+	#overlay{
+		width: auto;
+		border-radius: 0px;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+	}
+	
 }
 
 #search_input{
-    padding: 5px;
+	padding: 5px;
     border-style: none;
     font-size: 17px;
 	padding-left: 10px;
+	padding-right: 10px;
 	border-bottom: 1px solid black;
 }
 
@@ -347,11 +350,14 @@ h3{
 	margin-left: 40px;
 }
 
-.send_feed_back_link{
+#send_feed_back_link{
 	color: #3F51B5;
 	font-size: 13px;
 	text-decoration: none;
-	margin-top: 20px;
+}
+
+#h_city_and_state{
+	margin-bottom: 5px;
 }
 
 select{
@@ -490,11 +496,53 @@ p{
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    animation: spin 1s linear infinite;
+    animation: spin .7s linear infinite;
     margin: 0 auto;
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+#overlay_loader_id{
+	border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #ffc400; 
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    animation: overlay_spin .7s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes overlay_spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#open_close_arrow{
+	width: 20px;
+	height: 20px;
+	margin-left: 30px;
+	margin-top: 5px;
+}
+
+.rotate_open{
+	transition: .2s;
+	-moz-transition: .2s;
+	-ms-transition: .2s;
+	-webkit-transition: .2s;
+	-o-transition: .2s;
+	transform: rotate(-180deg);
+	transform-origin: center;
+}
+
+.rotate_closed{
+	transition: .2s;
+	-moz-transition: .2s;
+	-ms-transition: .2s;
+	-webkit-transition: .2s;
+	-o-transition: .2s;
+	transform: rotate(0deg);
+	transform-origin: center;
 }

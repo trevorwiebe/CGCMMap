@@ -74,15 +74,16 @@
 				<div class="menu_style"></div>
 			</div>
 			<input type="text" placeholder="Search Maps" id="search_input" onkeyup="searchForMatches()">
+			<img src="res/down-chevron.svg" id="open_close_arrow" onclick="openAndCloseMenu()">
 		</div>
+		<div id="overlay_loader_id"></div>
 		<ul id="names_found_list"></ul>
 		<div id="name_details_div">
 			<h3 id="name"></h3>
 			<h4 id="h_cong" class="name_details"></h4>
 			<h4 id="h_address" class="name_details"></h4>
 			<h4 id="h_city_and_state" class="name_details"></h4>
-			<h4></h4>
-			<a href="#" onclick="notifyAsIncorrect()" class="send_feed_back_link">Send feedback on this location</a>
+			<a href="#" onclick="notifyAsIncorrect()" id="send_feed_back_link">Send feedback on this location</a>
 		</div>
 	</div> 
 	
@@ -102,6 +103,10 @@
 		var mMap;
 		var mUser;
 		var mWhoAddedIt;
+		var mIsOpen = false;
+		
+		var mIsNameListShown;
+		var mIsNameDetailsShown;
 		
 		document.getElementById("feedback_error").style.visibility = "hidden";
 		document.getElementById("total_feedback").style.visibility = "hidden";
@@ -114,11 +119,19 @@
 		document.getElementById("fill_in_email_address").style.visibility = "hidden";
 		document.getElementById("fill_in_password").style.visibility = "hidden";
 		document.getElementById("error").style.visibility = "hidden";
+		document.getElementById("overlay_loader_id").style.display = "none";
 		
 		document.onclick = close_menus;
 
 		function initMap() {
 
+			var arrow = document.getElementById("open_close_arrow");
+
+			arrow.className = "rotate_closed";
+			mIsOpen = false;
+			mIsNameListShown = false;
+			mIsNameDetailsShown = false;
+			
 				var whereToCenter = {lat: 38, lng: -97};
 				mMap = new google.maps.Map(document.getElementById('map'), {
 					zoom: 5,
@@ -149,6 +162,7 @@
 						locations.push(newArray);
 					}
 
+					
 
 					for (var i = 0; i < locations.length; i++) {
 						var location = locations[i];
@@ -161,8 +175,10 @@
 						});
 
 						marker.addListener('click', function(){
+							setOverlayDivHeight(50);
+							document.getElementById("overlay_loader_id").style.display = "block";
 							document.getElementById("names_found_list").innerHTML = "";
-							document.getElementById("name_details_div").style.visibility = "visible";
+							document.getElementById("name_details_div").style.visibility = "hidden";
 							var locationId = this.get("locationId");
 							mWhoAddedIt = this.get("userId");
 							console.log(mWhoAddedIt);
@@ -259,17 +275,31 @@
 		}	
 
 		function searchForMatches(){
-			document.getElementById("names_found_list").innerHTML = "";
+			var namesFoundList = document.getElementById("names_found_list");
+			namesFoundList.innerHTML = "";
+			namesFoundList.style.visibility = "visible";
 			
 			// capitalize first letter to make sure all entries are the same
 			var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
 			
+			// get an instance of the arrow widget so we can rotate it open and closed as needed;
+			var arrow = document.getElementById("open_close_arrow");
+
 			// check if the string entered is 0 or null
 			if(equalTo.length == 0 || equalTo == null){
 				setOverlayDivHeight(0);
+				document.getElementById("name_details_div").style.visibility = "hidden";
+				arrow.className = "rotate_closed";
+				mIsOpen = false;
 				return;
 			}
 			
+			arrow.className = "rotate_open";
+			mIsOpen = true;
+			mIsNameListShown = true;
+			mIsNameDetailsShown = false;
+			
+		
 			document.getElementById("name_details_div").style.visibility = "hidden";
 			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToFirst(6);
 			ref.once('value').then(function(snapshot){
@@ -301,9 +331,11 @@
 
 
 				function itemClicked(){
+					setOverlayDivHeight(50);
+					document.getElementById("overlay_loader_id").style.display = "block";
+					document.getElementById("name_details_div").style.visibility = "hidden";
 					document.getElementById("search_input").value= "";
 					document.getElementById("names_found_list").innerHTML = "";
-					document.getElementById("name_details_div").style.visibility = "visible";
 					var locationId = this.getAttribute("myLocationId");
 					mWhoAddedIt = this.getAttribute("myWhoAddedItId");
 					var ref = firebase.database().ref("locations/" + locationId);
@@ -368,10 +400,20 @@
 					document.getElementById("h_address").innerHTML = address;
 					document.getElementById("h_cong").innerHTML = cong;
 					document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
+					document.getElementById("name_details_div").style.visibility = "visible";
+					mIsNameDetailsShown = true;
 					var whereToZoom = {lat: lat, lng: long};
 					smoothZoom(mMap, 20, mMap.getZoom());
 					mMap.panTo(whereToZoom);
-					setOverlayDivHeight(150);
+					setOverlayDivHeight(125);
+					document.getElementById("overlay_loader_id").style.display = "none";
+					
+					var arrow = document.getElementById("open_close_arrow");
+					arrow.className = "rotate_open";
+					mIsNameDetailsShown = true;
+					mIsNameListShown = false;
+					mIsOpen = true;
+					
 				})
 
 			})
@@ -380,7 +422,7 @@
 
 		function setOverlayDivHeight(height){
 			var container = document.getElementById('overlay');
-			height = height + 55;
+			height = height + 60;
 			container.style.height = (height) + "px";
 		}
 		
@@ -508,6 +550,49 @@
 					document.getElementById("shadow_div").style.visibility = "hidden";
 				}
 			}	
+		}
+		
+		function openAndCloseMenu(){
+			var arrow = document.getElementById("open_close_arrow");
+			
+			var nameDetailsDiv = document.getElementById("name_details_div");
+			var namesList = document.getElementById("names_found_list");
+			if(mIsOpen){
+				arrow.className = "rotate_closed";
+				mIsOpen = false;
+				
+				console.log(nameDetailsDiv.style.visibility);
+				
+				nameDetailsDiv.style.visibility = "hidden";
+				namesList.style.visibility = "hidden";
+
+				setOverlayDivHeight(0);
+			}else{
+				arrow.className = "rotate_open";
+				mIsOpen = true;
+				
+				console.log(nameDetailsDiv.style.visibility);
+				
+				if(mIsNameDetailsShown){
+					nameDetailsDiv.style.visibility = "visible"
+					setOverlayDivHeight(125);
+				}
+				
+				if(mIsNameListShown){
+					namesList.style.visibility = "visible";	
+					
+					var liNodes = [];
+
+					for (var i = 0; i < namesList.childNodes.length; i++) {
+						if (namesList.childNodes[i].nodeName == "LI") {
+							liNodes.push(namesList.childNodes[i]);
+						}
+					}
+					
+					var height = liNodes.length * 43;
+					setOverlayDivHeight(height);
+				}
+			}
 		}
 	
 		firebase.auth().onAuthStateChanged(function(user) {
