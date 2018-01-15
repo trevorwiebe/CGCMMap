@@ -25,7 +25,7 @@
 	<div id="map"></div>
 	
 	<div id="sign_in">
-		<h1>Mennonite Maps</h1>
+		<h1>CGCM Address Book</h1>
 		<h3>Please sign in to continue.</h3>
 		<p id="fill_in_email_address"></p>
 		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
@@ -73,7 +73,7 @@
 				<div class="menu_style"></div>
 				<div class="menu_style"></div>
 			</div>
-			<input type="text" placeholder="Search Maps" id="search_input" onkeyup="searchForMatches()">
+			<input type="text" placeholder="Search Address Book" id="search_input" onkeyup="searchForMatches()">
 			<img src="res/down-chevron.svg" id="open_close_arrow" onclick="openAndCloseMenu()">
 		</div>
 		<div id="overlay_loader_id"></div>
@@ -108,6 +108,8 @@
 		var mIsNameListShown;
 		var mIsNameDetailsShown;
 		
+		var mStateArray = {};
+		
 		document.getElementById("feedback_error").style.visibility = "hidden";
 		document.getElementById("total_feedback").style.visibility = "hidden";
 		document.getElementById("name_details_div").style.visibility = "hidden";
@@ -122,6 +124,16 @@
 		document.getElementById("overlay_loader_id").style.display = "none";
 		
 		document.onclick = close_menus;
+		
+		var databaseRef = firebase.database().ref('stateOrProvince');
+		databaseRef.on('value', function(snapshot){
+			var array = snapshotToArray(snapshot);
+			for(var i=0; i < array.length; i++){
+				var name = array[i].state;
+				var key = array[i].stateId;
+				mStateArray[key] = name;
+			}
+		})
 
 		function initMap() {
 
@@ -134,7 +146,7 @@
 			
 				var whereToCenter = {lat: 38, lng: -97};
 				mMap = new google.maps.Map(document.getElementById('map'), {
-					zoom: 5,
+					zoom: 4,
 					center: whereToCenter,
 					mapTypeControlOptions: {
 						position: google.maps.ControlPosition.LEFT_BOTTOM,
@@ -171,7 +183,8 @@
 							position: {lat: parseFloat(location[1]), lng: parseFloat(location[2])},
 							map: mMap,
 							title: location[0],
-							locationId: location[3]
+							locationId: location[3],
+							userId: location[4]
 						});
 
 						marker.addListener('click', function(){
@@ -181,7 +194,6 @@
 							document.getElementById("name_details_div").style.visibility = "hidden";
 							var locationId = this.get("locationId");
 							mWhoAddedIt = this.get("userId");
-							console.log(mWhoAddedIt);
 							var databaseRef = firebase.database().ref("locations/" + locationId);
 							databaseRef.once('value').then(function(snapshot){
 								parseAndRenderSnapshot(snapshot);
@@ -209,11 +221,13 @@
 		function sendFeedbackOnLocation(){
 			var notes = document.getElementById("incorrect_data_notes").value;
 			var whatsWrong = getSelectedText("whats_wrong");
+			var date = Date.now();
 			var ref = firebase.database().ref("locationFeedback/" + mWhoAddedIt).push();
 			var key = ref.getKey();
 			ref.set({
 				locationFeebackKey: key,
 				whatsWrong: whatsWrong,
+				date: date,
 				notes: notes
 			})
 			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
@@ -232,8 +246,10 @@
 				document.getElementById("feedback_error").style.visibility = "visible";
 				return;
 			}
+			var date = Date.now();
 			ref.set({
 				feedbackId: key,
+				date: date,
 				feedback: feedback
 			})
 			document.getElementById("feedback_error").style.visibility = "hidden";
@@ -311,8 +327,11 @@
 					var firstName = itemArray.firstName;
 					var lastName = itemArray.lastName;
 					var locationId = itemArray.locationId;
+					var stateId = itemArray.state;
+					var city = itemArray.city;
+					var state = mStateArray[stateId];
 					var userId = itemArray.userId;
-					var name = firstName + " " + lastName;
+					var name = firstName + " " + lastName + " - " + city + ", "  + state;
 
 					var ul = document.getElementById('names_found_list');
 					var li = document.createElement("li");
@@ -403,7 +422,7 @@
 					document.getElementById("name_details_div").style.visibility = "visible";
 					mIsNameDetailsShown = true;
 					var whereToZoom = {lat: lat, lng: long};
-					smoothZoom(mMap, 20, mMap.getZoom());
+					smoothZoom(mMap, 21, mMap.getZoom());
 					mMap.panTo(whereToZoom);
 					setOverlayDivHeight(125);
 					document.getElementById("overlay_loader_id").style.display = "none";
@@ -561,8 +580,6 @@
 				arrow.className = "rotate_closed";
 				mIsOpen = false;
 				
-				console.log(nameDetailsDiv.style.visibility);
-				
 				nameDetailsDiv.style.visibility = "hidden";
 				namesList.style.visibility = "hidden";
 
@@ -570,8 +587,7 @@
 			}else{
 				arrow.className = "rotate_open";
 				mIsOpen = true;
-				
-				console.log(nameDetailsDiv.style.visibility);
+			
 				
 				if(mIsNameDetailsShown){
 					nameDetailsDiv.style.visibility = "visible"
