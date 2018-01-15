@@ -119,10 +119,9 @@
 
 		function initMap() {
 
-			navigator.geolocation.getCurrentPosition(function(location){
-				var whereToCenter = {lat: location.coords.latitude, lng: location.coords.longitude};
+				var whereToCenter = {lat: 38, lng: -97};
 				mMap = new google.maps.Map(document.getElementById('map'), {
-					zoom: 10,
+					zoom: 5,
 					center: whereToCenter,
 					mapTypeControlOptions: {
 						position: google.maps.ControlPosition.LEFT_BOTTOM,
@@ -178,7 +177,7 @@
 					var loading_div = document.getElementById("loading_div");
 					fade(loading_div);
 				});
-			})
+	
 		}  
 
 		function notifyAsIncorrect(){
@@ -261,14 +260,26 @@
 
 		function searchForMatches(){
 			document.getElementById("names_found_list").innerHTML = "";
+			
+			// capitalize first letter to make sure all entries are the same
 			var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
-			if(equalTo.length == 0){
+			
+			// check if the string entered is 0 or null
+			if(equalTo.length == 0 || equalTo == null){
+				
+				// hide the name and address of last selected item if visible
 				document.getElementById("name_details_div").style.visibility = "hidden";
-				var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-				if(screenWidth < 615){
-					var container = document.getElementById('overlay');
-					container.style.height = (container.offsetHeight + -150) + "px";
-				}
+				
+//				var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+//				if(screenWidth < 615){
+				
+				var container = document.getElementById('overlay');
+				var height = container.style.height;
+				
+				container.style.height = (container.offsetHeight + -150) + "px";
+				
+//				}
+				
 				return;
 			}
 			setOverlayDivHeight(150);
@@ -390,11 +401,10 @@
 				currentHeightInt = 0;
 			}
 			var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-			if(screenWidth < 615){
-				if(currentHeightInt < 205){
+			console.log(currentHeightInt);
+				if(currentHeightInt < 203){
 					container.style.height = (container.offsetHeight + height) + "px";
 				}
-			}
 		}
 		
 		function fade(element) {

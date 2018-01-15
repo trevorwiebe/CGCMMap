@@ -24,7 +24,6 @@
 
 	<div id="container_div">
 		
-		
 		<div id="left_header_div"></div>
 		<div id="header_content_div">
 			<ul id="header_ul">
@@ -56,6 +55,7 @@
 					<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
 				</div>
 			</div>
+			<center><h3 id="name_already_saved">This persons location is already saved.</h3></center>
 			<center><h3 id="location_saved_successfully">Location save successfully!</h3></center>
 			<div id="maps_div">
 				<div id="maps_container"></div>
@@ -90,6 +90,7 @@
 		
 		document.getElementById("maps_div").style.display = "none";
 		document.getElementById("location_saved_successfully").style.display = "none";
+		document.getElementById("name_already_saved").style.display = "none";
     
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
@@ -158,6 +159,7 @@
 			
 			document.getElementById("maps_div").style.display = "none";
 			document.getElementById("location_saved_successfully").style.display = "block";
+			document.getElementById("name_already_saved").style.display = "none";
 			
 			var location_saved = document.getElementById("location_saved_successfully");
 			location_saved.style.opacity = 1;
@@ -168,17 +170,22 @@
 			}, 1000);
 			
 			deleteMarkers();
+			
+			mLatnLngFromAddress = {};
+			mNewLatnLngFromMap = {};
             
         });
 		
 	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUserId){
+			var firstName = capitalizeFirstLetter(varFirstName);
+			var lastName = capitalizeFirstLetter(varLastName);
             var ref = firebase.database().ref('locations').push();
             var key = ref.getKey();
             ref.set({
                 latitude: varLatitude,
                 longitude: varLongitude,
-				firstName: varFirstName,
-				lastName: varLastName,
+				firstName: firstName,
+				lastName: lastName,
 				address: varAddress,
 				city: varCity,
 				congregation: varCong,
@@ -260,87 +267,95 @@
 		}
 		
 		function verify_location(){
-			
+
 			var firstName = document.getElementById('first_name').value;
 			var lastName = document.getElementById('last_name').value;
 			var address = document.getElementById('address').value;
 			var city = document.getElementById('city').value;
 			var state = getSelectedText('state_select');
 			var cong = getSelectedText('cong_select');
-            
-            if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
-				console.log("Please fill the blanks");
-                return;
-            }
-            
-			document.getElementById("maps_div").style.display = "block";
-			
-			var addressString = address.split(" ");
-			var finishedAddresString = "";
-			var cityAndStateString = "";
-			for(var i=0; addressString.length > i; i++){
-				var item = addressString[i];
-				finishedAddresString = finishedAddresString + item + "+";	
-			}
-			
-			cityAndStateString = city + "+" + state;
-			
-			var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
-			var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-			var url = baseUrl + finishedAddresString + cityAndStateString + apiKey;
-			var request = new XMLHttpRequest();
-			request.onreadystatechange = function(){
-				if(this.readyState == 4 && this.status == 200){
-					var json = JSON.parse(this.responseText);
-					var lat_n_long = json.results[0].geometry.location;
-					
-					var lat = lat_n_long.lat;
-					var long = lat_n_long.lng;
-					
-					var congId = mCongregationMap[cong];
-					var stateId = mStatesMap[state];
-					
-					var userId = firebase.auth().currentUser.uid;
-						
-					mLatnLngFromAddress = {lat: lat, lng: long};
-					
-					mMap= new google.maps.Map(document.getElementById('maps_container'), {
-					  zoom: 18,
-					  center: mLatnLngFromAddress,
-						mapTypeId: 'satellite'
-					});
-					
-					var marker = new google.maps.Marker({
-					  position: mLatnLngFromAddress,
-					  map: mMap
-					});
-					markersArray.push(marker);
-					setMapOnAll(mMap);
-					
-					google.maps.event.addListener(mMap, "click", function (e) {
 
-						deleteMarkers();
-						
-						//lat and lng is available in e object
-						var latLng = e.latLng;
-						mNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
-						
-						var marker = new google.maps.Marker({
-						  position: mNewLatnLngFromMap,
-						  map: mMap
-						});
-						markersArray.push(marker);
-						setMapOnAll(mMap);
-						
-					});
-					
+			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
+return;
+}
+
+			var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
+			databaseRef.on('value', function(snapshot){
+				var array = snapshotToArray(snapshot);
+				if(areNamesInArray(array, firstName, lastName)){
+					document.getElementById("name_already_saved").style.display = "block";
+					document.getElementById("maps_div").style.display = "none";
 				}else{
-					
+					document.getElementById("name_already_saved").style.display = "none";
+					document.getElementById("maps_div").style.display = "block";
+
+					var addressString = address.split(" ");
+					var finishedAddresString = "";
+					var cityAndStateString = "";
+					for(var i=0; addressString.length > i; i++){
+						var item = addressString[i];
+						finishedAddresString = finishedAddresString + item + "+";	
+					}
+
+					cityAndStateString = city + "+" + state;
+
+					var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
+					var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+					var url = baseUrl + finishedAddresString + cityAndStateString + apiKey;
+					var request = new XMLHttpRequest();
+					request.onreadystatechange = function(){
+						if(this.readyState == 4 && this.status == 200){
+							var json = JSON.parse(this.responseText);
+							var lat_n_long = json.results[0].geometry.location;
+
+							var lat = lat_n_long.lat;
+							var long = lat_n_long.lng;
+
+							var congId = mCongregationMap[cong];
+							var stateId = mStatesMap[state];
+
+							var userId = firebase.auth().currentUser.uid;
+
+							mLatnLngFromAddress = {lat: lat, lng: long};
+
+							mMap= new google.maps.Map(document.getElementById('maps_container'), {
+								zoom: 18,
+								center: mLatnLngFromAddress,
+								mapTypeId: 'satellite'
+							});
+
+							var marker = new google.maps.Marker({
+								position: mLatnLngFromAddress,
+								map: mMap
+							});
+							markersArray.push(marker);
+							setMapOnAll(mMap);
+
+							google.maps.event.addListener(mMap, "click", function (e) {
+
+								deleteMarkers();
+
+								//lat and lng is available in e object
+								var latLng = e.latLng;
+								mNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
+
+								var marker = new google.maps.Marker({
+									position: mNewLatnLngFromMap,
+									map: mMap
+								});
+								markersArray.push(marker);
+								setMapOnAll(mMap);
+
+							});
+
+						}else{
+
+						}
+					}
+					request.open('GET', url);
+					request.send();
 				}
-			}
-			request.open('GET', url);
-			request.send();
-		
+			})
 		}
 		
 		function resetLocation(){
@@ -359,6 +374,10 @@
 			  markersArray[i].setMap(map);
 			}
 		  }
+		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
 
 		function deleteMarkers() {
 			setMapOnAll(null);
@@ -380,6 +399,31 @@
 		
 		function checkFeedback(){
 			location.href = "admin_check_feedback.html"
+		}
+		
+		function snapshotToArray(snapshot) {
+			var returnArr = [];
+
+			snapshot.forEach(function(childSnapshot) {
+				var item = childSnapshot.val();
+				item.key = childSnapshot.key;
+
+				returnArr.push(item);
+			});
+
+			return returnArr;
+		};
+
+		function areNamesInArray(array, firstNameToTest, lastNameToTest){
+			for(var i=0; i < array.length; i++){
+				var firstName = array[i].firstName;
+				var lastName = array[i].lastName;
+				
+				if(firstName == firstNameToTest && lastName == lastNameToTest){
+					return true;
+				}
+			}
+			return false;
 		}
 		
 		function editLocation(){

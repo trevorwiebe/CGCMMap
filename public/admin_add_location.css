@@ -242,3 +242,10 @@ body, html{
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+
+#name_already_saved{
+	padding: 15px;
+	background-color: #E57373;
+	color: #B71C1C;
+	width: 40%;
+}
