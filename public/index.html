@@ -266,27 +266,16 @@
 			
 			// check if the string entered is 0 or null
 			if(equalTo.length == 0 || equalTo == null){
-				
-				// hide the name and address of last selected item if visible
-				document.getElementById("name_details_div").style.visibility = "hidden";
-				
-//				var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-//				if(screenWidth < 615){
-				
-				var container = document.getElementById('overlay');
-				var height = container.style.height;
-				
-				container.style.height = (container.offsetHeight + -150) + "px";
-				
-//				}
-				
+				setOverlayDivHeight(0);
 				return;
 			}
-			setOverlayDivHeight(150);
+			
 			document.getElementById("name_details_div").style.visibility = "hidden";
-			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToFirst(3);
+			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToFirst(6);
 			ref.once('value').then(function(snapshot){
 				var array = snapshotToArray(snapshot);
+				var heightToSetAt = array.length * 43;
+				setOverlayDivHeight(heightToSetAt);
 				for(var j=0; array.length > j; j++){
 					var itemArray = array[j];
 					var firstName = itemArray.firstName;
@@ -391,20 +380,8 @@
 
 		function setOverlayDivHeight(height){
 			var container = document.getElementById('overlay');
-			var currentHeight = container.style.height;
-			var currentHeightInt;
-			if(currentHeight.length == 5){
-				currentHeightInt = parseInt(currentHeight.substring(0, 3));
-			}else if(currentHeight.length == 4){
-				currentHeightInt = parseInt(currentHeight.substring(0, 2));
-			}else{
-				currentHeightInt = 0;
-			}
-			var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-			console.log(currentHeightInt);
-				if(currentHeightInt < 203){
-					container.style.height = (container.offsetHeight + height) + "px";
-				}
+			height = height + 55;
+			container.style.height = (height) + "px";
 		}
 		
 		function fade(element) {
@@ -554,5 +531,6 @@
 	<script 
 		async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA&callback=initMap">
 	</script>
+	
 </body>
 </html>
