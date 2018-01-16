@@ -74,7 +74,9 @@
 				<div class="menu_style"></div>
 			</div>
 			<input type="text" placeholder="Search Address Book" id="search_input" onkeyup="searchForMatches()">
-			<img src="res/down-chevron.svg" id="open_close_arrow" onclick="openAndCloseMenu()">
+			<div id="arrow_div">
+				<img src="res/down-chevron.svg" id="open_close_arrow" onclick="openAndCloseMenu()">
+			</div>
 		</div>
 		<div id="overlay_loader_id"></div>
 		<ul id="names_found_list"></ul>
@@ -441,7 +443,7 @@
 
 		function setOverlayDivHeight(height){
 			var container = document.getElementById('overlay');
-			height = height + 60;
+			height = height + 50;
 			container.style.height = (height) + "px";
 		}
 		
@@ -461,7 +463,7 @@
 		function openNav() {
 			document.getElementById("shadow_div").style.visibility = "visible";
 			document.getElementById("side_nav").style.visibility = "visible";
-			document.getElementById("side_nav").style.width = "350px";
+			document.getElementById("side_nav").style.width = "300px";
 		}
 
 		function closeNav() {
