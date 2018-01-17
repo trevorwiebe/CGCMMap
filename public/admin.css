@@ -4,6 +4,34 @@ body, html{
 	font-family: Roboto, sans-serif;
 }
 
+#loading_div{
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background: white;
+	z-index: 2;
+}
+
+#loader {
+    border: 10px solid #e8e1e1;
+    border-top: 10px solid #FFC107;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+	margin-top: 250px;
+	margin-left: auto;
+	margin-right: auto;
+    animation: spin 0.7s linear infinite;
+	z-index: 3;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 #nav_div{
 	width: 100%;
 	display: flex;
@@ -35,7 +63,9 @@ body, html{
 /*
 	**********	CHECK FEEDBACK  **********
 */
-
+#check_feedback_div{
+	width: 60%;
+}
 
 
 
@@ -121,7 +151,6 @@ body, html{
 }
 
 .input{
-	text-align: center;
     border-style: solid;
 	background-color: white;
     font-size: 20px;
@@ -133,8 +162,9 @@ body, html{
 }
 
 #add_new_location_title{
-	padding-top: 50px;
+	padding-top: 10px;
 }
+
 
 #add_location_1{
 	margin-left: auto;
@@ -271,3 +301,62 @@ body, html{
 /*
 	**********	EDIT ITEMS  **********
 */
+
+#edit_location_div{
+	width: 60%;
+}
+
+#locations_to_edit_ul{
+	list-style-type: none;
+}
+
+#edit_li_items{
+	color: #3b3b3b;
+    padding-right: 20%;
+    padding-left: 20%;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	cursor: pointer;
+}
+
+#verify_edit_location_div{
+	text-align: center;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#edit_location_1{
+	display: inline-block;
+	margin-top: 30px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	margin-right: 20px;
+	vertical-align: top;
+}
+
+#edit_location_2{
+	display: inline-block;
+	margin-top: 30px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#divider_div{
+	width: 100%;
+	height: 1px;
+	background: black;
+}
+
+#edit_map_location{
+	width: 80%;
+	height: 500px;
+	cursor: pointer;
+}
+
+#updated_successfully{
+	padding: 15px;
+	background-color: #00E676;
+	color: #1B5E20;
+	width: 95%;
+}

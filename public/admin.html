@@ -22,20 +22,24 @@
 </head>
 <body>
 
+	<div id="loading_div">
+		<div id="loader"></div>
+	</div>
+	
 	<div id="nav_div">
 		<div id="left_header_div"></div>
 			<div id="header_content_div">
 				<ul id="header_ul">
-					<li class="header_li"><a href="#" onclick="addLocation()">Add Location</a></li>
-					<li class="header_li"><a href="#" onclick="editLocation()">Edit Locations</a></li>
-					<li class="header_li"><a href="#" onclick="checkFeedback()">Check Feedback</a></li>
+					<li class="header_li"><a onclick="addLocation()">Add Location</a></li>
+					<li class="header_li"><a onclick="editLocation()">Edit Locations</a></li>
+					<li class="header_li"><a onclick="checkFeedback()">Check Feedback</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
 	</div>
 	
 	<div id="content_div">
-		
+	
 		<div id="right_content_div"></div>
 		
 		<div id="add_location_div_container">
@@ -67,7 +71,7 @@
 			<div id="add_state_province_cong_container">
 				<div id="add_s_p_c_1">
 					<center><h2 class="tags">Add new State or Province</h2></center>
-					<input type="text" id="state" class="input" placeholder="State or Province"><br>
+					<center><input type="text" id="state" class="input" placeholder="State or Province"><br></center>
 					<center><input type="button" id="save_state" class="save_button" value="Save State or Province" onclick="saveState()"></center>
 				</div>
 				<div id="add_s_p_c_2">
@@ -78,26 +82,62 @@
 			</div>
 		</div>
 		
-		<div id="edit_location_div"></div>
+		<div id="edit_location_div">
+			<center><h2>Edit location</h2></center>
+			
+			<center><input type="text" class="input" placeholder="Search for location", id="edit_search_location" onkeyup="searchForPlacesToEdit()"></center>
+			<center><div id="divider_div"></div></center>
+			<center><ul id="locations_to_edit_ul"></ul></center>
+			
+			<div id="verify_edit_location_div">
+				
+				<div id="edit_location_1">
+					<input type="text" placeholder="First Name" id="edit_first_name" class="input"><br>
+					<input type="text" placeholder="Last Name" id="edit_last_name" class="input"><br>
+					<input type="text" placeholder="Address" id="edit_address" class="input"><br>
+					<input type="text" placeholder="City" id="edit_city" class="input"><br>
+				</div>
+				
+				<div id="edit_location_2">
+					<h4 class="tags">Select State or Province</h4>
+					<select id="edit_state_select" class="select"></select>
+					<h4 class="tags">Select Congregation</h4>
+					<select id="edit_cong_select" class="select"></select>
+				</div>
+				
+			</div>
+			
+			<center><h3 id="updated_successfully">Location updated successfully</h3></center>
+			
+			<center><div id="edit_map_location"></div></center>
+			
+			<center><input value="Update Location" class="save_button" id="update_location_btn" type="button" onclick="updateLocation()"></center>
+			
+		</div>
 	
-		<div id="check_feedback_div"></div>
+		<div id="check_feedback_div">
+			<center><h2>Check feedback</h2></center>
+		</div>
 		
 		<div id="left_content_div"></div>
 	</div>
 
 	<script>
 		
-		
 		// Member variables
 		var mUser;
 		var mMap;
 		var mLatnLngFromAddress = {};
 		var mNewLatnLngFromMap = {};
+		var mEditLatnLngFromAddress = {};
+		var mEditNewLatnLngFromMap = {};
 		var markersArray = [];
 		var mCongregationMap = {};
 		var mCongregationArray = [];
 		var mStatesMap = {};
 		var mStatesArray = [];
+		var mLocationId;
+		var mUserId;
 		
 		// hide elements that are not need now
 		document.getElementById("maps_div").style.display = "none";
@@ -105,7 +145,8 @@
 		document.getElementById("name_already_saved").style.display = "none";
 		document.getElementById("edit_location_div").style.display = "none";
 		document.getElementById("check_feedback_div").style.display = "none";
-		document.getElementById("add_location_div_container").style.display = "block";
+		document.getElementById("add_location_div_container").style.display = "none";
+	
     
 		
 		var database = firebase.database();
@@ -123,6 +164,8 @@
 			var congSelect = document.getElementById("state_select");
 			congSelect.innerHTML = "";
 			parseStateSnapshot(snapshot);
+			document.getElementById("add_location_div_container").style.display = "block";
+			document.getElementById("loading_div").style.display = "none";
 		});
 		
         document.getElementById("save_location").addEventListener("click", function(){
@@ -135,7 +178,6 @@
 			var cong = getSelectedText('cong_select');
             
             if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
-				console.log("Please fill the blanks");
                 return;
             }
             
@@ -247,6 +289,7 @@
 		
 		function parseStateSnapshot(snapshot){
 			var stateSelect = document.getElementById("state_select");
+			var editStateSelect = document.getElementById("edit_state_select");
 			snapshot.forEach(function(childSnapshot){
 				var name = childSnapshot.val().state;
 				var nameId = childSnapshot.val().stateId;
@@ -254,6 +297,7 @@
 				var node = document.createElement('option');
 				node.value = name;
 				node.innerHTML = name;
+				
 				stateSelect.appendChild(node);
 				
 				mStatesArray.push(name);
@@ -265,8 +309,7 @@
 		function getSelectedText(elementId) {
 			var elt = document.getElementById(elementId);
 
-			if (elt.selectedIndex == -1)
-				return null;
+			if (elt.selectedIndex == -1)return null;
 
 			return elt.options[elt.selectedIndex].text;
 		}
@@ -428,17 +471,224 @@ return;
 		}
 		
 		function addLocation(){
+			markersArray = [];
 			document.getElementById("add_location_div_container").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
 		}
 		
+		/*
+			*****  EDIT ITEMS CODE   *****
+		*/
 		function editLocation(){
+			markersArray = [];
 			document.getElementById("edit_location_div").style.display = "block";
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
+			document.getElementById("verify_edit_location_div").style.display = "none";
+			document.getElementById("edit_map_location").style.display = "none";
+			document.getElementById("update_location_btn").style.display = "none";
+			document.getElementById("updated_successfully").style.display = "none";
+			
+			var editSelectState = document.getElementById("edit_state_select");
+			var editSelectCong = document.getElementById("edit_cong_select");
+			
+			for(var i=0; mStatesArray.length > i; i++){
+				var name = mStatesArray[i];
+				var node = document.createElement('option');
+				node.value = name;
+				node.innerHTML = name;
+				
+				editSelectState.appendChild(node);
+			}
+			
+			for(var i=0; mCongregationArray.length >i; i++){
+				var cong = mCongregationArray[i];
+				var node = document.createElement('option');
+				node.value = cong;
+				node.innerHTML = cong;
+				
+				editSelectCong.appendChild(node);
+			}
 		}
 		
+		function searchForPlacesToEdit(){
+			
+			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_location").value);
+			
+			var locationsToEdit = document.getElementById("locations_to_edit_ul");
+			locationsToEdit.innerHTML = "";
+			locationsToEdit.style.display = "block";
+			
+			document.getElementById("verify_edit_location_div").style.display = "none";
+			document.getElementById("updated_successfully").style.display = "none";
+			document.getElementById("edit_map_location").style.display = "none";
+			document.getElementById("update_location_btn").style.display = "none";
+			
+			
+			if(searchToEditItem.length == 0 || searchToEditItem == null){
+				locationsToEdit.style.display = "none";
+				return;
+			}
+			
+			var ref = database.ref('locations').orderByChild("firstName").startAt(searchToEditItem).limitToFirst(6);
+			ref.once('value').then(function(snapshot){
+				var array = snapshotToArray(snapshot);
+				for(var j=0; array.length > j; j++){
+					var itemArray = array[j];
+					var firstName = itemArray.firstName;
+					var lastName = itemArray.lastName;
+					var locationId = itemArray.locationId;
+					
+					var name = firstName + " " + lastName;
+
+					var ul = document.getElementById('locations_to_edit_ul');
+					var li = document.createElement("li");
+					li.appendChild(document.createTextNode(name));
+					li.setAttribute("id", "edit_li_items");
+					li.setAttribute("myLocationId", locationId);
+					ul.appendChild(li);
+				}
+
+				var list = document.getElementById("locations_to_edit_ul");
+
+				for(i=0;i<=list.childElementCount-1;i++){
+					list.children[i].addEventListener("click",itemClicked);
+				}
+
+				function itemClicked(){
+					var locationId = this.getAttribute("myLocationId");
+					var ref = firebase.database().ref("locations/" + locationId);
+					ref.once('value').then(function(snapshot){
+						document.getElementById("verify_edit_location_div").style.display = "block";
+						document.getElementById("locations_to_edit_ul").style.display = "none";
+						document.getElementById("edit_search_location").value = "";
+						document.getElementById("edit_map_location").style.display = "block";
+						document.getElementById("update_location_btn").style.display = "block";
+
+						
+						var array = snapshotToArray(snapshot);
+						
+						var firstName = array[3];
+						var lastName = array[4];
+						var address = array[0];
+						var state = array[8];
+						var city = array[1];
+						var cong = array[2];
+						var lat = array[5];
+						var long = array[7];
+						mLocationId = array[6];
+						mUserId = array[9];
+						
+						document.getElementById("edit_first_name").value = firstName;
+						document.getElementById("edit_last_name").value = lastName;
+						document.getElementById("edit_address").value = address;
+						document.getElementById("edit_city").value = city;
+						
+						mEditLatnLngFromAddress = {lat: lat, lng: long};
+
+						var edit_map = new google.maps.Map(document.getElementById('edit_map_location'), {
+							zoom: 19,
+							center: mEditLatnLngFromAddress,
+							mapTypeId: 'satellite'
+						});
+						
+						var marker = new google.maps.Marker({
+							position: mEditLatnLngFromAddress,
+							map: edit_map
+						});
+						
+						markersArray.push(marker);
+						setMapOnAll(edit_map);
+						
+						google.maps.event.addListener(edit_map, "click", function (e) {
+
+							deleteMarkers();
+
+							//lat and lng is available in e object
+							var latLng = e.latLng;
+							mEditNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
+
+							var marker = new google.maps.Marker({
+								position: mEditNewLatnLngFromMap,
+								map: edit_map
+							});
+							
+							markersArray.push(marker);
+							setMapOnAll(edit_map);
+
+						});
+						
+					})
+				}
+			})
+		}
+		
+		function updateLocation(){
+			var firstName = document.getElementById("edit_first_name").value;
+			var lastName = document.getElementById("edit_last_name").value;
+			var address = document.getElementById("edit_address").value;
+			var city = document.getElementById("edit_city").value;
+			var state = getSelectedText("edit_state_select");
+			var cong = getSelectedText("edit_cong_select");
+			var congId = mCongregationMap[cong];
+			var stateId = mStatesMap[state];
+			var lat;
+			var lng;
+			
+			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
+				return;
+			}
+			
+			if(mEditNewLatnLngFromMap.lat == null || mEditNewLatnLngFromMap.lat == null){
+				var lat = mEditLatnLngFromAddress.lat;
+				var lng = mEditLatnLngFromAddress.lng;
+			}else{
+				var lat = mEditNewLatnLngFromMap.lat;
+				var lng = mEditNewLatnLngFromMap.lng;
+			}
+			
+			var ref = firebase.database().ref("locations/" + mLocationId);
+			ref.set({
+                latitude: lat,
+                longitude: lng,
+				firstName: firstName,
+				lastName: lastName,
+				address: address,
+				city: city,
+				congregation: congId,
+				state: stateId,
+                locationId: mLocationId,
+				userId: mUserId
+            });
+
+			document.getElementById("edit_first_name").value = "";
+			document.getElementById("edit_last_name").value = "";
+			document.getElementById("edit_address").value = "";
+			document.getElementById("edit_city").value = "";
+			
+			mEditLatnLngFromAddress = {};
+			mEditNewLatnLngFromMap = {};
+			
+			mUserId = null;
+			mLocationId = null;
+			
+			markersArray = [];
+
+			document.getElementById("verify_edit_location_div").style.display = "none";
+			document.getElementById("edit_map_location").style.display = "none";
+			document.getElementById("update_location_btn").style.display = "none";
+			document.getElementById("updated_successfully").style.display = "block";
+				
+			}
+						   		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+		
+		/*
+			*****  CHECK FEEDBACK CODE   *****
+		*/
 		function checkFeedback(){
 			document.getElementById("check_feedback_div").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
