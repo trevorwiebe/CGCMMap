@@ -3,8 +3,8 @@
 <head>
 	<title>Add Location</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="admin_add_location.css">
-    <link rel="stylesheet" href="admin_add_location.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="admin.css">
+    <link rel="stylesheet" href="admin.css">
       
 	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
 	<script>
@@ -22,22 +22,23 @@
 </head>
 <body>
 
-	<div id="container_div">
-		
+	<div id="nav_div">
 		<div id="left_header_div"></div>
-		<div id="header_content_div">
-			<ul id="header_ul">
-				<li class="header_li" ><a href="#" onclick="checkFeedback()">Check Feedback</a></li>
-				<li class="header_li" id="selected_li"><a href="#">Add Location</a></li>
-				<li class="header_li"><a href="#" onclick="editLocation()">Edit Locations</a></li>
-			</ul>
-		</div>
+			<div id="header_content_div">
+				<ul id="header_ul">
+					<li class="header_li"><a href="#" onclick="addLocation()">Add Location</a></li>
+					<li class="header_li"><a href="#" onclick="editLocation()">Edit Locations</a></li>
+					<li class="header_li"><a href="#" onclick="checkFeedback()">Check Feedback</a></li>
+				</ul>
+			</div>
 		<div id="right_header_div"></div>
-		
+	</div>
+	
+	<div id="content_div">
 		
 		<div id="right_content_div"></div>
 		
-		<div id="container">
+		<div id="add_location_div_container">
 			<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
 			<div id="add_location_container">
 				<div id="add_location_1">
@@ -76,38 +77,42 @@
 				</div>
 			</div>
 		</div>
-	</div>	
+		
+		<div id="edit_location_div"></div>
 	
-	<div id="left_content_div"></div>
+		<div id="check_feedback_div"></div>
+		
+		<div id="left_content_div"></div>
+	</div>
 
 	<script>
 		
+		
+		// Member variables
 		var mUser;
 		var mMap;
 		var mLatnLngFromAddress = {};
 		var mNewLatnLngFromMap = {};
 		var markersArray = [];
-		
-		document.getElementById("maps_div").style.display = "none";
-		document.getElementById("location_saved_successfully").style.display = "none";
-		document.getElementById("name_already_saved").style.display = "none";
-    
-		firebase.auth().onAuthStateChanged(function(user) {
-			if (user) {
-				
-			} else {
-				location.href = "sign_in.html";
-			}
-		});
-		
 		var mCongregationMap = {};
 		var mCongregationArray = [];
-		
 		var mStatesMap = {};
 		var mStatesArray = [];
 		
+		// hide elements that are not need now
+		document.getElementById("maps_div").style.display = "none";
+		document.getElementById("location_saved_successfully").style.display = "none";
+		document.getElementById("name_already_saved").style.display = "none";
+		document.getElementById("edit_location_div").style.display = "none";
+		document.getElementById("check_feedback_div").style.display = "none";
+		document.getElementById("add_location_div_container").style.display = "block";
+    
+		
 		var database = firebase.database();
 		
+		/*
+			*****  ADD LOCATIONS CODE   *****
+		*/
 		database.ref('congregations').on('value', function(snapshot){
 			var congSelect = document.getElementById("cong_select");
 			congSelect.innerHTML = "";
@@ -397,10 +402,6 @@ return;
 			}, 30);
 		}
 		
-		function checkFeedback(){
-			location.href = "admin_check_feedback.html"
-		}
-		
 		function snapshotToArray(snapshot) {
 			var returnArr = [];
 
@@ -426,9 +427,24 @@ return;
 			return false;
 		}
 		
-		function editLocation(){
-			location.href = "admin_edit_location.html"
+		function addLocation(){
+			document.getElementById("add_location_div_container").style.display = "block";
+			document.getElementById("edit_location_div").style.display = "none";
+			document.getElementById("check_feedback_div").style.display = "none";
 		}
+		
+		function editLocation(){
+			document.getElementById("edit_location_div").style.display = "block";
+			document.getElementById("add_location_div_container").style.display = "none";
+			document.getElementById("check_feedback_div").style.display = "none";
+		}
+		
+		function checkFeedback(){
+			document.getElementById("check_feedback_div").style.display = "block";
+			document.getElementById("edit_location_div").style.display = "none";
+			document.getElementById("add_location_div_container").style.display = "none";
+		}
+		
 	</script>
 	
 	<script 

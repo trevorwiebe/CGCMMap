@@ -4,7 +4,8 @@ body, html{
 	font-family: Roboto, sans-serif;
 }
 
-#container_div{
+#nav_div{
+	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
 }
@@ -30,7 +31,26 @@ body, html{
 	box-shadow: 2px 2px 4px #888;
 }
 
-#container{
+
+/*
+	**********	CHECK FEEDBACK  **********
+*/
+
+
+
+
+
+/*
+	**********	ADD LOCATION DIV  **********
+*/
+
+
+#content_div{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#add_location_div_container{
 	width: 60%;
 }
 
@@ -54,7 +74,6 @@ body, html{
 }
 
 .header_li a{
-	border-bottom: 2px solid white;
 	font-family: Roboto, sans-serif;
     display: block;
     color: white;
@@ -73,10 +92,6 @@ body, html{
 .header_li a:hover{
 	background-color: #283482;
 	cursor: pointer;
-}
-
-#selected_li a{
-	border-bottom: 2px solid #FFC107;
 }
 
 #add_location_container{
@@ -218,7 +233,7 @@ body, html{
 }
 
 @media only screen and (max-width: 935px){
-	#container{
+	#add_location_div_container{
 		margin-top: 0px;
 		margin-bottom: 0px;
 		margin-left: 0px;
@@ -249,3 +264,10 @@ body, html{
 	color: #B71C1C;
 	width: 40%;
 }
+
+
+
+
+/*
+	**********	EDIT ITEMS  **********
+*/
