@@ -80,13 +80,19 @@
 		</div>
 		<div id="overlay_loader_id"></div>
 		<ul id="names_found_list"></ul>
-		<div id="name_details_div">
-			<h3 id="name"></h3>
-			<h4 id="h_cong" class="name_details"></h4>
-			<h4 id="h_address" class="name_details"></h4>
-			<h4 id="h_city_and_state" class="name_details"></h4>
-			<a href="#" onclick="notifyAsIncorrect()" id="send_feed_back_link">Send feedback on this location</a>
+		<div id="details">
+			<div id="name_details_div">
+				<h3 id="name"></h3>
+				<h4 id="h_cong" class="name_details"></h4>
+				<h4 id="h_address" class="name_details"></h4>
+				<h4 id="h_city_and_state" class="name_details"></h4>
+			</div>
+			<div id="info_details">
+				<button id="open_in_google_maps_btn" onclick="openInGoogleMaps()">Navigate</button>
+			</div>
 		</div>
+		<center><p id="location_maybe_incorrect">This location may be incorrect</p></center>
+		<center><a href="#" onclick="notifyAsIncorrect()" id="send_feed_back_link">Send feedback on this location</a></center>
 	</div> 
 	
 	<div id="side_nav" class="sidenav">
@@ -110,6 +116,8 @@
 		var mIsNameListShown;
 		var mIsNameDetailsShown;
 		
+		var mSelectedLatnLng = {};
+		
 		var mStateArray = {};
 		
 		document.getElementById("feedback_error").style.visibility = "hidden";
@@ -124,6 +132,9 @@
 		document.getElementById("fill_in_password").style.visibility = "hidden";
 		document.getElementById("error").style.visibility = "hidden";
 		document.getElementById("overlay_loader_id").style.display = "none";
+		document.getElementById("location_maybe_incorrect").style.visibility = "hidden";
+		document.getElementById("open_in_google_maps_btn").style.display = "none";
+		document.getElementById("send_feed_back_link").style.display = "none";
 		
 		document.onclick = close_menus;
 		
@@ -240,6 +251,13 @@
 			location.href = "admin.html";
 		}
 		
+		function openInGoogleMaps(){
+			var lat = mSelectedLatnLng.lat;
+			var lng = mSelectedLatnLng.lng;
+			
+			openMaps(lat, lng);
+		}
+		
 		function sendFeedbackOnWholeSite(){
 			var ref = firebase.database().ref("totalFeedback").push();
 			var key = ref.getKey();
@@ -296,6 +314,8 @@
 			var namesFoundList = document.getElementById("names_found_list");
 			namesFoundList.innerHTML = "";
 			namesFoundList.style.visibility = "visible";
+			document.getElementById("open_in_google_maps_btn").style.display = "none";
+			document.getElementById("send_feed_back_link").style.display = "none";
 			
 			// capitalize first letter to make sure all entries are the same
 			var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
@@ -409,6 +429,8 @@
 			var long = array.longitude;
 			var locationId = array.locationId;
 			
+			mSelectedLatnLng = {lat: lat, lng: long};
+			
 			var ref = firebase.database().ref("congregations/" + congId + "/congregation");
 			ref.once('value').then(function(snapshot){
 				
@@ -422,11 +444,13 @@
 					document.getElementById("h_cong").innerHTML = cong;
 					document.getElementById("h_city_and_state").innerHTML = city + ", " + state;
 					document.getElementById("name_details_div").style.visibility = "visible";
+					document.getElementById("send_feed_back_link").style.display = "block";
+					document.getElementById("open_in_google_maps_btn").style.display = "block";
 					mIsNameDetailsShown = true;
 					var whereToZoom = {lat: lat, lng: long};
 					smoothZoom(mMap, 21, mMap.getZoom());
 					mMap.panTo(whereToZoom);
-					setOverlayDivHeight(125);
+					setOverlayDivHeight(155);
 					document.getElementById("overlay_loader_id").style.display = "none";
 					
 					var arrow = document.getElementById("open_close_arrow");
@@ -573,17 +597,71 @@
 			}	
 		}
 		
+		function openMaps(lat, lon) {
+			var latLon = lat + ',' + lon;
+			
+			window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
+
+			
+//			var device = getMobileOperatingSystem();
+//			switch(device){
+//				case "Windows Phone":
+//					console.log("windows phone");
+//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
+//					window.open("http://maps.google.com/?q="+latLon, '_system');
+//					break;
+//				case "Android":
+//					console.log("android");
+//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
+//					break;
+//				case "iOS":
+//					console.log("iphone");
+//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
+//					window.open("http://maps.apple.com/?sll=" + latLon + "&z=100&t=k", "_system");
+//					break;
+//				default:
+//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
+//					window.open("http://maps.google.com/?q="+latLon, '_system');
+//					break;
+//			}
+		}
+		
+		function getMobileOperatingSystem() {
+		  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+			  // Windows Phone must come first because its UA also contains "Android"
+			if (/windows phone/i.test(userAgent)) {
+				return "Windows Phone";
+			}
+
+			if (/android/i.test(userAgent)) {
+				return "Android";
+			}
+
+			// iOS detection from: http://stackoverflow.com/a/9039885/177710
+			if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+				return "iOS";
+			}
+
+			return "unknown";
+		}
+		
 		function openAndCloseMenu(){
 			var arrow = document.getElementById("open_close_arrow");
 			
 			var nameDetailsDiv = document.getElementById("name_details_div");
 			var namesList = document.getElementById("names_found_list");
+			var openInGMaps = document.getElementById("open_in_google_maps_btn");
+			var sendFeedbackLink = document.getElementById("send_feed_back_link");
 			if(mIsOpen){
 				arrow.className = "rotate_closed";
 				mIsOpen = false;
 				
 				nameDetailsDiv.style.visibility = "hidden";
 				namesList.style.visibility = "hidden";
+				openInGMaps.style.visibility = "hidden";
+				sendFeedbackLink.style.visibility = "hidden";
+			
 
 				setOverlayDivHeight(0);
 			}else{
@@ -593,7 +671,9 @@
 				
 				if(mIsNameDetailsShown){
 					nameDetailsDiv.style.visibility = "visible"
-					setOverlayDivHeight(125);
+					openInGMaps.style.visibility = "visible";
+					sendFeedbackLink.style.visibility = "visible";
+					setOverlayDivHeight(155);
 				}
 				
 				if(mIsNameListShown){

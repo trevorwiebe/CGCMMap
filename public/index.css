@@ -79,6 +79,7 @@ h3{
 	margin-right: 20px;
 	margin-top: 7px;
 	margin-bottom: 10px;
+	text-align: center;
 }
 
 .sidenav {
@@ -216,8 +217,26 @@ h3{
 	margin-top: 20px;
 }
 
+#details{
+	display: inline-block;
+	margin-bottom: 10px;
+	margin-left: 10%;
+}
+
 #name_details_div{
 	text-align: center;
+	margin-top: -20px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+#info_details{
+	display: inline-block;
+	vertical-align: top;
+}
+
+#location_maybe_incorrect{
+	margin-bottom: 5px;
 }
 
 #sign_in{
@@ -285,6 +304,23 @@ h3{
 	border-bottom: 1px solid black;
 }
 
+#open_in_google_maps_btn{
+	border: none;
+	background: #303F9F;
+	padding: 20px;
+	border-radius: 2px;
+	margin-left: 20px;
+	margin-top: 15px;
+	color: white;
+	box-shadow: 1px 1px 2px #888;
+}
+
+#names_found_list{
+    list-style: none;
+    margin-right: 35px;
+	margin-left: 40px;
+}
+
 @media screen and (max-width: 615px){
 
 	#total_feedback{
@@ -342,7 +378,7 @@ h3{
 	
 }
 
-@media screen and (max-width: 395px){
+@media screen and (max-width: 400px){
 	#search_input{
 		width: 165px;
 	}
@@ -355,17 +391,23 @@ h3{
 	#open_close_arrow{
 		margin-left: 10px;
 	}
-}
-
-#names_found_list{
-    list-style: none;
-    margin-right: 35px;
-	margin-left: 40px;
+	#open_in_google_maps_btn{
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+	#details{
+		margin-left: 5%;
+	}
+	
+	#names_found_list{
+		margin-right: 0px;
+		margin-left: 0px;
+	}
 }
 
 #send_feed_back_link{
 	color: #3F51B5;
-	font-size: 13px;
+	font-size: 14px;
 	text-decoration: none;
 }
 
