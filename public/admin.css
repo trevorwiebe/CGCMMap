@@ -208,13 +208,6 @@ body, html{
 	flex-wrap: wrap;
 }
 
-#location_saved_successfully{
-	padding: 15px;
-	background-color: #00E676;
-	color: #1B5E20;
-	width: 40%;
-}
-
 .select{
 	width: 230px;
 	padding: 10px;
@@ -333,10 +326,8 @@ body, html{
 	margin-bottom: 10px;
 }
 
-#name_already_saved{
+#message_center{
 	padding: 15px;
-	background-color: #E57373;
-	color: #B71C1C;
 	width: 40%;
 }
 

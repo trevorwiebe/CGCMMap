@@ -67,8 +67,7 @@
 					<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
 				</div>
 			</div>
-			<center><h3 id="name_already_saved">This persons location is already saved.</h3></center>
-			<center><h3 id="location_saved_successfully">Location save successfully!</h3></center>
+			<center><h3 id="message_center"></h3></center>
 			<div id="maps_div">
 				<div id="maps_container"></div>
 				<center><input type="button" onclick="resetLocation()" value="Reset Pin" id="reset_location">
@@ -159,8 +158,6 @@
 		
 		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
-		document.getElementById("location_saved_successfully").style.display = "none";
-		document.getElementById("name_already_saved").style.display = "none";
 		document.getElementById("edit_location_div").style.display = "none";
 		document.getElementById("check_feedback_div").style.display = "none";
 		document.getElementById("add_location_div_container").style.display = "none";
@@ -194,6 +191,36 @@
 			document.getElementById("side_nav").style.width = "0";
 		}
 		
+		function setMessage(message, type){
+			var messageCenter = document.getElementById("message_center");
+			messageCenter.style.display = "block";
+			messageCenter.style.opacity = 1;
+			messageCenter.style.filter = 'alpha(opacity=' + 1 * 100 + ")";
+			messageCenter.innerHTML = message;
+			switch(type){
+				case 0:
+//					Error
+					messageCenter.style.color = "#B71C1C";
+					messageCenter.style.backgroundColor = "#E57373";
+					break;
+				case 1:
+//					Not an Error
+					messageCenter.style.color = "#1B5E20";
+					messageCenter.style.backgroundColor = "#00E676";
+					break;
+				default:
+					messageCenter.style.color = "white";
+					messageCenter.style.backgroundColor = "white";
+			}
+			setTimeout(function(){ 
+				fade(messageCenter); 
+			}, 2000);
+		}
+		
+		function isNotCapital(word){
+		  return word[0] !== word[0].toUpperCase();
+		}
+		
 		
 		/*
 			*****  ADD LOCATIONS CODE   *****
@@ -222,7 +249,9 @@
 			var cong = getSelectedText('cong_select');
             
             if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
-                return;
+                setMessage("Please fill all the blanks", 0);
+				console.log("here");
+				return;
             }
             
 			var congId = mCongregationMap[cong];
@@ -249,16 +278,7 @@
 			document.getElementById('city').value = ""
 			
 			document.getElementById("maps_div").style.display = "none";
-			document.getElementById("location_saved_successfully").style.display = "block";
-			document.getElementById("name_already_saved").style.display = "none";
-			
-			var location_saved = document.getElementById("location_saved_successfully");
-			location_saved.style.opacity = 1;
-			location_saved.style.filter = 'alpha(opacity=' + 1 * 100 + ")";
-			
-			setTimeout(function(){ 
-				fade(location_saved); 
-			}, 1000);
+			setMessage("Location saved successfully", 1);
 			
 			deleteMarkers();
 			
@@ -371,17 +391,21 @@
 			var cong = getSelectedText('cong_select');
 
 			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
-return;
-}
+				setMessage("Please fill all the blanks",0);
+				return;
+			}
 
+			if(isNotCapital(firstName) || isNotCapital(lastName) || isNotCapital(city)){
+				setMessage("First name, last name and city must be capitalized",0);
+				return;
+			}
 			var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
 			databaseRef.on('value', function(snapshot){
 				var array = snapshotToArray(snapshot);
 				if(areNamesInArray(array, firstName, lastName)){
-					document.getElementById("name_already_saved").style.display = "block";
+					setMessage("This person's location is already saved", 0);
 					document.getElementById("maps_div").style.display = "none";
 				}else{
-					document.getElementById("name_already_saved").style.display = "none";
 					document.getElementById("maps_div").style.display = "block";
 
 					var addressString = address.split(" ");
