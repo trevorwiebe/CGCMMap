@@ -207,6 +207,8 @@
 							document.getElementById("overlay_loader_id").style.display = "block";
 							document.getElementById("names_found_list").innerHTML = "";
 							document.getElementById("name_details_div").style.visibility = "hidden";
+							document.getElementById("send_feed_back_link").style.display = "none";
+						document.getElementById("open_in_google_maps_btn").style.display = "none";
 							var locationId = this.get("locationId");
 							mWhoAddedIt = this.get("userId");
 							var databaseRef = firebase.database().ref("locations/" + locationId);
@@ -399,6 +401,8 @@
 					setOverlayDivHeight(50);
 					document.getElementById("overlay_loader_id").style.display = "block";
 					document.getElementById("name_details_div").style.visibility = "hidden";
+					document.getElementById("send_feed_back_link").style.display = "none";
+					document.getElementById("open_in_google_maps_btn").style.display = "none";
 					document.getElementById("search_input").value= "";
 					document.getElementById("names_found_list").innerHTML = "";
 					var locationId = this.getAttribute("myLocationId");
