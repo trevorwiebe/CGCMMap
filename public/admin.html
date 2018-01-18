@@ -155,6 +155,7 @@
 		var mLocationId;
 		var mUserId;
 		var mCurrentUserId;
+		var mLocationThatCurrentUserPutIn = {};
 		
 		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
@@ -172,8 +173,11 @@
 				mCurrentUserId = user.uid;
 				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
 					var array = snapshotToArray(snapshot);
-					console.log(array);
 				})
+				
+				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
+					mLocationThatCurrentUserPutIn = snapshotToArray(snapshot);
+				});
 			} else {
 				mCurrentUserId = null;
 			}
@@ -189,6 +193,7 @@
 			document.getElementById("shadow_div").style.visibility = "hidden";
 			document.getElementById("side_nav").style.width = "0";
 		}
+		
 		
 		/*
 			*****  ADD LOCATIONS CODE   *****
@@ -558,9 +563,7 @@ return;
 			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_location").value);
 			
 			var locationsToEdit = document.getElementById("locations_to_edit_ul");
-			locationsToEdit.innerHTML = "";
-			locationsToEdit.style.display = "block";
-			
+
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("updated_successfully").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
@@ -572,11 +575,21 @@ return;
 				return;
 			}
 			
-			var ref = database.ref('locations').orderByChild("firstName").startAt(searchToEditItem).limitToFirst(6);
-			ref.once('value').then(function(snapshot){
-				var array = snapshotToArray(snapshot);
-				for(var j=0; array.length > j; j++){
-					var itemArray = array[j];
+				locationsToEdit.innerHTML = "";
+				locationsToEdit.style.display = "block";
+				
+				var searchAndFoundItems = [];
+			
+				for(var t=0; mLocationThatCurrentUserPutIn.length >t; t++){
+					var array = mLocationThatCurrentUserPutIn[t];
+					var firstName = array.firstName;
+					if(checkIfNameStartsWithString(searchToEditItem, firstName)){
+						searchAndFoundItems.push(array);  
+					}
+				};
+			
+				for(var j=0; searchAndFoundItems.length > j; j++){
+					var itemArray = searchAndFoundItems[j];
 					var firstName = itemArray.firstName;
 					var lastName = itemArray.lastName;
 					var locationId = itemArray.locationId;
@@ -661,7 +674,6 @@ return;
 						
 					})
 				}
-			})
 		}
 		
 		function updateLocation(){
@@ -727,6 +739,17 @@ return;
 			}, 1000);
 				
 			}
+		
+		function checkIfNameStartsWithString(str, name){
+			var strLength = str.length;
+			if(strLength <= name.length){
+				var nameString = name.substr(0, strLength);	
+				if(nameString === str){
+					return true;
+				}
+			}
+			return false;
+		}
 						   		
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
