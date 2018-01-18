@@ -340,8 +340,9 @@
 			document.getElementById("open_in_google_maps_btn").style.display = "none";
 			document.getElementById("send_feed_back_link").style.display = "none";
 			
-			// capitalize first letter to make sure all entries are the same
-			var equalTo = capitalizeFirstLetter(document.getElementById("search_input").value);
+			// capitalize first letter to make sure it searches correctly
+			var outPut = document.getElementById("search_input").value;
+			var equalTo = toTitleCase(outPut);
 			
 			// get an instance of the arrow widget so we can rotate it open and closed as needed;
 			var arrow = document.getElementById("open_close_arrow");
@@ -362,7 +363,7 @@
 			
 		
 			document.getElementById("name_details_div").style.visibility = "hidden";
-			var ref = firebase.database().ref("locations").orderByChild('firstName').startAt(equalTo).limitToFirst(6);
+			var ref = firebase.database().ref("locations").orderByChild('firstAndLastName').startAt(equalTo).limitToFirst(6);
 			ref.once('value').then(function(snapshot){
 				var array = snapshotToArray(snapshot);
 				var heightToSetAt = array.length * 43;
@@ -732,6 +733,10 @@
 					setOverlayDivHeight(height);
 				}
 			}
+		}
+		
+		function toTitleCase(str){
+			return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 		}
 	
 		firebase.auth().onAuthStateChanged(function(user) {
