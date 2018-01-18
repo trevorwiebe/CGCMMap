@@ -406,8 +406,6 @@
 					setMessage("This person's location is already saved", 0);
 					document.getElementById("maps_div").style.display = "none";
 				}else{
-					document.getElementById("maps_div").style.display = "block";
-
 					var addressString = address.split(" ");
 					var finishedAddresString = "";
 					var cityAndStateString = "";
@@ -425,48 +423,54 @@
 					request.onreadystatechange = function(){
 						if(this.readyState == 4 && this.status == 200){
 							var json = JSON.parse(this.responseText);
-							console.log(json);
-							var lat_n_long = json.results[0].geometry.location;
+							var successCode = json.status;
+							console.log(successCode);
+							if(successCode === "ZERO_RESULTS"){
+								setMessage("Address is unknown, please try a different one", 0);
+							}else{
+								document.getElementById("maps_div").style.display = "block";
+								var lat_n_long = json.results[0].geometry.location;
 
-							var lat = lat_n_long.lat;
-							var long = lat_n_long.lng;
+								var lat = lat_n_long.lat;
+								var long = lat_n_long.lng;
 
-							var congId = mCongregationMap[cong];
-							var stateId = mStatesMap[state];
+								var congId = mCongregationMap[cong];
+								var stateId = mStatesMap[state];
 
-							var userId = firebase.auth().currentUser.uid;
+								var userId = firebase.auth().currentUser.uid;
 
-							mLatnLngFromAddress = {lat: lat, lng: long};
+								mLatnLngFromAddress = {lat: lat, lng: long};
 
-							mMap= new google.maps.Map(document.getElementById('maps_container'), {
-								zoom: 18,
-								center: mLatnLngFromAddress,
-								mapTypeId: 'satellite'
-							});
-
-							var marker = new google.maps.Marker({
-								position: mLatnLngFromAddress,
-								map: mMap
-							});
-							markersArray.push(marker);
-							setMapOnAll(mMap);
-
-							google.maps.event.addListener(mMap, "click", function (e) {
-
-								deleteMarkers();
-
-								//lat and lng is available in e object
-								var latLng = e.latLng;
-								mNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
+								mMap= new google.maps.Map(document.getElementById('maps_container'), {
+									zoom: 18,
+									center: mLatnLngFromAddress,
+									mapTypeId: 'satellite'
+								});
 
 								var marker = new google.maps.Marker({
-									position: mNewLatnLngFromMap,
+									position: mLatnLngFromAddress,
 									map: mMap
 								});
 								markersArray.push(marker);
 								setMapOnAll(mMap);
 
-							});
+								google.maps.event.addListener(mMap, "click", function (e) {
+
+									deleteMarkers();
+
+									//lat and lng is available in e object
+									var latLng = e.latLng;
+									mNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
+
+									var marker = new google.maps.Marker({
+										position: mNewLatnLngFromMap,
+										map: mMap
+									});
+									markersArray.push(marker);
+									setMapOnAll(mMap);
+
+								});	
+							}
 
 						}else{
 
