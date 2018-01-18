@@ -258,8 +258,7 @@
 		function openInGoogleMaps(){
 			var lat = mSelectedLatnLng.lat;
 			var lng = mSelectedLatnLng.lng;
-			
-			openMaps(lat, lng);
+			window.open("https://www.google.com/maps/dir/?api=1&destination=" + lat + ',' + lng + "&dir_action=navigate", '_system');
 		}
 		
 		function sendFeedbackOnWholeSite(){
@@ -642,55 +641,6 @@
 			setMapOnAll(null);
 			markersArray = [];
 		  }
-		
-		function openMaps(lat, lon) {
-			var latLon = lat + ',' + lon;
-			
-			window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
-
-			
-//			var device = getMobileOperatingSystem();
-//			switch(device){
-//				case "Windows Phone":
-//					console.log("windows phone");
-//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
-//					window.open("http://maps.google.com/?q="+latLon, '_system');
-//					break;
-//				case "Android":
-//					console.log("android");
-//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
-//					break;
-//				case "iOS":
-//					console.log("iphone");
-//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
-//					window.open("http://maps.apple.com/?sll=" + latLon + "&z=100&t=k", "_system");
-//					break;
-//				default:
-//					window.open("https://www.google.com/maps/dir/?api=1&destination=" + latLon + "&dir_action=navigate", '_system');
-//					window.open("http://maps.google.com/?q="+latLon, '_system');
-//					break;
-//			}
-		}
-		
-		function getMobileOperatingSystem() {
-		  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-			  // Windows Phone must come first because its UA also contains "Android"
-			if (/windows phone/i.test(userAgent)) {
-				return "Windows Phone";
-			}
-
-			if (/android/i.test(userAgent)) {
-				return "Android";
-			}
-
-			// iOS detection from: http://stackoverflow.com/a/9039885/177710
-			if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-				return "iOS";
-			}
-
-			return "unknown";
-		}
 		
 		function openAndCloseMenu(){
 			var arrow = document.getElementById("open_close_arrow");
