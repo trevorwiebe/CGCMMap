@@ -241,7 +241,7 @@
 				long = mNewLatnLngFromMap.lng;
 			}
 			
-			saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, userId);
+			saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, userId, Date.now());
          
             document.getElementById('first_name').value = "";
 			document.getElementById('last_name').value = "";
@@ -267,12 +267,15 @@
             
         });
 		
-	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUserId){
+	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUserId, varDate){
 			var firstName = capitalizeFirstLetter(varFirstName);
 			var lastName = capitalizeFirstLetter(varLastName);
+			var firstAndLastName = firstName + " " + lastName;
             var ref = firebase.database().ref('locations').push();
             var key = ref.getKey();
             ref.set({
+				firstAndLastName: firstAndLastName,
+				date: varDate,
                 latitude: varLatitude,
                 longitude: varLongitude,
 				firstName: firstName,
