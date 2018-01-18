@@ -59,6 +59,110 @@ body, html{
 	box-shadow: 2px 2px 4px #888;
 }
 
+#header_ul{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	display: inline-block;
+}
+
+.header_li{
+	float: left;
+}
+
+.header_li a{
+	font-family: Roboto, sans-serif;
+    display: block;
+    color: white;
+    text-align: center;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 16px;
+	margin-top: 30px;
+    margin-right: 16px;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.header_li a:hover{
+	background-color: #283482;
+	cursor: pointer;
+}
+
+.menu_style {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+	border-radius: 2px;
+}
+
+#menu_container{
+	margin-left: 40px;
+	vertical-align: top;
+	margin-top: 5px;
+	margin-top: 25px;
+	margin-right: 40px;
+	display: none;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: white;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+	z-index: 5;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #4f4f4f;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.nav_divider_div{
+	width: 250px;
+    height: 1px;
+    background-color: black;
+	margin-left: 16px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+#shadow_div{
+	position: fixed;
+    width: auto; 
+    height: auto;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 4;
+}
 
 /*
 	**********	CHECK FEEDBACK  **********
@@ -90,38 +194,6 @@ body, html{
 
 #right_content_div{
 	width: 20%;
-}
-
-#header_ul{
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-}
-
-.header_li{
-	float: left;
-}
-
-.header_li a{
-	font-family: Roboto, sans-serif;
-    display: block;
-    color: white;
-    text-align: center;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-left: 16px;
-	margin-top: 30px;
-    margin-right: 16px;
-    font-size: 20px;
-    text-decoration: none;
-}
-
-.header_li a:hover{
-	background-color: #283482;
-	cursor: pointer;
 }
 
 #add_location_container{
@@ -244,33 +316,6 @@ body, html{
 	margin-right: auto;
 }
 
-@media only screen and (max-width: 800px)  {
-	
-	#add_location_1{
-		margin-top: 0px;
-		margin-left: 40px;
-		margin-right: 40px;
-		margin-bottom: 50px;
-	}
-
-	#add_location_2{
-		margin-bottom: 50px;
-		margin-left: 40px;
-		margin-right: 40px;
-		margin-top: 0px;
-	}
-	
-}
-
-@media only screen and (max-width: 935px){
-	#add_location_div_container{
-		margin-top: 0px;
-		margin-bottom: 0px;
-		margin-left: 0px;
-		margin-right: 0px;
-	}
-}
-
 .save_button{
 	margin: 20px;
     background-color: #FFC107;
@@ -359,4 +404,79 @@ body, html{
 	background-color: #00E676;
 	color: #1B5E20;
 	width: 95%;
+}
+
+/* resizing css code */
+@media only screen and (max-width: 1020px){
+	#right_header_div{
+		width: 0%;
+	}
+	
+	#left_header_div{
+		width: 0%;
+	}
+	
+	#header_content_div{
+		width: 100%;
+	}
+	
+	#add_location_div_container{
+		width: 98%;	
+	}
+	
+	#edit_location_div{
+		width: 98%;
+	}
+	
+	#check_feedback_div{
+		width: 98%;
+	}
+	
+	#left_content_div{
+		width: 1%;
+	}
+
+	#right_content_div{
+		width: 1%;
+	}
+}
+
+@media only screen and (max-width: 935px){
+	#add_location_div_container{
+		margin-top: 0px;
+		margin-bottom: 0px;
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+}
+
+@media only screen and (max-width: 800px)  {
+	
+	#add_location_1{
+		margin-top: 0px;
+		margin-left: 40px;
+		margin-right: 40px;
+		margin-bottom: 50px;
+	}
+
+	#add_location_2{
+		margin-bottom: 50px;
+		margin-left: 40px;
+		margin-right: 40px;
+		margin-top: 0px;
+	}
+	
+}
+
+@media only screen and (max-width: 650px){
+	#header_ul{
+		display: none;
+	}
+	#menu_container{
+		display: inline-block;
+	}
+	
+	#maps_container{
+		width: 100%;
+	}
 }

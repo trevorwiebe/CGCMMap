@@ -6,7 +6,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="admin.css">
     <link rel="stylesheet" href="admin.css">
       
-	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
 	<script>
 	  // Initialize Firebase
 	  var config = {
@@ -29,6 +29,11 @@
 	<div id="nav_div">
 		<div id="left_header_div"></div>
 			<div id="header_content_div">
+				<div id="menu_container" onclick="openNav()">
+					<div class="menu_style"></div>
+					<div class="menu_style"></div>
+					<div class="menu_style"></div>
+				</div>
 				<ul id="header_ul">
 					<li class="header_li"><a onclick="addLocation()">Add Location</a></li>
 					<li class="header_li"><a onclick="editLocation()">Edit Locations</a></li>
@@ -37,6 +42,8 @@
 			</div>
 		<div id="right_header_div"></div>
 	</div>
+	
+	<div id="shadow_div"></div>
 	
 	<div id="content_div">
 	
@@ -117,15 +124,24 @@
 	
 		<div id="check_feedback_div">
 			<center><h2>Check feedback</h2></center>
+			<ul id="feedback_ul"></ul>
 		</div>
 		
 		<div id="left_content_div"></div>
+	</div>
+	
+	<div id="side_nav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="#" onclick="addLocation()">Add Location</a>
+		<div class="nav_divider_div"></div>
+		<a href="#" onclick="editLocation()">Edit Locations</a>
+		<div class="nav_divider_div"></div>
+		<a href="#" onclick="checkFeedback()">Check Feedback</a>
 	</div>
 
 	<script>
 		
 		// Member variables
-		var mUser;
 		var mMap;
 		var mLatnLngFromAddress = {};
 		var mNewLatnLngFromMap = {};
@@ -138,18 +154,41 @@
 		var mStatesArray = [];
 		var mLocationId;
 		var mUserId;
+		var mCurrentUserId;
 		
-		// hide elements that are not need now
+		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
 		document.getElementById("location_saved_successfully").style.display = "none";
 		document.getElementById("name_already_saved").style.display = "none";
 		document.getElementById("edit_location_div").style.display = "none";
 		document.getElementById("check_feedback_div").style.display = "none";
 		document.getElementById("add_location_div_container").style.display = "none";
+		document.getElementById("shadow_div").style.visibility = "hidden";
 	
     
-		
 		var database = firebase.database();
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				mCurrentUserId = user.uid;
+				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
+					var array = snapshotToArray(snapshot);
+					console.log(array);
+				})
+			} else {
+				mCurrentUserId = null;
+			}
+		});
+		
+		function openNav() {
+			document.getElementById("shadow_div").style.visibility = "visible";
+			document.getElementById("side_nav").style.visibility = "visible";
+			document.getElementById("side_nav").style.width = "300px";
+		}
+
+		function closeNav() {
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("side_nav").style.width = "0";
+		}
 		
 		/*
 			*****  ADD LOCATIONS CODE   *****
@@ -472,6 +511,7 @@ return;
 		
 		function addLocation(){
 			markersArray = [];
+			closeNav();
 			document.getElementById("add_location_div_container").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
@@ -482,6 +522,7 @@ return;
 		*/
 		function editLocation(){
 			markersArray = [];
+			closeNav();
 			document.getElementById("edit_location_div").style.display = "block";
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
@@ -566,7 +607,6 @@ return;
 						document.getElementById("edit_map_location").style.display = "block";
 						document.getElementById("update_location_btn").style.display = "block";
 
-						
 						var array = snapshotToArray(snapshot);
 						
 						var firstName = array[3];
@@ -678,7 +718,13 @@ return;
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
-			document.getElementById("updated_successfully").style.display = "block";
+			var updatedSuccessfully = document.getElementById("updated_successfully");
+			updatedSuccessfully.style.display = "block";
+			updatedSuccessfully.style.opacity = 1;
+			updatedSuccessfully.style.filter = 'alpha(opacity=' + 1 * 100 + ")";
+			setTimeout(function(){ 
+				fade(updatedSuccessfully); 
+			}, 1000);
 				
 			}
 						   		
@@ -690,6 +736,7 @@ return;
 			*****  CHECK FEEDBACK CODE   *****
 		*/
 		function checkFeedback(){
+			closeNav();
 			document.getElementById("check_feedback_div").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
