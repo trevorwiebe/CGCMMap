@@ -307,18 +307,50 @@ h3{
 #open_in_google_maps_btn{
 	border: none;
 	background: #303F9F;
-	padding: 20px;
+	padding: 15px;
 	border-radius: 2px;
 	margin-left: 20px;
-	margin-top: 15px;
 	color: white;
 	box-shadow: 1px 1px 2px #888;
+}
+
+#show_markers{
+	border: none;
+	background: white;
+	border-radius: 2px;
+	margin-left: 20px;
+	color: #303F9F;
+	box-shadow: 1px 1px 2px #888;
+	margin-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 #names_found_list{
     list-style: none;
     margin-right: 35px;
 	margin-left: 40px;
+}
+
+.sign_in_cancel_button{
+	background-color: white;
+	border-style: none;
+	font-family: 'Roboto', sans-serif;
+	color: #EF5350;
+	font-size: 15px;
+	font-weight: bold;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 70px;
+	padding-right: 70px;
+	margin-top: 15px;
+}
+
+#sign_in_explain{
+	margin-left: 70px;
+	margin-right: 70px;
 }
 
 @media screen and (max-width: 615px){
@@ -339,7 +371,11 @@ h3{
 	
 	#sign_in{
 		width: 325px;
-		height: 450px;
+	}
+	
+	#sign_in_explain{
+		margin-left: 0px;
+		margin-right: 0px;
 	}
 }
 
@@ -405,7 +441,9 @@ h3{
 	}
 }
 
+
 #send_feed_back_link{
+	margin-top: 10px;
 	color: #3F51B5;
 	font-size: 14px;
 	text-decoration: none;
@@ -480,8 +518,7 @@ h1, h3{
 	color: #3b3b3b;
 }
 
-p{
-	font-family: 'Roboto', sans-serif;
+#sign_in_error{
 	color: #EF5350;
 	margin: 0px;
 	font-size: 14px;

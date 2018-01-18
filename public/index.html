@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="index.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+	<meta name="description" content="A handy website to help the members of the Church of God in Christ Mennonite go where they need to go.">
 	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
 	<script>
 		// Initialize Firebase
@@ -25,16 +25,15 @@
 	<div id="map"></div>
 	
 	<div id="sign_in">
-		<h1>CGCM Address Book</h1>
-		<h3>Please sign in to continue.</h3>
-		<p id="fill_in_email_address"></p>
+		<h2>Please sign in to continue.</h2>
+		<p id="sign_in_explain">You can use CGCM Address Book without signing in. Signing in is only necessary for those who are in charge of the locations of the members in their congregation.</p>
 		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
-		<p id="fill_in_password">Please fill in password.</p>
 		<input type="password" class="credentials" id="password" placeholder="Password"><br>
 		<div id="loader"></div>
-		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN">
-		<p id="error">There was an error signing in.</p>
-		<input type="button" class="register_button" onclick="register();" value="REGISTER">
+		<p id="sign_in_error"></p>
+		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN"><br>
+		<input type="button" class="register_button" onclick="register();" value="REGISTER"><br>
+		<input type="button" class="sign_in_cancel_button" onclick="cancelSignIn()" value="CANCEL">
 	</div>
 	
 	<div id="total_feedback">
@@ -48,9 +47,10 @@
 	<div id="incorrect_data_div">
 		<h3>Select type of problem</h3>
 		<select id="whats_wrong">
-			<option value="incorrect_address">Location on map is incorrect</option>
+			<option value="incorrect_location">Location on map is incorrect</option>
 			<option value="incorrect_address">Address is incorrect</option>
 			<option value="typo">Typo in name or address</option>
+			<option value="delete_location">Location needs to be deleted</option>
 			<option value="other">Other</option>
 		</select>
 		<h3>What should it be?</h3>
@@ -89,9 +89,10 @@
 			</div>
 			<div id="info_details">
 				<button id="open_in_google_maps_btn" onclick="openInGoogleMaps()">Navigate</button>
+<!--				<button id="show_markers" onclick="showMarkers()"></button>-->
 			</div>
 		</div>
-		<center><p id="location_maybe_incorrect">This location may be incorrect</p></center>
+		<center><p id="location_maybe_incorrect">The information reguarding this location may be incorrect.<br>Please send feedback so we can resolve the issue.</p></center>
 		<center><a href="#" onclick="notifyAsIncorrect()" id="send_feed_back_link">Send feedback on this location</a></center>
 	</div> 
 	
@@ -112,13 +113,13 @@
 		var mUser;
 		var mWhoAddedIt;
 		var mIsOpen = false;
-		
 		var mIsNameListShown;
 		var mIsNameDetailsShown;
-		
 		var mSelectedLatnLng = {};
-		
 		var mStateArray = {};
+		var markersArray = [];
+		var mAllMarkers = [];
+		var mAreAllLocationsShown;
 		
 		document.getElementById("feedback_error").style.visibility = "hidden";
 		document.getElementById("total_feedback").style.visibility = "hidden";
@@ -127,12 +128,9 @@
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("side_nav").style.visibility = "hidden";
 		document.getElementById("sign_in").style.visibility = "hidden";
-		document.getElementById("loader").style.visibility = "hidden";
-		document.getElementById("fill_in_email_address").style.visibility = "hidden";
-		document.getElementById("fill_in_password").style.visibility = "hidden";
-		document.getElementById("error").style.visibility = "hidden";
+		document.getElementById("loader").style.display = "none";
 		document.getElementById("overlay_loader_id").style.display = "none";
-		document.getElementById("location_maybe_incorrect").style.visibility = "hidden";
+		document.getElementById("location_maybe_incorrect").style.display = "none";
 		document.getElementById("open_in_google_maps_btn").style.display = "none";
 		document.getElementById("send_feed_back_link").style.display = "none";
 		
@@ -199,6 +197,10 @@
 							locationId: location[3],
 							userId: location[4]
 						});
+						
+						mAllMarkers.push(marker);
+						markersArray.push(marker);
+						setMapOnAll(mMap);
 
 						marker.addListener('click', function(){
 							setOverlayDivHeight(50);
@@ -294,6 +296,12 @@
 			document.getElementById("shadow_div").style.visibility = "visible";
 		}
 		
+		function cancelSignIn(){
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("sign_in").style.visibility = "hidden";
+			setErrorEmailErrorText("");
+		}
+		
 		function signInAndOut(){
 			if(mUser){
 				firebase.auth().signOut().then(function() {
@@ -309,6 +317,21 @@
 				mJustClickedSignIn = true;
 			}
 		}	
+		
+		function showMarkers(){
+			if(mAreAllLocationsShown){
+				// hide the locations
+				deleteMarkers();
+//				document.getElementById("show_markers").innerHTML = "Show<br>locations"
+				mAreAllLocationsShown = false;
+			}else{
+				// show the locations
+				markersArray = mAllMarkers;
+				setMapOnAll(mMap);
+//				document.getElementById("show_markers").innerHTML = "Hide<br>locations"
+				mAreAllLocationsShown = true;
+			}
+		}
 
 		function searchForMatches(){
 			var namesFoundList = document.getElementById("names_found_list");
@@ -447,8 +470,20 @@
 					document.getElementById("send_feed_back_link").style.display = "block";
 					document.getElementById("open_in_google_maps_btn").style.display = "block";
 					mIsNameDetailsShown = true;
-					var whereToZoom = {lat: lat, lng: long};
-					smoothZoom(mMap, 21, mMap.getZoom());
+					mAreAllLocationsShown = false;
+					
+//					deleteMarkers();
+//					var marker = new google.maps.Marker({
+//							position: mSelectedLatnLng,
+//							map: mMap
+//						});
+//					markersArray.push(marker);
+//					setMapOnAll(mMap);
+					
+//					document.getElementById("show_markers").innerHTML = "Show<br>locations"
+					
+					var whereToZoom = mSelectedLatnLng;
+					smoothZoom(mMap, 20, mMap.getZoom());
 					mMap.panTo(whereToZoom);
 					setOverlayDivHeight(155);
 					document.getElementById("overlay_loader_id").style.display = "none";
@@ -505,43 +540,37 @@
 		}
 		
 		function logIn() {
-			document.getElementById("error").style.visibility = "hidden";
+			setErrorEmailErrorText("");
 			var email_address = document.getElementById("email_address").value;
 			var input_password = document.getElementById("password").value;
 			if(email_address.length == 0 && input_password.length == 0){
-				document.getElementById("fill_in_password").style.visibility = "visible";
-				document.getElementById("fill_in_email_address").style.visibility = "visible";
-				setErrorEmailErrorText("Please fill in email address.")
+				setErrorEmailErrorText("Please fill the blanks");
 			}else if(input_password.length == 0){
-				document.getElementById("fill_in_password").style.visibility = "visible";
-				document.getElementById("fill_in_email_address").style.visibility = "hidden";
+				setErrorEmailErrorText("Please fill in password");
 			}else if(email_address.length == 0){
-				document.getElementById("fill_in_email_address").style.visibility = "visible";
-				setErrorEmailErrorText("Please fill in email address.")
-				document.getElementById("fill_in_password").style.visibility = "hidden";
+				setErrorEmailErrorText("Please fill in email address");
 			}else{
-				document.getElementById("fill_in_email_address").style.visibility = "hidden";
-				document.getElementById("fill_in_password").style.visibility = "hidden";
 				if(validateEmail(email_address)){
-					document.getElementById("loader").style.visibility = "visible";
+		
+					document.getElementById("loader").style.display = "block";
+					
 					firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function(){
-						firebase.auth().signInWithEmailAndPassword(email_address, input_password).catch(function(error){
-							var errorCode = error.code;
-							var errorMessage = error.message;
-							document.getElementById("loader").style.visibility = "hidden";
-							document.getElementById("fill_in_email_address").style.visibility = "hidden";
-							document.getElementById("fill_in_password").style.visibility = "hidden";
-							document.getElementById("error").style.visibility = "visible";	
-						})
+						
+						firebase.auth().signInWithEmailAndPassword(email_address, input_password)
+							.catch(function(error){
+								document.getElementById("loader").style.display = "none";
+								var errorMessage = error.message;
+								setErrorEmailErrorText(errorMessage);
+							})
+						
 					}).catch(function(error){
-						document.getElementById("loader").style.visibility = "hidden";
-						document.getElementById("fill_in_email_address").style.visibility = "hidden";
-						document.getElementById("fill_in_password").style.visibility = "hidden";
-						document.getElementById("error").style.visibility = "visible";
+						document.getElementById("loader").style.display = "none";
+						var errorMessage = error.message;
+						setErrorEmailErrorText(errorMessage);
 					});
+					
 				}else{
-					document.getElementById("fill_in_email_address").style.visibility = "visible";
-					setErrorEmailErrorText( email_address + " is not a valid email address.");
+					setErrorEmailErrorText("Email is not valid");
 				}
 			}
 		}
@@ -558,7 +587,7 @@
 		}  
 
 		function setErrorEmailErrorText(error_text) {
-			document.getElementById("fill_in_email_address").innerHTML = error_text;
+			document.getElementById("sign_in_error").innerHTML = error_text;
 		}
 		
 		function close_menus(e){
@@ -570,6 +599,7 @@
 				if(style.visibility === 'visible'){
 					document.getElementById("shadow_div").style.visibility = "hidden";
 					document.getElementById("sign_in").style.visibility = "hidden";	
+					setErrorEmailErrorText("");
 				}
 				
 				// close nav drawer
@@ -596,6 +626,17 @@
 				}
 			}	
 		}
+		
+		function setMapOnAll(map) {
+			for (var i = 0; i < markersArray.length; i++) {
+			  markersArray[i].setMap(map);
+			}
+		  }
+		
+		function deleteMarkers() {
+			setMapOnAll(null);
+			markersArray = [];
+		  }
 		
 		function openMaps(lat, lon) {
 			var latLon = lat + ',' + lon;
@@ -659,8 +700,8 @@
 				
 				nameDetailsDiv.style.visibility = "hidden";
 				namesList.style.visibility = "hidden";
-				openInGMaps.style.visibility = "hidden";
-				sendFeedbackLink.style.visibility = "hidden";
+				openInGMaps.style.display = "none";
+				sendFeedbackLink.style.display = "none";
 			
 
 				setOverlayDivHeight(0);
@@ -671,8 +712,8 @@
 				
 				if(mIsNameDetailsShown){
 					nameDetailsDiv.style.visibility = "visible"
-					openInGMaps.style.visibility = "visible";
-					sendFeedbackLink.style.visibility = "visible";
+					openInGMaps.style.display = "block";
+					sendFeedbackLink.style.display = "block";
 					setOverlayDivHeight(155);
 				}
 				
@@ -701,7 +742,7 @@
 				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
 				document.getElementById("shadow_div").style.visibility = "hidden";
 				document.getElementById("sign_in").style.visibility = "hidden";
-				document.getElementById("loader").style.visibility = "hidden";
+				document.getElementById("loader").style.display = "none";
 			} else {
 				document.getElementById("registered_user_div").style.display = "none";
 				document.getElementById("registered_user_href").style.display = "none";
