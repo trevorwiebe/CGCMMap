@@ -67,7 +67,7 @@
 					<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
 				</div>
 			</div>
-			<center><h3 id="message_center"></h3></center>
+			<center><h3 id="message_center_add_location"></h3></center>
 			<div id="maps_div">
 				<div id="maps_container"></div>
 				<center><input type="button" onclick="resetLocation()" value="Reset Pin" id="reset_location">
@@ -89,7 +89,7 @@
 		</div>
 		
 		<div id="edit_location_div">
-			<center><h2>Edit location</h2></center>
+			<center><h2>Edit or Delete locations</h2></center>
 			
 			<center><input type="text" class="input" placeholder="Search for location", id="edit_search_location" onkeyup="searchForPlacesToEdit()"></center>
 			<center><div id="divider_div"></div></center>
@@ -108,12 +108,13 @@
 					<h4 class="tags">Select State or Province</h4>
 					<select id="edit_state_select" class="select"></select>
 					<h4 class="tags">Select Congregation</h4>
-					<select id="edit_cong_select" class="select"></select>
+					<select id="edit_cong_select" class="select"></select><br>
+					<input type="button" onclick="deleteThisLocation()" id="delete_this_location_btn" value="Delete this location">
 				</div>
 				
 			</div>
 			
-			<center><h3 id="updated_successfully">Location updated successfully</h3></center>
+			<center><h3 id="edit_location_message"></h3></center>
 			
 			<center><div id="edit_map_location"></div></center>
 			
@@ -152,6 +153,7 @@
 		var mStatesMap = {};
 		var mStatesArray = [];
 		var mLocationId;
+		var mSelectedDate;
 		var mUserId;
 		var mCurrentUserId;
 		var mLocationThatCurrentUserPutIn = {};
@@ -191,8 +193,8 @@
 			document.getElementById("side_nav").style.width = "0";
 		}
 		
-		function setMessage(message, type){
-			var messageCenter = document.getElementById("message_center");
+		function setMessage(id, message, type){
+			var messageCenter = document.getElementById(id);
 			messageCenter.style.display = "block";
 			messageCenter.style.opacity = 1;
 			messageCenter.style.filter = 'alpha(opacity=' + 1 * 100 + ")";
@@ -249,8 +251,7 @@
 			var cong = getSelectedText('cong_select');
             
             if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
-                setMessage("Please fill all the blanks", 0);
-				console.log("here");
+                setMessage("message_center_add_location", "Please fill all the blanks", 0);
 				return;
             }
             
@@ -278,7 +279,7 @@
 			document.getElementById('city').value = ""
 			
 			document.getElementById("maps_div").style.display = "none";
-			setMessage("Location saved successfully", 1);
+			setMessage("message_center_add_location", "Location saved successfully", 1);
 			
 			deleteMarkers();
 			
@@ -391,19 +392,19 @@
 			var cong = getSelectedText('cong_select');
 
 			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
-				setMessage("Please fill all the blanks",0);
+				setMessage("message_center_add_location", "Please fill all the blanks",0);
 				return;
 			}
 
 			if(isNotCapital(firstName) || isNotCapital(lastName) || isNotCapital(city)){
-				setMessage("First name, last name and city must be capitalized",0);
+				setMessage("message_center_add_location", "First name, last name and city must be capitalized",0);
 				return;
 			}
 			var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
 			databaseRef.on('value', function(snapshot){
 				var array = snapshotToArray(snapshot);
 				if(areNamesInArray(array, firstName, lastName)){
-					setMessage("This person's location is already saved", 0);
+					setMessage("message_center_add_location", "This person's location is already saved", 0);
 					document.getElementById("maps_div").style.display = "none";
 				}else{
 					var addressString = address.split(" ");
@@ -424,9 +425,8 @@
 						if(this.readyState == 4 && this.status == 200){
 							var json = JSON.parse(this.responseText);
 							var successCode = json.status;
-							console.log(successCode);
 							if(successCode === "ZERO_RESULTS"){
-								setMessage("Address is unknown, please try a different one", 0);
+								setMessage("message_center_add_location", "Address is unknown, please try a different one", 0);
 							}else{
 								document.getElementById("maps_div").style.display = "block";
 								var lat_n_long = json.results[0].geometry.location;
@@ -566,7 +566,6 @@
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
-			document.getElementById("updated_successfully").style.display = "none";
 			
 			var editSelectState = document.getElementById("edit_state_select");
 			var editSelectCong = document.getElementById("edit_cong_select");
@@ -597,7 +596,6 @@
 			var locationsToEdit = document.getElementById("locations_to_edit_ul");
 
 			document.getElementById("verify_edit_location_div").style.display = "none";
-			document.getElementById("updated_successfully").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
 			
@@ -611,6 +609,7 @@
 				locationsToEdit.style.display = "block";
 				
 				var searchAndFoundItems = [];
+			
 			
 				for(var t=0; mLocationThatCurrentUserPutIn.length >t; t++){
 					var array = mLocationThatCurrentUserPutIn[t];
@@ -654,16 +653,17 @@
 
 						var array = snapshotToArray(snapshot);
 						
-						var firstName = array[3];
-						var lastName = array[4];
+						var firstName = array[5];
+						var lastName = array[6];
 						var address = array[0];
-						var state = array[8];
+						var state = array[10];
 						var city = array[1];
 						var cong = array[2];
-						var lat = array[5];
-						var long = array[7];
-						mLocationId = array[6];
-						mUserId = array[9];
+						var lat = array[7];
+						var long = array[9];
+						mLocationId = array[8];
+						mUserId = array[11];
+						mSelectedDate = array[3];
 						
 						document.getElementById("edit_first_name").value = firstName;
 						document.getElementById("edit_last_name").value = lastName;
@@ -732,6 +732,8 @@
 				var lng = mEditNewLatnLngFromMap.lng;
 			}
 			
+			var firstAndLastName = firstName + " " + lastName;
+			
 			var ref = firebase.database().ref("locations/" + mLocationId);
 			ref.set({
                 latitude: lat,
@@ -740,6 +742,8 @@
 				lastName: lastName,
 				address: address,
 				city: city,
+				date: mSelectedDate,
+				firstAndLastName: firstAndLastName,
 				congregation: congId,
 				state: stateId,
                 locationId: mLocationId,
@@ -758,17 +762,13 @@
 			mLocationId = null;
 			
 			markersArray = [];
+			
+			mSelectedDate = null;
 
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
-			var updatedSuccessfully = document.getElementById("updated_successfully");
-			updatedSuccessfully.style.display = "block";
-			updatedSuccessfully.style.opacity = 1;
-			updatedSuccessfully.style.filter = 'alpha(opacity=' + 1 * 100 + ")";
-			setTimeout(function(){ 
-				fade(updatedSuccessfully); 
-			}, 1000);
+			setMessage("edit_location_message", "Location updated successfully", 1);
 				
 			}
 		
@@ -785,6 +785,15 @@
 						   		
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+		
+		function deleteThisLocation(){
+			var ref = database.ref("locations").child(mLocationId);
+			ref.remove();
+			setMessage("edit_location_message", "Location delete successfully", 1);
+			document.getElementById("verify_edit_location_div").style.display = "none";
+			document.getElementById("edit_map_location").style.display = "none";
+			document.getElementById("update_location_btn").style.display = "none";
 		}
 		
 		/*
