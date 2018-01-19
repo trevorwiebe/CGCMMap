@@ -35,12 +35,21 @@
 					<div class="menu_style"></div>
 				</div>
 				<ul id="header_ul">
-					<li class="header_li"><a onclick="addLocation()">Add Location</a></li>
-					<li class="header_li"><a onclick="editLocation()">Edit Locations</a></li>
-					<li class="header_li"><a onclick="checkFeedback()">Check Feedback</a></li>
+					<li class="header_li"><a onclick="navAddLocation()">Add Location</a></li>
+					<li class="header_li"><a onclick="navEditLocation()">Edit Locations</a></li>
+					<li class="header_li"><a onclick="navCheckFeedback()">Check Feedback</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
+	</div>
+	
+	<div id="side_nav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="#" onclick="navAddLocation()">Add Location</a>
+		<div class="nav_divider_div"></div>
+		<a href="#" onclick="navEditLocation()">Edit Locations</a>
+		<div class="nav_divider_div"></div>
+		<a href="#" onclick="navCheckFeedback()">Check Feedback</a>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -70,8 +79,8 @@
 			<center><h3 id="message_center_add_location"></h3></center>
 			<div id="maps_div">
 				<div id="maps_container"></div>
-				<center><input type="button" onclick="resetLocation()" value="Reset Pin" id="reset_location">
-				<input type="button" id="save_location" class="save_button" value="Save Location"></center>
+				<center><input type="button" onclick="resetPins()" value="Reset Pin" id="reset_location">
+				<input type="button" id="save_location" onclick="saveLocationBtn()" class="save_button" value="Save Location"></center>
 			</div>
 			<div id="add_location_divider"></div>
 			<div id="add_state_province_cong_container">
@@ -129,15 +138,6 @@
 		
 		<div id="left_content_div"></div>
 	</div>
-	
-	<div id="side_nav" class="sidenav">
-		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<a href="#" onclick="addLocation()">Add Location</a>
-		<div class="nav_divider_div"></div>
-		<a href="#" onclick="editLocation()">Edit Locations</a>
-		<div class="nav_divider_div"></div>
-		<a href="#" onclick="checkFeedback()">Check Feedback</a>
-	</div>
 
 	<script>
 		
@@ -165,13 +165,16 @@
 		document.getElementById("add_location_div_container").style.display = "none";
 		document.getElementById("shadow_div").style.visibility = "hidden";
 	
-    
+		/*
+			*****  CODE USED FOR MORE THAN ONE ADMIN ACTIVITY  *****
+		*/
 		var database = firebase.database();
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				mCurrentUserId = user.uid;
 				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
 					var array = snapshotToArray(snapshot);
+					console.log(array);
 				})
 				
 				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
@@ -201,14 +204,14 @@
 			messageCenter.innerHTML = message;
 			switch(type){
 				case 0:
-//					Error
+					// Error
 					messageCenter.style.color = "#B71C1C";
 					messageCenter.style.backgroundColor = "#E57373";
 					break;
 				case 1:
-//					Not an Error
+					// Not an Error
 					messageCenter.style.color = "#1B5E20";
-					messageCenter.style.backgroundColor = "#00E676";
+					messageCenter.style.backgroundColor = "#66BB6A";
 					break;
 				default:
 					messageCenter.style.color = "white";
@@ -223,10 +226,10 @@
 		  return word[0] !== word[0].toUpperCase();
 		}
 		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
 		
-		/*
-			*****  ADD LOCATIONS CODE   *****
-		*/
 		database.ref('congregations').on('value', function(snapshot){
 			var congSelect = document.getElementById("cong_select");
 			congSelect.innerHTML = "";
@@ -241,9 +244,13 @@
 			document.getElementById("loading_div").style.display = "none";
 		});
 		
-        document.getElementById("save_location").addEventListener("click", function(){
-            
-            var firstName = document.getElementById('first_name').value;
+		
+		/*
+			*****  ADD LOCATIONS CODE   *****
+		*/
+		
+		function saveLocationBtn(){
+			 var firstName = document.getElementById('first_name').value;
 			var lastName = document.getElementById('last_name').value;
 			var address = document.getElementById('address').value;
 			var city = document.getElementById('city').value;
@@ -285,8 +292,7 @@
 			
 			mLatnLngFromAddress = {};
 			mNewLatnLngFromMap = {};
-            
-        });
+		}
 		
 	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUserId, varDate){
 			var firstName = capitalizeFirstLetter(varFirstName);
@@ -337,42 +343,6 @@
 			});
 			document.getElementById("congregation").value = "";
 		}
-		
-		function parseCongSnapshot(snapshot) {
-			var congSelect = document.getElementById("cong_select");
-	   		snapshot.forEach(function(childSnapshot) {
-		   		var name = childSnapshot.val().congregation;
-		   		var nameId = childSnapshot.val().congregationId;
-
-		   		var node = document.createElement('option');
-				node.value = name;
-				node.innerHTML = name;
-				congSelect.appendChild(node);
-
-		   		mCongregationArray.push(name);
-		   		mCongregationMap[name] = nameId;
-    	   	});
-
-	     };
-		
-		function parseStateSnapshot(snapshot){
-			var stateSelect = document.getElementById("state_select");
-			var editStateSelect = document.getElementById("edit_state_select");
-			snapshot.forEach(function(childSnapshot){
-				var name = childSnapshot.val().state;
-				var nameId = childSnapshot.val().stateId;
-				
-				var node = document.createElement('option');
-				node.value = name;
-				node.innerHTML = name;
-				
-				stateSelect.appendChild(node);
-				
-				mStatesArray.push(name);
-				mStatesMap[name] = nameId;
-				
-			})
-		};
 		
 		function getSelectedText(elementId) {
 			var elt = document.getElementById(elementId);
@@ -482,7 +452,7 @@
 			})
 		}
 		
-		function resetLocation(){
+		function resetPins(){
 			deleteMarkers();
 			var marker = new google.maps.Marker({
 			  position: mLatnLngFromAddress,
@@ -492,6 +462,42 @@
 			setMapOnAll(mMap);
 			mMap.panTo(mLatnLngFromAddress);
 		}
+		
+		function parseCongSnapshot(snapshot) {
+			var congSelect = document.getElementById("cong_select");
+	   		snapshot.forEach(function(childSnapshot) {
+		   		var name = childSnapshot.val().congregation;
+		   		var nameId = childSnapshot.val().congregationId;
+
+		   		var node = document.createElement('option');
+				node.value = name;
+				node.innerHTML = name;
+				congSelect.appendChild(node);
+
+		   		mCongregationArray.push(name);
+		   		mCongregationMap[name] = nameId;
+    	   	});
+
+	     };
+		
+		function parseStateSnapshot(snapshot){
+			var stateSelect = document.getElementById("state_select");
+			var editStateSelect = document.getElementById("edit_state_select");
+			snapshot.forEach(function(childSnapshot){
+				var name = childSnapshot.val().state;
+				var nameId = childSnapshot.val().stateId;
+				
+				var node = document.createElement('option');
+				node.value = name;
+				node.innerHTML = name;
+				
+				stateSelect.appendChild(node);
+				
+				mStatesArray.push(name);
+				mStatesMap[name] = nameId;
+				
+			})
+		};
        
 		function setMapOnAll(map) {
 			for (var i = 0; i < markersArray.length; i++) {
@@ -546,7 +552,7 @@
 			return false;
 		}
 		
-		function addLocation(){
+		function navAddLocation(){
 			markersArray = [];
 			closeNav();
 			document.getElementById("add_location_div_container").style.display = "block";
@@ -554,10 +560,11 @@
 			document.getElementById("check_feedback_div").style.display = "none";
 		}
 		
+		
 		/*
 			*****  EDIT ITEMS CODE   *****
 		*/
-		function editLocation(){
+		function navEditLocation(){
 			markersArray = [];
 			closeNav();
 			document.getElementById("edit_location_div").style.display = "block";
@@ -782,15 +789,11 @@
 			}
 			return false;
 		}
-						   		
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
 		
 		function deleteThisLocation(){
 			var ref = database.ref("locations").child(mLocationId);
 			ref.remove();
-			setMessage("edit_location_message", "Location delete successfully", 1);
+			setMessage("edit_location_message", "Location deleted successfully", 1);
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
@@ -799,7 +802,7 @@
 		/*
 			*****  CHECK FEEDBACK CODE   *****
 		*/
-		function checkFeedback(){
+		function navCheckFeedback(){
 			closeNav();
 			document.getElementById("check_feedback_div").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
