@@ -466,6 +466,11 @@ body, html{
 	width: 40%;
 }
 
+#cong_message, #state_or_province_message{
+	padding: 15px;
+}
+
+
 
 /*
 	**********	EDIT ITEMS  **********

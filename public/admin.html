@@ -87,11 +87,13 @@
 				<div id="add_s_p_c_1">
 					<center><h2 class="tags">Add new State or Province</h2></center>
 					<center><input type="text" id="state" class="input" placeholder="State or Province"><br></center>
+					<center><p id="state_or_province_message"></p></center>
 					<center><input type="button" id="save_state" class="save_button" value="Save State or Province" onclick="saveState()"></center>
 				</div>
 				<div id="add_s_p_c_2">
 					<center><h2 class="tags">Add new Congregation</h2></center>
 					<input type="text" id="congregation" class="input" placeholder="Congregation"><br>
+					<center><p id="cong_message"></p></center>
 					<center><input type="button" id="save_congregation" class="save_button" value="Save Congregation" onclick="saveCongregation()"></center>
 				</div>
 			</div>
@@ -193,6 +195,8 @@
 		document.getElementById("check_feedback_div").style.display = "none";
 		document.getElementById("add_location_div_container").style.display = "none";
 		document.getElementById("shadow_div").style.visibility = "hidden";
+		document.getElementById("cong_message").style.display = "none";
+		document.getElementById("state_or_province_message").style.display = "none";
 		
 		document.onclick = closeMenus;
 	
@@ -371,6 +375,15 @@
 		function saveState(){
 			var state = document.getElementById("state").value;
 			if(state.length == 0){
+				setMessage("state_or_province_message", "Please fill the blank", 0);
+				return;
+			}
+			if(mStatesArray.indexOf(state) > -1){
+				setMessage("state_or_province_message", state + " was already added", 0);
+				return;
+			}
+			if(isNotCapital(state)){
+				setMessage("state_or_province_message", "State or province must be capitalized", 0);
 				return;
 			}
 			var ref = firebase.database().ref('stateOrProvince').push();
@@ -379,12 +392,22 @@
 				stateId: key,
 				state: state
 			});
+			setMessage("state_or_province_message", state + " was added successfully", 1);
 			document.getElementById("state").value = "";
 		}
 		
 		function saveCongregation(){
 			var cong = document.getElementById("congregation").value;
 			if(cong.length == 0){
+				setMessage("cong_message", "Please fill the blank", 0);
+				return;
+			}
+			if(mCongregationArray.indexOf(cong) > -1){
+				setMessage("cong_message", "Congregation already added", 0);
+				return;
+			}
+			if(isNotCapital(cong)){
+				setMessage("cong_message", "Congregation must be capitalized", 0);
 				return;
 			}
 			var ref = firebase.database().ref('congregations').push();
@@ -393,6 +416,7 @@
 				congregationId: key,
 				congregation: cong
 			});
+			setMessage("cong_message", cong + " was added successfully", 1);
 			document.getElementById("congregation").value = "";
 		}
 		
