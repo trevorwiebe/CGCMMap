@@ -132,8 +132,33 @@
 		</div>
 	
 		<div id="check_feedback_div">
-			<center><h2>Check feedback</h2></center>
-			<ul id="feedback_ul"></ul>
+			<center><h3 id="unresolved_feedback_h">Unresolved Feedback</h3></center>
+			<ul id="unresolved_feedback_ul"></ul>
+			
+			<center><h3 id="resolved_feedback_h">Resolved Feedback</h3></center>
+			<ul id="resolved_feedback_ul"></ul>
+			
+			<div id="view_feedback">
+				<div id="feedback_content">
+					<center><h3>Feedback</h3></center>
+					<p id="feedback_whats_wrong" class="show_feedback_p"></p>
+					<p id="feedback_notes" class="show_feedback_p"></p>
+					<p id="feedback_date" class="show_feedback_p"></p>
+					<center><h3>Location in question</h3></center>
+					<p id="first_and_last_name" class="show_feedback_p">test</p>
+					<p id="feedback_congregation" class="show_feedback_p">test</p>
+					<p id="feedback_address" class="show_feedback_p">test</p>
+					<p id="feedback_city_and_state" class="show_feedback_p">test</p>
+				</div>
+					<div id="feedback_button_bar">
+						<button id="feedback_cancel" onclick="feedback_cancel()">Cancel</button>
+						<button id="feedback_mark_resolved" onclick="markResolved()">Mark as resolved</button>
+						<button id="feedback_edit_location" onclick="feedbackEditLocation()">Edit Location</button>
+					</div>
+			</div>
+			<div id="loading_feedback">
+				<div id="feedback_loader"></div>
+			</div>
 		</div>
 		
 		<div id="left_content_div"></div>
@@ -149,14 +174,18 @@
 		var mEditNewLatnLngFromMap = {};
 		var markersArray = [];
 		var mCongregationMap = {};
+		var mCongregationMapIds = {};
 		var mCongregationArray = [];
 		var mStatesMap = {};
+		var mStateMapIds = {};
 		var mStatesArray = [];
 		var mLocationId;
 		var mSelectedDate;
 		var mUserId;
 		var mCurrentUserId;
 		var mLocationThatCurrentUserPutIn = {};
+		var mLocationFeedbackArray = {};
+		var mIsEditingFromCheckFeedback = false;
 		
 		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
@@ -164,6 +193,8 @@
 		document.getElementById("check_feedback_div").style.display = "none";
 		document.getElementById("add_location_div_container").style.display = "none";
 		document.getElementById("shadow_div").style.visibility = "hidden";
+		
+		document.onclick = closeMenus;
 	
 		/*
 			*****  CODE USED FOR MORE THAN ONE ADMIN ACTIVITY  *****
@@ -173,8 +204,9 @@
 			if (user) {
 				mCurrentUserId = user.uid;
 				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
-					var array = snapshotToArray(snapshot);
-					console.log(array);
+					mLocationFeedbackArray = snapshotToArray(snapshot);
+					document.getElementById("add_location_div_container").style.display = "block";
+					document.getElementById("loading_div").style.display = "none";
 				})
 				
 				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
@@ -230,6 +262,28 @@
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		}
 		
+		function closeMenus(e){
+			if(e.target.id === "shadow_div"){
+			
+				var check_feedback = document.getElementById("view_feedback");
+				var style = window.getComputedStyle(check_feedback);
+				if(style.visibility === 'visible'){
+					document.getElementById("shadow_div").style.visibility = "hidden";
+					check_feedback.style.visibility = "hidden";
+					
+					document.getElementById("loading_feedback").style.visibility = "hidden";
+				}
+				
+				// close nav drawer
+				var nav_drawer = document.getElementById("side_nav");
+				var nav_style = window.getComputedStyle(nav_drawer);
+				if(nav_style.width !== '0px'){
+					closeNav();
+				}
+				
+			}	
+		}
+		
 		database.ref('congregations').on('value', function(snapshot){
 			var congSelect = document.getElementById("cong_select");
 			congSelect.innerHTML = "";
@@ -240,8 +294,6 @@
 			var congSelect = document.getElementById("state_select");
 			congSelect.innerHTML = "";
 			parseStateSnapshot(snapshot);
-			document.getElementById("add_location_div_container").style.display = "block";
-			document.getElementById("loading_div").style.display = "none";
 		});
 		
 		
@@ -476,6 +528,7 @@
 
 		   		mCongregationArray.push(name);
 		   		mCongregationMap[name] = nameId;
+				mCongregationMapIds[nameId] = name;
     	   	});
 
 	     };
@@ -495,6 +548,7 @@
 				
 				mStatesArray.push(name);
 				mStatesMap[name] = nameId;
+				mStateMapIds[nameId] = name;
 				
 			})
 		};
@@ -802,11 +856,123 @@
 		/*
 			*****  CHECK FEEDBACK CODE   *****
 		*/
+		
+		function parseDate(date){
+		
+			var date = parseFloat(date);
+			var date = new Date(date);
+			
+			var year = date.getFullYear();
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			
+			return month + "/" + day + "/" + year;
+		}
+		
 		function navCheckFeedback(){
 			closeNav();
+			var unresolvedFeedUl = document.getElementById("unresolved_feedback_ul");
+			var resolvedFeedUl = document.getElementById("resolved_feedback_ul");
+			document.getElementById("loading_feedback").style.visibility = "hidden";
+			document.getElementById("view_feedback").style.visibility = "hidden";
 			document.getElementById("check_feedback_div").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
+			for(var k=0; mLocationFeedbackArray.length > k; k++){
+				var itemArray = mLocationFeedbackArray[k];
+				var whatsWrong = itemArray.whatsWrong;
+				var isResolved = itemArray.isResolved;
+				var locationId = itemArray.locationFeedbackKey;
+				var date = itemArray.date;
+				var notes = itemArray.notes;
+				if(isResolved){
+					var li = document.createElement("li");
+					li.appendChild(document.createTextNode(whatsWrong));
+					li.setAttribute("id", "feedback_resolved_li");
+					li.setAttribute("locationId", locationId);
+					li.setAttribute("date", date);
+					li.setAttribute("notes", notes);
+					li.setAttribute("whatsWrong", whatsWrong);
+					li.setAttribute("isResolved", "1");
+					resolvedFeedUl.appendChild(li);
+				}else{
+					var li = document.createElement("li");
+					li.appendChild(document.createTextNode(whatsWrong));
+					li.setAttribute("id", "feedback_not_resolved_li");
+					li.setAttribute("locationId", locationId);
+					li.setAttribute("date", date);
+					li.setAttribute("notes", notes);
+					li.setAttribute("whatsWrong", whatsWrong);
+					li.setAttribute("isResolved", "0");
+					unresolvedFeedUl.appendChild(li);	
+				}
+			}
+			
+			for(i=0;i<=unresolvedFeedUl.childElementCount-1;i++){
+				unresolvedFeedUl.children[i].addEventListener("click",itemClicked);
+			}
+			
+			for(i=0;i<=resolvedFeedUl.childElementCount-1;i++){
+				resolvedFeedUl.children[i].addEventListener("click",itemClicked);
+			}
+			
+			function itemClicked(){
+				document.getElementById("loading_feedback").style.visibility = "visible";
+				document.getElementById("shadow_div").style.visibility = "visible";
+				document.getElementById("view_feedback").style.visibility = "visible";
+				var locationKey = this.getAttribute("locationId");
+				var millis = this.getAttribute("date");
+				var date = parseDate(millis);
+				var notes = this.getAttribute("notes");
+				var whatsWrong = this.getAttribute("whatsWrong");
+				var isResolved = this.getAttribute("isResolved");
+				
+				if(isResolved === "1"){
+					document.getElementById("feedback_mark_resolved").style.display = "none";
+					document.getElementById("feedback_edit_location").style.display = "none";
+				}else{
+					document.getElementById("feedback_mark_resolved").style.display = "inline-block";
+					document.getElementById("feedback_edit_location").style.display = "inline-block";
+				}
+				document.getElementById("feedback_whats_wrong").innerHTML = whatsWrong;
+				document.getElementById("feedback_notes").innerHTML = notes;
+				document.getElementById("feedback_date").innerHTML = date;
+				var ref = database.ref('locations').child(locationKey);
+				ref.on('value', function(snapshot){
+					document.getElementById("loading_feedback").style.visibility = "hidden";
+					var array = snapshotToArray(snapshot);
+					var address = array[0];
+					var city = array[1];
+					var stateId = array[10];
+					var congId = array[2];
+					var name = array[4];
+					var state = mStateMapIds[stateId];
+					var cong = mCongregationMapIds[congId];
+					document.getElementById("first_and_last_name").innerHTML = name;
+					document.getElementById("feedback_address").innerHTML = address;
+					document.getElementById("feedback_city_and_state").innerHTML = city + ", " + state;
+					document.getElementById("feedback_congregation").innerHTML= cong;
+				})
+			}
+			
+		}
+		
+		function feedback_cancel(){
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("view_feedback").style.visibility = "hidden";
+			document.getElementById("loading_feedback").style.visibility = "hidden";
+		}
+		
+		function markResolved(){
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("view_feedback").style.visibility = "hidden";
+			document.getElementById("loading_feedback").style.visibility = "hidden";
+		}
+		
+		function feedbackEditLocation(){
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("view_feedback").style.visibility = "hidden";
+			document.getElementById("loading_feedback").style.visibility = "hidden";
 		}
 		
 	</script>

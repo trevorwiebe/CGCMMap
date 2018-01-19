@@ -49,11 +49,12 @@
 		<select id="whats_wrong">
 			<option value="incorrect_location">Location on map is incorrect</option>
 			<option value="incorrect_address">Address is incorrect</option>
-			<option value="typo">Typo in name or address</option>
 			<option value="delete_location">Location needs to be deleted</option>
+			<option value="typo">Typo in name or address</option>
 			<option value="other">Other</option>
 		</select>
-		<h3>What should it be?</h3>
+		<h3>Tell us more</h3>
+		<p id="location_feedback_explain">Try to be clear and descriptive with the problem, more words the better. Thanks for improving CGCM Maps!</p>
 		<textarea id="incorrect_data_notes"></textarea>
 		<input type="button" value="Cancel" class="button" id="incorrect_cancel_btn" onclick="cancelIncorrect()">
 		<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendFeedbackOnLocation()">
@@ -102,7 +103,7 @@
 		<div class="nav_divider_div"></div>
 		<a href="#" onclick="showSendFeedbackOnWholeSite()">Send Feedback</a>
 		<div class="nav_divider_div"></div>
-		<a href="#" onclick="admin()" id="registered_user_href">Registered User</a>
+		<a href="#" onclick="admin()" id="registered_user_href">Congregational<br>Agent</a>
 		<div class="nav_divider_div" id="registered_user_div"></div>
 		<a href="#" onclick="signInAndOut()" id="sign_in_out_href"></a>
 	</div>
@@ -120,6 +121,7 @@
 		var markersArray = [];
 		var mAllMarkers = [];
 		var mAreAllLocationsShown;
+		var mSelectedLocationId;
 		
 		document.getElementById("feedback_error").style.visibility = "hidden";
 		document.getElementById("total_feedback").style.visibility = "hidden";
@@ -160,7 +162,7 @@
 					zoom: 4,
 					center: whereToCenter,
 					mapTypeControlOptions: {
-						position: google.maps.ControlPosition.LEFT_BOTTOM,
+						position: google.maps.ControlPosition.RIGHT_BOTTOM,
 						fullscreenControl: false,
 					}
 				});
@@ -242,7 +244,9 @@
 			var ref = firebase.database().ref("locationFeedback/" + mWhoAddedIt).push();
 			var key = ref.getKey();
 			ref.set({
-				locationFeebackKey: key,
+				locationFeedbackKey: mSelectedLocationId,
+				feedbackKey: key,
+				isResolved: false,
 				whatsWrong: whatsWrong,
 				date: date,
 				notes: notes
@@ -362,7 +366,6 @@
 			mIsNameListShown = true;
 			mIsNameDetailsShown = false;
 			
-		
 			document.getElementById("name_details_div").style.visibility = "hidden";
 			var ref = firebase.database().ref("locations").orderByChild('firstAndLastName').startAt(equalTo).limitToFirst(6);
 			ref.once('value').then(function(snapshot){
@@ -455,6 +458,8 @@
 			var lat = array.latitude;
 			var long = array.longitude;
 			var locationId = array.locationId;
+			
+			mSelectedLocationId = locationId;
 			
 			mSelectedLatnLng = {lat: lat, lng: long};
 			
