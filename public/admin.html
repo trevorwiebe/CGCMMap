@@ -131,6 +131,30 @@
 			
 			<center><input value="Update Location" class="save_button" id="update_location_btn" type="button" onclick="updateLocation()"></center>
 			
+			<center><h2>Edit State or Provinces</h2></center>
+			
+			<center><input type="text" class="input" placeholder="Search for state or province", id="edit_search_state" onkeyup="searchForStatesToEdit()"></center>
+			<center><div id="divider_div"></div></center>
+			<center><ul id="states_to_edit_ul"></ul></center>
+			
+			<div id="edit_state_div">
+				<input type="text" class="input" id="state_to_edit" placeholder="State or Province"><br>
+				<input type="button" class="save_button" value="Update State or Province" onclick="updateState()">
+			</div>
+			<p id="edit_state_message"></p>
+			
+			<center><h2>Edit Congregations</h2></center>
+			
+			<center><input type="text" class="input" placeholder="Search for congregation", id="edit_search_cong" onkeyup="searchForCongsToEdit()"></center>
+			<center><div id="divider_div"></div></center>
+			<center><ul id="cong_to_edit_ul"></ul></center>
+			
+			<div id="edit_cong_div">
+				<input type="text" class="input" id="cong_to_edit" placeholder="Congregation"><br>
+				<input type="button" class="save_button" value="Update Congregation" onclick="updateCong()">
+			</div>
+			<p id="edit_cong_message"></p>
+			
 		</div>
 	
 		<div id="check_feedback_div">
@@ -188,6 +212,8 @@
 		var mLocationThatCurrentUserPutIn = {};
 		var mLocationFeedbackArray = {};
 		var mIsEditingFromCheckFeedback = false;
+		var mStateIdToUpdate;
+		var mCongIdToUpdate;
 		
 		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
@@ -651,6 +677,8 @@
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
+			document.getElementById("edit_state_div").style.display = "none";
+			document.getElementById("edit_cong_div").style.display = "none";
 			
 			var editSelectState = document.getElementById("edit_state_select");
 			var editSelectCong = document.getElementById("edit_cong_select");
@@ -684,13 +712,13 @@
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
 			
+			locationsToEdit.innerHTML = "";
 			
 			if(searchToEditItem.length == 0 || searchToEditItem == null){
 				locationsToEdit.style.display = "none";
 				return;
 			}
 			
-				locationsToEdit.innerHTML = "";
 				locationsToEdit.style.display = "block";
 				
 				var searchAndFoundItems = [];
@@ -793,6 +821,114 @@
 				}
 		}
 		
+		function searchForStatesToEdit(){
+			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_state").value);
+			var editStateUl = document.getElementById("states_to_edit_ul");
+			editStateUl.innerHTML = "";
+			if(searchToEditItem.length == 0 || searchToEditItem == null){
+				editStateUl.style.display = "none";
+				return;
+			}
+			
+			editStateUl.style.display = "block";
+			
+			var statesFound = [];
+			
+			for(var t=0; mStatesArray.length >t; t++){
+				var state = mStatesArray[t];
+				if(checkIfNameStartsWithString(searchToEditItem, state)){
+					statesFound.push(state);  
+				}
+			};
+			
+			for(var r=0; statesFound.length>r; r++){
+				var state = statesFound[r];
+				var stateId = mStatesMap[state];
+				var li = document.createElement("li");
+				li.appendChild(document.createTextNode(state));
+				li.setAttribute("id", "edit_li_items");
+				li.setAttribute("stateId", stateId);
+				li.setAttribute("state", state);
+				editStateUl.appendChild(li);
+			}
+			
+			for(k=0;k<=editStateUl.childElementCount-1;k++){
+				editStateUl.children[k].addEventListener("click",itemClicked);
+			}
+			
+			function itemClicked(){
+				editStateUl.style.display = "none";
+				mStateIdToUpdate = this.getAttribute("stateId");
+				var state = this.getAttribute("state");
+				document.getElementById("edit_state_div").style.display = "block";
+				document.getElementById("state_to_edit").value = state;
+				
+			}
+		}
+		
+		function searchForCongsToEdit(){
+			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_cong").value);
+			if(searchToEditItem.length == 0 || searchToEditItem == null){
+				return;
+			}
+			
+			var editCongUl = document.getElementById("cong_to_edit_ul");
+			var congsFound = [];
+			
+			console.log(mCongregationArray);
+			
+			for(var t=0; mCongregationArray.length >t; t++){
+				var cong = mCongregationArray[t];
+				if(checkIfNameStartsWithString(searchToEditItem, cong)){
+					congsFound.push(cong); 
+				}
+			};
+			
+			for(var r=0; congsFound.length>r; r++){
+				var cong = congsFound[r];
+				var congId = mCongregationMap[cong];
+				var li = document.createElement("li");
+				li.appendChild(document.createTextNode(cong));
+				li.setAttribute("id", "edit_li_items");
+				li.setAttribute("congId", congId);
+				li.setAttribute("cong", cong);
+				editCongUl.appendChild(li);
+			}
+			
+			for(k=0;k<=editCongUl.childElementCount-1;k++){
+				editCongUl.children[k].addEventListener("click",itemClicked);
+			}
+			
+			function itemClicked(){
+				mCongIdToUpdate = this.getAttribute("congId");
+				var cong = this.getAttribute("cong");
+				document.getElementById("edit_cong_div").style.display = "block";
+				document.getElementById("cong_to_edit").value = cong;
+			}
+			
+		}
+		
+		function updateCong(){
+			var congEl = document.getElementById("cong_to_edit");
+			var cong = congEl.value;
+			if(cong.length == 0){
+				setMessage("edit_cong_message", "Please fill the blank", 0);
+				return;
+			}
+			if(isNotCapital(cong)){
+				setMessage("edit_cong_message", "Congregation must be capitalized", 0);
+				return;
+			}
+			var ref = firebase.database().ref('congregations').child("-L3A0bsRkmzP4b35Y-96");
+			ref.set({
+				congregationId: "-L3A0bsRkmzP4b35Y-96",
+				congregation: "Morning Star"
+			});
+			setMessage("edit_cong_message", cong + " was updated successfully", 1);
+			congEl.value = "";
+			document.getElementById("edit_cong_div").style.display = "none";
+		}
+		
 		function updateLocation(){
 			var firstName = document.getElementById("edit_first_name").value;
 			var lastName = document.getElementById("edit_last_name").value;
@@ -876,6 +1012,28 @@
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
 		}
+		
+		function updateState(){
+			var stateEl = document.getElementById("state_to_edit");
+			var state = stateEl.value;
+			if(state.length == 0){
+				setMessage("edit_state_message", "Please fill the blank", 0);
+				return;
+			}
+			if(isNotCapital(state)){
+				setMessage("edit_state_message", "State or province must be capitalized", 0);
+				return;
+			}
+			var ref = firebase.database().ref('stateOrProvince').child(mStateIdToUpdate);
+			ref.set({
+				stateId: mStateIdToUpdate,
+				state: state
+			});
+			setMessage("edit_state_message", state + " was updated successfully", 1);
+			stateEl.value = "";
+			document.getElementById("edit_state_div").style.display = "none";
+		}
+		
 		
 		/*
 			*****  CHECK FEEDBACK CODE   *****
