@@ -51,6 +51,7 @@
 			<option value="incorrect_address">Address is incorrect</option>
 			<option value="delete_location">Location needs to be deleted</option>
 			<option value="typo">Typo in name or address</option>
+			<option value="cong_typo">Typo in congregation name</option>
 			<option value="other">Other</option>
 		</select>
 		<h3>Tell us more</h3>
@@ -232,6 +233,8 @@
 		}
 
 		function cancelIncorrect(){
+			document.getElementById("incorrect_data_notes").value = "";
+			document.getElementById("whats_wrong").options[0].selected = true;
 			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
 			document.getElementById("shadow_div").style.visibility = 'hidden';
 		}
@@ -250,6 +253,8 @@
 				date: date,
 				notes: notes
 			})
+			document.getElementById("incorrect_data_notes").value = "";
+			document.getElementById("whats_wrong").options[0].selected = true;
 			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
 			document.getElementById("shadow_div").style.visibility = 'hidden';
 		}
@@ -480,18 +485,8 @@
 					mIsNameDetailsShown = true;
 					mAreAllLocationsShown = false;
 					
-//					deleteMarkers();
-//					var marker = new google.maps.Marker({
-//							position: mSelectedLatnLng,
-//							map: mMap
-//						});
-//					markersArray.push(marker);
-//					setMapOnAll(mMap);
-					
-//					document.getElementById("show_markers").innerHTML = "Show<br>locations"
-					
 					var whereToZoom = mSelectedLatnLng;
-					smoothZoom(mMap, 20, mMap.getZoom());
+					mMap.setZoom(19);
 					mMap.panTo(whereToZoom);
 					setOverlayDivHeight(155);
 					document.getElementById("overlay_loader_id").style.display = "none";

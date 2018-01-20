@@ -919,10 +919,10 @@
 				setMessage("edit_cong_message", "Congregation must be capitalized", 0);
 				return;
 			}
-			var ref = firebase.database().ref('congregations').child("-L3A0bsRkmzP4b35Y-96");
+			var ref = firebase.database().ref('congregations').child(mCongIdToUpdate);
 			ref.set({
-				congregationId: "-L3A0bsRkmzP4b35Y-96",
-				congregation: "Morning Star"
+				congregationId: mCongIdToUpdate,
+				congregation: cong
 			});
 			setMessage("edit_cong_message", cong + " was updated successfully", 1);
 			congEl.value = "";
