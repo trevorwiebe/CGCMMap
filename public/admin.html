@@ -45,11 +45,11 @@
 	
 	<div id="side_nav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<a href="#" onclick="navAddLocation()">Add Location</a>
+		<a onclick="navAddLocation()">Add Location</a>
 		<div class="nav_divider_div"></div>
-		<a href="#" onclick="navEditLocation()">Edit Locations</a>
+		<a onclick="navEditLocation()">Edit Locations</a>
 		<div class="nav_divider_div"></div>
-		<a href="#" onclick="navCheckFeedback()">Check Feedback</a>
+		<a onclick="navCheckFeedback()">Check Feedback</a>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -1055,6 +1055,8 @@
 			closeNav();
 			var unresolvedFeedUl = document.getElementById("unresolved_feedback_ul");
 			var resolvedFeedUl = document.getElementById("resolved_feedback_ul");
+			unresolvedFeedUl.innerHTML = "";
+			resolvedFeedUl.innerHTML = ""
 			document.getElementById("loading_feedback").style.visibility = "hidden";
 			document.getElementById("view_feedback").style.visibility = "hidden";
 			document.getElementById("check_feedback_div").style.display = "block";

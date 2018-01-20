@@ -447,6 +447,17 @@ h3{
 	}
 }
 
+@media screen and (max-height: 500px){
+	.loader{
+		margin-top: 150px;
+	}
+}
+
+@media screen and (max-height: 900px){
+	.loader{
+		margin-top: 350px;
+	}
+}
 
 #send_feed_back_link{
 	margin-top: 10px;

@@ -99,13 +99,11 @@
 	
 	<div id="side_nav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<a href="#" onclick="information()">Stats</a>
+		<a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a>
 		<div class="nav_divider_div"></div>
-		<a href="#" onclick="showSendFeedbackOnWholeSite()">Send Feedback</a>
-		<div class="nav_divider_div"></div>
-		<a href="#" onclick="admin()" id="registered_user_href">Congregational<br>Agent</a>
+		<a onclick="admin()" id="registered_user_href">Congregational<br>Agent</a>
 		<div class="nav_divider_div" id="registered_user_div"></div>
-		<a href="#" onclick="signInAndOut()" id="sign_in_out_href"></a>
+		<a onclick="signInAndOut()" id="sign_in_out_href"></a>
 	</div>
 
 	<script>
@@ -293,10 +291,6 @@
 			document.getElementById("feedback_error").style.visibility = "hidden";
 			document.getElementById("total_feedback").style.visibility = "hidden";
 			document.getElementById("shadow_div").style.visibility = "hidden";
-		}
-		
-		function information(){
-			closeNav();	
 		}
 		
 		function showSendFeedbackOnWholeSite(){
