@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Address Book</title>
+	<title>CGCM Map</title>
 	<link rel="stylesheet" href="index.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="index.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,13 +26,12 @@
 	
 	<div id="sign_in">
 		<h2>Please sign in to continue.</h2>
-		<p id="sign_in_explain">You can use CGCM Address Book without signing in. Signing in is only necessary for those who are in charge of the locations of the members in their congregation.</p>
+		<p id="sign_in_explain">You can use CGCM Map without signing in. Signing in is only necessary for those who are in charge of the locations of the members in their congregation.</p>
 		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
 		<input type="password" class="credentials" id="password" placeholder="Password"><br>
 		<div id="loader"></div>
 		<p id="sign_in_error"></p>
 		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN"><br>
-<!--		<input type="button" class="register_button" onclick="register();" value="REGISTER"><br>-->
 		<input type="button" class="sign_in_cancel_button" onclick="cancelSignIn()" value="CANCEL">
 	</div>
 	
@@ -65,7 +64,7 @@
 	
 	<div id="loading_div">
 		<div class="loader" id="loader_id"></div>
-		<center><h2 class="name_details" id="loading_maps_text">Loading Address Book...</h2></center>
+		<center><h2 class="name_details" id="loading_maps_text">Loading CGCM Map...</h2></center>
 	</div>
 	
 	<div id="overlay">
@@ -75,7 +74,7 @@
 				<div class="menu_style"></div>
 				<div class="menu_style"></div>
 			</div>
-			<input type="text" placeholder="Search Address Book" id="search_input" onkeyup="searchForMatches()">
+			<input type="text" placeholder="Search CGCM Map" id="search_input" onkeyup="searchForMatches()">
 			<div id="arrow_div">
 				<img src="res/down-chevron.svg" id="open_close_arrow" onclick="openAndCloseMenu()">
 			</div>

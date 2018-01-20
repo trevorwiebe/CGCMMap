@@ -435,8 +435,8 @@ body, html{
 }
 
 #add_location_divider{
-	height: 1.5px;
-	width: 95%;
+	height: 1px;
+	width: 90%;
 	margin-top: 30px;
 	margin-bottom: 10px;
 	background-color: #3b3b3b;
@@ -527,9 +527,11 @@ body, html{
 }
 
 #divider_div{
-	width: 100%;
+	width: 70%;
 	height: 1px;
-	background: black;
+	margin-top: 35px;
+	margin-bottom: 55px;
+	background: #3b3b3b;
 }
 
 #edit_map_location{
@@ -631,6 +633,9 @@ body, html{
 	#feedback_button_bar{
 		text-align: center;
 		margin-left: 0px;
+	}
+	#divider_div{
+		width: 95%;
 	}
 }
 

@@ -103,7 +103,6 @@
 			<center><h2>Edit or Delete locations</h2></center>
 			
 			<center><input type="text" class="input" placeholder="Search for location", id="edit_search_location" onkeyup="searchForPlacesToEdit()"></center>
-			<center><div id="divider_div"></div></center>
 			<center><ul id="locations_to_edit_ul"></ul></center>
 			
 			<div id="verify_edit_location_div">
@@ -119,8 +118,7 @@
 					<h4 class="tags">Select State or Province</h4>
 					<select id="edit_state_select" class="select"></select>
 					<h4 class="tags">Select Congregation</h4>
-					<select id="edit_cong_select" class="select"></select><br>
-					<input type="button" onclick="deleteThisLocation()" id="delete_this_location_btn" value="Delete this location">
+					<select id="edit_cong_select" class="select"></select>
 				</div>
 				
 			</div>
@@ -131,10 +129,13 @@
 			
 			<center><input value="Update Location" class="save_button" id="update_location_btn" type="button" onclick="updateLocation()"></center>
 			
+			<center><input type="button" onclick="deleteThisLocation()" id="delete_this_location_btn" value="Delete this location"></center>
+			
+			<center><div id="divider_div"></div></center>
+		
 			<center><h2>Edit State or Provinces</h2></center>
 			
 			<center><input type="text" class="input" placeholder="Search for state or province", id="edit_search_state" onkeyup="searchForStatesToEdit()"></center>
-			<center><div id="divider_div"></div></center>
 			<center><ul id="states_to_edit_ul"></ul></center>
 			
 			<div id="edit_state_div">
@@ -143,10 +144,11 @@
 			</div>
 			<p id="edit_state_message"></p>
 			
+			<center><div id="divider_div"></div></center>
+			
 			<center><h2>Edit Congregations</h2></center>
 			
-			<center><input type="text" class="input" placeholder="Search for congregation", id="edit_search_cong" onkeyup="searchForCongsToEdit()"></center>
-			<center><div id="divider_div"></div></center>
+			<center><input type="text" class="input" placeholder="Search for congregation", id="edit_search_cong" onkeyup="searchForCongsToEdit()"></center>f
 			<center><ul id="cong_to_edit_ul"></ul></center>
 			
 			<div id="edit_cong_div">
@@ -223,6 +225,11 @@
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("cong_message").style.display = "none";
 		document.getElementById("state_or_province_message").style.display = "none";
+		document.getElementById("delete_this_location_btn").style.display = "none";
+		document.getElementById("edit_cong_message").style.display = "none";
+		document.getElementById("edit_state_message").style.display = "none";
+		document.getElementById("edit_location_message").style.display = "none";
+
 		
 		document.onclick = closeMenus;
 	
@@ -763,6 +770,7 @@
 						document.getElementById("edit_search_location").value = "";
 						document.getElementById("edit_map_location").style.display = "block";
 						document.getElementById("update_location_btn").style.display = "block";
+						document.getElementById("delete_this_location_btn").style.display = "block";
 
 						var array = snapshotToArray(snapshot);
 						
@@ -824,6 +832,7 @@
 		function searchForStatesToEdit(){
 			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_state").value);
 			var editStateUl = document.getElementById("states_to_edit_ul");
+			document.getElementById("edit_state_div").style.display = "none";
 			editStateUl.innerHTML = "";
 			if(searchToEditItem.length == 0 || searchToEditItem == null){
 				editStateUl.style.display = "none";
@@ -868,14 +877,14 @@
 		
 		function searchForCongsToEdit(){
 			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_cong").value);
+			document.getElementById("edit_cong_div").style.display = "none";
+			var editCongUl = document.getElementById("cong_to_edit_ul");
+			editCongUl.innerHTML = "";
 			if(searchToEditItem.length == 0 || searchToEditItem == null){
 				return;
 			}
 			
-			var editCongUl = document.getElementById("cong_to_edit_ul");
 			var congsFound = [];
-			
-			console.log(mCongregationArray);
 			
 			for(var t=0; mCongregationArray.length >t; t++){
 				var cong = mCongregationArray[t];
@@ -900,6 +909,7 @@
 			}
 			
 			function itemClicked(){
+				editCongUl.style.display = "none";
 				mCongIdToUpdate = this.getAttribute("congId");
 				var cong = this.getAttribute("cong");
 				document.getElementById("edit_cong_div").style.display = "block";
@@ -971,6 +981,7 @@
 				userId: mUserId
             });
 
+			document.getElementById("delete_this_location_btn").style.display = "none";
 			document.getElementById("edit_first_name").value = "";
 			document.getElementById("edit_last_name").value = "";
 			document.getElementById("edit_address").value = "";
