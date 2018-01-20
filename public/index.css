@@ -207,7 +207,7 @@ h3{
     border-radius: 50%;
     width: 60px;
     height: 60px;
-	margin-top: 250px;
+	margin-top: 150px;
 	margin-left: auto;
 	margin-right: auto;
     animation: spin 0.7s linear infinite;
@@ -447,13 +447,13 @@ h3{
 	}
 }
 
-@media screen and (max-height: 500px){
+@media screen and (min-height: 700px){
 	.loader{
-		margin-top: 150px;
+		margin-top: 250px;
 	}
 }
 
-@media screen and (max-height: 900px){
+@media screen and (min-height: 900px){
 	.loader{
 		margin-top: 350px;
 	}
