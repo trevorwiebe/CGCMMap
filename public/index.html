@@ -54,7 +54,7 @@
 			<option value="other">Other</option>
 		</select>
 		<h3>Tell us more</h3>
-		<p id="location_feedback_explain">Try to be clear and descriptive with the problem, more words the better. Thanks for improving CGCM Maps!</p>
+		<p id="location_feedback_explain">Try to be clear and descriptive with the problem. Thanks for improving CGCM Maps!</p>
 		<textarea id="incorrect_data_notes"></textarea>
 		<input type="button" value="Cancel" class="button" id="incorrect_cancel_btn" onclick="cancelIncorrect()">
 		<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendFeedbackOnLocation()">
@@ -74,7 +74,7 @@
 				<div class="menu_style"></div>
 				<div class="menu_style"></div>
 			</div>
-			<input type="text" placeholder="Search CGCM Map" id="search_input" onkeyup="searchForMatches()">
+			<input type="text" placeholder="First and Last Name" id="search_input" onkeyup="searchForMatches()">
 			<div id="arrow_div">
 				<img src="res/down-chevron.svg" id="open_close_arrow" onclick="openAndCloseMenu()">
 			</div>
@@ -154,7 +154,7 @@
 			mIsNameListShown = false;
 			mIsNameDetailsShown = false;
 			
-				var whereToCenter = {lat: 38, lng: -97};
+				var whereToCenter = {lat: 38.566678, lng: -97.2637757};
 				mMap = new google.maps.Map(document.getElementById('map'), {
 					zoom: 4,
 					center: whereToCenter,
@@ -184,14 +184,11 @@
 						locations.push(newArray);
 					}
 
-					
-
 					for (var i = 0; i < locations.length; i++) {
 						var location = locations[i];
 
 						var marker = new google.maps.Marker({
 							position: {lat: parseFloat(location[1]), lng: parseFloat(location[2])},
-							map: mMap,
 							title: location[0],
 							locationId: location[3],
 							userId: location[4]
@@ -199,15 +196,16 @@
 						
 						mAllMarkers.push(marker);
 						markersArray.push(marker);
-						setMapOnAll(mMap);
+						
+						 var markerCluster = new MarkerClusterer(mMap, markersArray, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
-						marker.addListener('click', function(){
+						google.maps.event.addListener(marker, 'click', function(){
 							setOverlayDivHeight(50);
 							document.getElementById("overlay_loader_id").style.display = "block";
 							document.getElementById("names_found_list").innerHTML = "";
 							document.getElementById("name_details_div").style.visibility = "hidden";
 							document.getElementById("send_feed_back_link").style.display = "none";
-						document.getElementById("open_in_google_maps_btn").style.display = "none";
+							document.getElementById("open_in_google_maps_btn").style.display = "none";
 							var locationId = this.get("locationId");
 							mWhoAddedIt = this.get("userId");
 							var databaseRef = firebase.database().ref("locations/" + locationId);
@@ -223,6 +221,7 @@
 				});
 	
 		}  
+		
 
 		function notifyAsIncorrect(){
 			document.getElementById("incorrect_data_div").style.visibility = 'visible';
@@ -319,21 +318,6 @@
 				mJustClickedSignIn = true;
 			}
 		}	
-		
-		function showMarkers(){
-			if(mAreAllLocationsShown){
-				// hide the locations
-				deleteMarkers();
-//				document.getElementById("show_markers").innerHTML = "Show<br>locations"
-				mAreAllLocationsShown = false;
-			}else{
-				// show the locations
-				markersArray = mAllMarkers;
-				setMapOnAll(mMap);
-//				document.getElementById("show_markers").innerHTML = "Hide<br>locations"
-				mAreAllLocationsShown = true;
-			}
-		}
 
 		function searchForMatches(){
 			var namesFoundList = document.getElementById("names_found_list");
@@ -478,9 +462,8 @@
 					mIsNameDetailsShown = true;
 					mAreAllLocationsShown = false;
 					
-					var whereToZoom = mSelectedLatnLng;
-					mMap.setZoom(19);
-					mMap.panTo(whereToZoom);
+					mMap.setZoom(18);
+					mMap.panTo(mSelectedLatnLng);
 					setOverlayDivHeight(155);
 					document.getElementById("overlay_loader_id").style.display = "none";
 					
@@ -582,6 +565,17 @@
 			return (false)  
 		}  
 
+		function customMapIcon (opts) {
+		  return Object.assign({
+			path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+			fillColor: '#000',
+			fillOpacity: 1,
+			strokeColor: '#000',
+			strokeWeight: 1,
+			scale: 1,
+		  }, opts);
+		}
+		
 		function setErrorEmailErrorText(error_text) {
 			document.getElementById("sign_in_error").innerHTML = error_text;
 		}
@@ -630,7 +624,11 @@
 		  }
 		
 		function deleteMarkers() {
-			setMapOnAll(null);
+			for (var i = 0; i < markersArray.length; i++) {
+				var marker = markersArray[i];
+				marker.setMap(null);
+				marker = null;
+			}
 			markersArray = [];
 		  }
 		
@@ -703,6 +701,9 @@
 		
 	</script>
 
+	<script 
+			src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
 	<script 
 		async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA&callback=initMap">
 	</script>
