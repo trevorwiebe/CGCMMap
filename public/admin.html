@@ -73,7 +73,7 @@
 						<select id="state_select" class="select"></select>
 						<h4 class="tags">Select Congregation</h4>
 						<select id="cong_select" class="select"></select>
-						<p>You must verify location before adding to database.</p>
+						<p>You must verify location before<br>adding to the database.</p>
 						<center><button id="verify_location_btn" onclick="verify_location()">Verify Location</button></center>
 					</div>
 				</div>
@@ -240,6 +240,7 @@
 		document.getElementById("edit_cong_message").style.display = "none";
 		document.getElementById("edit_state_message").style.display = "none";
 		document.getElementById("edit_location_message").style.display = "none";
+		document.getElementById("add_s_p_c_1").style.display = "none";
 
 		
 		document.onclick = closeMenus;
@@ -332,13 +333,13 @@
 			}	
 		}
 		
-		database.ref('congregations').on('value', function(snapshot){
+		database.ref('congregations').orderByChild("congregation").on('value', function(snapshot){
 			var congSelect = document.getElementById("cong_select");
 			congSelect.innerHTML = "";
 			parseCongSnapshot(snapshot);
 		});
 		
-		database.ref('stateOrProvince').on('value', function(snapshot){
+		database.ref('stateOrProvince').orderByChild("state").on('value', function(snapshot){
 			var congSelect = document.getElementById("state_select");
 			congSelect.innerHTML = "";
 			parseStateSnapshot(snapshot);
@@ -697,6 +698,7 @@
 			document.getElementById("update_location_btn").style.display = "none";
 			document.getElementById("edit_state_div").style.display = "none";
 			document.getElementById("edit_cong_div").style.display = "none";
+			document.getElementById("edit_state_box").style.display = "none";
 			
 			var editSelectState = document.getElementById("edit_state_select");
 			var editSelectCong = document.getElementById("edit_cong_select");

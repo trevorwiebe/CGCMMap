@@ -58,6 +58,8 @@ fix bug where on small screens the menu arrow goes below the search maps widget 
 
 change all the instances of "address book" to "map" -- !completed!
 
+on add location selects, order congs and states alphebetically -- !completed!
+
 **High Priority**
 connect mark resolved button
 connect edit location feedback btn to edit locations
