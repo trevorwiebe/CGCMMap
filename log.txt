@@ -1,0 +1,67 @@
+remove all pins after name is searched -- worked on, but didn't finish
+
+check bug where sometimes navigate button and feedback link aren't shown  -- !completed!
+
+decrease the size of the sign in div on very small screens  -- !completed!
+
+add more of an explaination to the sign in div tell why a sign in is neccasary -- !completed!
+
+fix bug where there are duplicates in searching for location to edit -- !completed!
+
+in edit location only search for the locations that you added -- !completed!
+
+remove register button -- !completed!
+
+hide navigate and report error link when loading new selected location -- !completed!
+
+add full name field to location entry -- !completed!
+
+fix bug where google maps doesn't always open correctly -- !didn't fix, but current solution is good enough!
+
+force user to only add first and last name and city that are capitalized -- !completed!
+
+fix where when verifing the location with the addres it sometimes return "no results" -- !completed!
+
+add the ablitity to delete locations -- !completed!
+
+add indexOn to firebase rules -- !completed!
+
+add "cgcmaddressbook.com" as another domain name -- !completed!
+
+add check feedback -- !completed!
+
+make it so when you add a cong or state it checks to see if ones is already added -- !completed!
+
+force user to add only capitalized congs and states -- !completed!
+
+add the ability to edit states and congregations -- !completed!
+
+add a feedback option - "Type in congregation name" -- !completed!
+
+clear location feedback box when canceled or send -- !completed!
+
+make admin feedback more mobile responsive -- !completed!
+
+remove stats from nav -- !completed!
+
+fix padding bug in admin where when side margins go to 20% the widgets go into one column -- !completed!
+
+clear the feedback uls when switching away from the feedback tab -- !completed!
+
+move delete location button to bottom of edit location div -- !completed!
+
+hide edit congregations ul after a cong is selected -- !completed!
+
+**High Priority**
+fix bug where on small screens the menu arrow goes below the search maps widget
+connect mark resolved button
+connect edit location feedback btn to edit locations
+change all the instances of "address book" to "map"
+
+*Low Priority*
+add phone number field to register users page
+add loader to add new location to show after verify location is clicked
+add note saying if cong or state isn't in dropdown menu to add it below
+work on error reporting
+add forgot password link to sign in div
+hide delete location button after location is deleted

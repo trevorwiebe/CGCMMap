@@ -35,9 +35,9 @@
 					<div class="menu_style"></div>
 				</div>
 				<ul id="header_ul">
-					<li class="header_li"><a onclick="navAddLocation()">Add Location</a></li>
-					<li class="header_li"><a onclick="navEditLocation()">Edit Locations</a></li>
-					<li class="header_li"><a onclick="navCheckFeedback()">Check Feedback</a></li>
+					<li class="header_li"><a onclick="navAddLocation()">ADD LOCATIONS</a></li>
+					<li class="header_li"><a onclick="navEditLocation()">EDIT LOCATIONS</a></li>
+					<li class="header_li"><a onclick="navCheckFeedback()">CHECK FEEDBACK</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
@@ -59,112 +59,123 @@
 		<div id="right_content_div"></div>
 		
 		<div id="add_location_div_container">
-			<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
-			<div id="add_location_container">
-				<div id="add_location_1">
-					<input type="text" id="first_name" class="input" placeholder="First Name"><br>
-					<input type="text" id="last_name" class="input" placeholder="Last Name"><br>
-					<input type="text" id="address" class="input" placeholder="Address"><br>
-					<input type="text" id="city" class="input" placeholder="City"><br>
+			<div id="add_location_box">
+				<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
+				<div id="add_location_container">
+					<div id="add_location_1">
+						<input type="text" id="first_name" class="input" placeholder="First Name"><br>
+						<input type="text" id="last_name" class="input" placeholder="Last Name"><br>
+						<input type="text" id="address" class="input" placeholder="Address"><br>
+						<input type="text" id="city" class="input" placeholder="City"><br>
+					</div>
+					<div id="add_location_2">
+						<h4 class="tags">Select State or Province</h4>
+						<select id="state_select" class="select"></select>
+						<h4 class="tags">Select Congregation</h4>
+						<select id="cong_select" class="select"></select>
+						<p>You must verify location before adding to database.</p>
+						<center><button id="verify_location_btn" onclick="verify_location()">Verify Location</button></center>
+					</div>
 				</div>
-				<div id="add_location_2">
-					<h4 class="tags">Select State or Province</h4>
-					<select id="state_select" class="select"></select>
-					<h4 class="tags">Select Congregation</h4>
-					<select id="cong_select" class="select"></select>
-					<p>You must verify location before adding to database.</p>
-					<center><input type="button" id="verify_location_btn" onclick="verify_location()" value="Verify Location"></center>
-				</div>
-			</div>
 			<center><h3 id="message_center_add_location"></h3></center>
-			<div id="maps_div">
-				<div id="maps_container"></div>
-				<center><input type="button" onclick="resetPins()" value="Reset Pin" id="reset_location">
-				<input type="button" id="save_location" onclick="saveLocationBtn()" class="save_button" value="Save Location"></center>
 			</div>
-			<div id="add_location_divider"></div>
+			<div id="maps_div">
+				<center><h2>Verify new location</h2></center>
+				<div id="maps_container"></div>
+				<center><button onclick="resetPins()" id="reset_location">Reset Pin</button>
+				<button id="save_location" onclick="saveLocationBtn()" class="save_button">Save Location</button></center>
+			</div>
 			<div id="add_state_province_cong_container">
 				<div id="add_s_p_c_1">
 					<center><h2 class="tags">Add new State or Province</h2></center>
 					<center><input type="text" id="state" class="input" placeholder="State or Province"><br></center>
 					<center><p id="state_or_province_message"></p></center>
-					<center><input type="button" id="save_state" class="save_button" value="Save State or Province" onclick="saveState()"></center>
+					<center><button id="save_state" class="save_button" onclick="saveState()">Save State or Province</button></center>
 				</div>
 				<div id="add_s_p_c_2">
 					<center><h2 class="tags">Add new Congregation</h2></center>
-					<input type="text" id="congregation" class="input" placeholder="Congregation"><br>
+					<center><input type="text" id="congregation" class="input" placeholder="Congregation"><br></center>
 					<center><p id="cong_message"></p></center>
-					<center><input type="button" id="save_congregation" class="save_button" value="Save Congregation" onclick="saveCongregation()"></center>
+					<center><button id="save_congregation" class="save_button" onclick="saveCongregation()">Save Congregation</button></center>
 				</div>
 			</div>
 		</div>
 		
 		<div id="edit_location_div">
-			<center><h2>Edit or Delete locations</h2></center>
 			
-			<center><input type="text" class="input" placeholder="Search for location", id="edit_search_location" onkeyup="searchForPlacesToEdit()"></center>
-			<center><ul id="locations_to_edit_ul"></ul></center>
+			<div id="edit_location_box">
+				<center><h2>Edit or Delete locations</h2></center>
 			
-			<div id="verify_edit_location_div">
-				
-				<div id="edit_location_1">
-					<input type="text" placeholder="First Name" id="edit_first_name" class="input"><br>
-					<input type="text" placeholder="Last Name" id="edit_last_name" class="input"><br>
-					<input type="text" placeholder="Address" id="edit_address" class="input"><br>
-					<input type="text" placeholder="City" id="edit_city" class="input"><br>
+				<center><input type="text" class="input" placeholder="Search for location", id="edit_search_location" onkeyup="searchForPlacesToEdit()"></center>
+				<center><ul id="locations_to_edit_ul"></ul></center>
+
+				<div id="verify_edit_location_div">
+
+					<div id="edit_location_1">
+						<input type="text" placeholder="First Name" id="edit_first_name" class="input"><br>
+						<input type="text" placeholder="Last Name" id="edit_last_name" class="input"><br>
+						<input type="text" placeholder="Address" id="edit_address" class="input"><br>
+						<input type="text" placeholder="City" id="edit_city" class="input"><br>
+					</div>
+
+					<div id="edit_location_2">
+						<h4 class="tags">Select State or Province</h4>
+						<select id="edit_state_select" class="select"></select>
+						<h4 class="tags">Select Congregation</h4>
+						<select id="edit_cong_select" class="select"></select>
+					</div>
+
 				</div>
-				
-				<div id="edit_location_2">
-					<h4 class="tags">Select State or Province</h4>
-					<select id="edit_state_select" class="select"></select>
-					<h4 class="tags">Select Congregation</h4>
-					<select id="edit_cong_select" class="select"></select>
+
+				<center><h3 id="edit_location_message"></h3></center>
+
+				<center><div id="edit_map_location"></div></center>
+
+				<center><input value="Update Location" class="save_button" id="update_location_btn" type="button" onclick="updateLocation()"></center>
+
+				<center><button onclick="deleteThisLocation()" id="delete_this_location_btn">Delete this location</button></center>
+			</div>
+			
+			<div id="edit_state_box">
+				<center><h2>Edit State or Provinces</h2></center>
+			
+				<center><input type="text" class="input" placeholder="Search for state or province", id="edit_search_state" onkeyup="searchForStatesToEdit()"></center>
+				<center><ul id="states_to_edit_ul"></ul></center>
+
+				<div id="edit_state_div">
+					<input type="text" class="input" id="state_to_edit" placeholder="State or Province"><br>
+					<input type="button" class="save_button" value="Update State or Province" onclick="updateState()">
 				</div>
-				
+				<p id="edit_state_message"></p>
 			</div>
 			
-			<center><h3 id="edit_location_message"></h3></center>
+			<div id="edit_congs_box">
+				<center><h2>Edit Congregations</h2></center>
 			
-			<center><div id="edit_map_location"></div></center>
-			
-			<center><input value="Update Location" class="save_button" id="update_location_btn" type="button" onclick="updateLocation()"></center>
-			
-			<center><input type="button" onclick="deleteThisLocation()" id="delete_this_location_btn" value="Delete this location"></center>
-			
-			<center><div id="divider_div"></div></center>
-		
-			<center><h2>Edit State or Provinces</h2></center>
-			
-			<center><input type="text" class="input" placeholder="Search for state or province", id="edit_search_state" onkeyup="searchForStatesToEdit()"></center>
-			<center><ul id="states_to_edit_ul"></ul></center>
-			
-			<div id="edit_state_div">
-				<input type="text" class="input" id="state_to_edit" placeholder="State or Province"><br>
-				<input type="button" class="save_button" value="Update State or Province" onclick="updateState()">
+				<center><input type="text" class="input" placeholder="Search for congregation", id="edit_search_cong" onkeyup="searchForCongsToEdit()"></center>
+				<center><ul id="cong_to_edit_ul"></ul></center>
+
+				<div id="edit_cong_div">
+					<input type="text" class="input" id="cong_to_edit" placeholder="Congregation"><br>
+					<input type="button" class="save_button" value="Update Congregation" onclick="updateCong()">
+				</div>
+				<p id="edit_cong_message"></p>
 			</div>
-			<p id="edit_state_message"></p>
-			
-			<center><div id="divider_div"></div></center>
-			
-			<center><h2>Edit Congregations</h2></center>
-			
-			<center><input type="text" class="input" placeholder="Search for congregation", id="edit_search_cong" onkeyup="searchForCongsToEdit()"></center>
-			<center><ul id="cong_to_edit_ul"></ul></center>
-			
-			<div id="edit_cong_div">
-				<input type="text" class="input" id="cong_to_edit" placeholder="Congregation"><br>
-				<input type="button" class="save_button" value="Update Congregation" onclick="updateCong()">
-			</div>
-			<p id="edit_cong_message"></p>
 			
 		</div>
 	
 		<div id="check_feedback_div">
-			<center><h3 id="unresolved_feedback_h">Unresolved Feedback</h3></center>
-			<ul id="unresolved_feedback_ul"></ul>
+			<div id="unresolved_feedback_box">
+				<center><h2 id="unresolved_feedback_h">Unresolved Feedback</h2></center>
+				<center><h4 id="no_feedback_tv">No feedback to resolve</h4></center>
+				<ul id="unresolved_feedback_ul"></ul>
+			</div>
 			
-			<center><h3 id="resolved_feedback_h">Resolved Feedback</h3></center>
-			<ul id="resolved_feedback_ul"></ul>
+			<div id="resolved_feedback_box">
+				<center><h2 id="resolved_feedback_h">Resolved Feedback</h2></center>
+				<center><h4 id="feedback_resolved_tv">No feedback resolved</h4></center>
+				<ul id="resolved_feedback_ul"></ul>
+			</div>
 			
 			<div id="view_feedback">
 				<div id="feedback_content">
@@ -1081,6 +1092,7 @@
 				var date = itemArray.date;
 				var notes = itemArray.notes;
 				if(isResolved){
+					document.getElementById("feedback_resolved_tv").style.display = "none";
 					var li = document.createElement("li");
 					li.appendChild(document.createTextNode(whatsWrong));
 					li.setAttribute("id", "feedback_resolved_li");
@@ -1091,6 +1103,7 @@
 					li.setAttribute("isResolved", "1");
 					resolvedFeedUl.appendChild(li);
 				}else{
+					document.getElementById("no_feedback_tv").style.display = "none";
 					var li = document.createElement("li");
 					li.appendChild(document.createTextNode(whatsWrong));
 					li.setAttribute("id", "feedback_not_resolved_li");
