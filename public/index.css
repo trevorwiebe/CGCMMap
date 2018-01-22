@@ -224,21 +224,24 @@ h3{
 }
 
 #details{
-	display: inline-block;
-	margin-bottom: 10px;
-	margin-left: 10%;
+	
 }
 
 #name_details_div{
 	text-align: center;
-	margin-top: -20px;
+	display: inline-block;
+	vertical-align: top;
+	margin: auto;
+}
+
+#navigate_div{
 	display: inline-block;
 	vertical-align: top;
 }
 
-#info_details{
-	display: inline-block;
-	vertical-align: top;
+#name{
+	width: 247px;
+	margin: 5px;
 }
 
 #location_maybe_incorrect{
@@ -314,25 +317,25 @@ h3{
 	border: none;
 	background: #303F9F;
 	padding: 15px;
-	margin-top: 20px;
 	border-radius: 2px;
-	margin-left: 20px;
+	margin-left: 27px;
 	color: white;
 	box-shadow: 1px 1px 2px #888;
 }
 
-#show_markers{
+#report_error{
 	border: none;
 	background: white;
 	border-radius: 2px;
-	margin-left: 20px;
 	color: #303F9F;
 	box-shadow: 1px 1px 2px #888;
-	margin-top: 10px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: 15px;
-	padding-right: 15px;
+	margin-left: 27px;
+	margin-top: 20px;
+	
+	padding-top: 7px;
+	padding-bottom: 7px;
+	padding-left: 21px;
+	padding-right: 21px;
 }
 
 #names_found_list{
@@ -438,6 +441,13 @@ h3{
 		margin-left: 0px;
 		margin-right: 0px;
 	}
+	#report_error{
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+	#name{
+		width: 200px;
+	}
 	#details{
 		margin-left: 5%;
 	}
@@ -446,13 +456,6 @@ h3{
 		margin-right: 0px;
 		margin-left: 0px;
 	}
-}
-
-#send_feed_back_link{
-	margin-top: 10px;
-	color: #3F51B5;
-	font-size: 14px;
-	text-decoration: none;
 }
 
 #h_city_and_state{

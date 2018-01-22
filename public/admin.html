@@ -80,7 +80,7 @@
 			<center><h3 id="message_center_add_location"></h3></center>
 			</div>
 			<div id="maps_div">
-				<center><h2>Verify new location</h2></center>
+				<center><h2 id="must_verify">Verify new location</h2></center>
 				<div id="maps_container"></div>
 				<center><button onclick="resetPins()" id="reset_location">Reset Pin</button>
 				<button id="save_location" onclick="saveLocationBtn()" class="save_button">Save Location</button></center>
@@ -1033,6 +1033,7 @@
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
+			document.getElementById("delete_this_location_btn").style.display = "none";
 		}
 		
 		function updateState(){

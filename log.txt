@@ -52,11 +52,15 @@ move delete location button to bottom of edit location div -- !completed!
 
 hide edit congregations ul after a cong is selected -- !completed!
 
+hide delete location button after location is deleted -- !completed!
+
+fix bug where on small screens the menu arrow goes below the search maps widget -- !completed!
+
+change all the instances of "address book" to "map" -- !completed!
+
 **High Priority**
-fix bug where on small screens the menu arrow goes below the search maps widget
 connect mark resolved button
 connect edit location feedback btn to edit locations
-change all the instances of "address book" to "map"
 
 *Low Priority*
 add phone number field to register users page
@@ -64,4 +68,3 @@ add loader to add new location to show after verify location is clicked
 add note saying if cong or state isn't in dropdown menu to add it below
 work on error reporting
 add forgot password link to sign in div
-hide delete location button after location is deleted
