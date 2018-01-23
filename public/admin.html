@@ -37,7 +37,7 @@
 				<ul id="header_ul">
 					<li class="header_li"><a onclick="navAddLocation()">ADD LOCATIONS</a></li>
 					<li class="header_li"><a onclick="navEditLocation()">EDIT LOCATIONS</a></li>
-					<li class="header_li"><a onclick="navCheckFeedback()">CHECK FEEDBACK</a></li>
+					<li class="header_li"><a onclick="navCheckFeedback()">CHECK LOCATION ERRORS</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
@@ -49,7 +49,7 @@
 		<div class="nav_divider_div"></div>
 		<a onclick="navEditLocation()">Edit Locations</a>
 		<div class="nav_divider_div"></div>
-		<a onclick="navCheckFeedback()">Check Feedback</a>
+		<a onclick="navCheckFeedback()">Check Location Errors</a>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -166,20 +166,20 @@
 	
 		<div id="check_feedback_div">
 			<div id="unresolved_feedback_box">
-				<center><h2 id="unresolved_feedback_h">Unresolved Feedback</h2></center>
-				<center><h4 id="no_feedback_tv">No feedback to resolve</h4></center>
+				<center><h2 id="unresolved_feedback_h">Unresolved Errors</h2></center>
+				<center><h4 id="no_feedback_tv">No errors to resolve</h4></center>
 				<ul id="unresolved_feedback_ul"></ul>
 			</div>
 			
 			<div id="resolved_feedback_box">
-				<center><h2 id="resolved_feedback_h">Resolved Feedback</h2></center>
-				<center><h4 id="feedback_resolved_tv">No feedback resolved</h4></center>
+				<center><h2 id="resolved_feedback_h">Resolved Errors</h2></center>
+				<center><h4 id="feedback_resolved_tv">No errors resolved</h4></center>
 				<ul id="resolved_feedback_ul"></ul>
 			</div>
 			
 			<div id="view_feedback">
 				<div id="feedback_content">
-					<center><h3>Feedback</h3></center>
+					<center><h3>Error</h3></center>
 					<p id="feedback_whats_wrong" class="show_feedback_p"></p>
 					<p id="feedback_notes" class="show_feedback_p"></p>
 					<p id="feedback_date" class="show_feedback_p"></p>
