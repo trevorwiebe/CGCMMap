@@ -1,0 +1,128 @@
+html, body{
+	background-color: #eeeeee;
+	font-family: Roboto, sans-serif;
+	margin: 0;
+	height: 100%;
+}
+
+#container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#right_div{
+	width: 10%;
+}
+
+#content_with_header{
+	text-align: center;
+}
+
+#content_div{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#content_with_heading{
+	width: 80%;
+}
+
+#left_div{
+	width: 10%;
+}
+
+.blocks{
+	background-color: white;
+	padding: 20px;
+	width: 400px;
+	border-radius: 2px;
+	margin: 10px;
+	box-shadow: 1px 1px 2px #888
+}
+
+.block_label{
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.account_info{
+	margin-top: 3px;
+	margin-bottom: 3px;
+	margin-left: 55px;
+	margin-right: 55px;
+}
+
+#cong_info{
+	margin-left: 55px;
+	margin-right: 55px;
+}
+
+#account_info_div{
+	padding-bottom: 20px;
+}
+
+#list_name{
+	list-style-type: none;
+	margin-right: 50px;
+	margin-left: 20px;
+}
+
+#list_cost{
+	list-style-type: none;
+}
+
+li{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-bottom: 1px solid #eeeeee;
+}
+
+#divider_div{
+	margin-left: 5%;
+	margin-right: 5%;
+	width: 90%;
+	height: 1px;
+	background-color: #888
+}
+
+.summary_content{
+	text-align: right;
+	margin-right: 50px;
+}
+
+#pay{
+	border: none;
+	margin: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 30px;
+	padding-right: 30px;
+	border-radius: 2px;
+	color: white;
+	background-color: #303F9F;
+}
+
+#pay:hover{
+	background-color: #232e72;
+}
+
+#check_out_heading{
+	text-align: center;
+}
+
+@media only screen and (max-width: 600px){
+	#right_div{
+		width: 0%;
+	}
+
+	#content_with_heading{
+		width: 100%;
+	}
+
+	#left_div{
+		width: 0%;
+	}
+}

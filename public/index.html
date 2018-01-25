@@ -29,10 +29,15 @@
 		<p id="sign_in_explain">You can use CGCM Map without signing in. Signing in is only necessary for those who are in charge of the locations of the members in their congregation.</p>
 		<input type="text" class="credentials" id="email_address" placeholder="Email"><br>
 		<input type="password" class="credentials" id="password" placeholder="Password"><br>
-		<div id="loader"></div>
 		<p id="sign_in_error"></p>
-		<input type="button" class="log_in_button" onclick="logIn();" value="LOG IN"><br>
-		<input type="button" class="sign_in_cancel_button" onclick="cancelSignIn()" value="CANCEL">
+		<button class="log_in_button" onclick="logIn()">LOG IN</button><br>
+		<button id="register_button" onclick="register()">REGISTER</button><br>
+		<button class="sign_in_cancel_button" onclick="cancelSignIn()">CANCEL</button><br>
+		
+	</div>
+		
+	<div id="sign_in_loading">
+		<div id="loader"></div>
 	</div>
 	
 	<div id="total_feedback">
@@ -128,6 +133,7 @@
 		document.getElementById("side_nav").style.visibility = "hidden";
 		document.getElementById("sign_in").style.visibility = "hidden";
 		document.getElementById("loader").style.display = "none";
+		document.getElementById("sign_in_loading").style.display = "none";
 		document.getElementById("overlay_loader_id").style.display = "none";
 		document.getElementById("location_maybe_incorrect").style.display = "none";
 		document.getElementById("open_in_google_maps_btn").style.display = "none";
@@ -532,19 +538,25 @@
 			}else{
 				if(validateEmail(email_address)){
 		
-					document.getElementById("loader").style.display = "block";
+					var loader = document.getElementById("loader");
+					loader.style.display = "block"
+					
+					var sign_in_loading = document.getElementById("sign_in_loading");
+					sign_in_loading.style.display = "block";
 					
 					firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function(){
 						
 						firebase.auth().signInWithEmailAndPassword(email_address, input_password)
 							.catch(function(error){
-								document.getElementById("loader").style.display = "none";
+								loader.style.display = "none";
+								sign_in_loading.style.display = "none";
 								var errorMessage = error.message;
 								setErrorEmailErrorText(errorMessage);
 							})
 						
 					}).catch(function(error){
-						document.getElementById("loader").style.display = "none";
+						loader.style.display = "none";
+						sign_in_loading.style.display = "none";
 						var errorMessage = error.message;
 						setErrorEmailErrorText(errorMessage);
 					});
@@ -693,6 +705,7 @@
 				document.getElementById("shadow_div").style.visibility = "hidden";
 				document.getElementById("sign_in").style.visibility = "hidden";
 				document.getElementById("loader").style.display = "none";
+				document.getElementById("sign_in_loading").style.display = "none";
 			} else {
 				document.getElementById("registered_user_div").style.display = "none";
 				document.getElementById("registered_user_href").style.display = "none";

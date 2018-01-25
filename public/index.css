@@ -264,6 +264,20 @@ h3{
 	margin: auto;
 }
 
+#sign_in_loading{
+	position: fixed;
+	width: 550px;
+	height: 450px;
+	top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 2px;
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 6;
+	margin: auto;
+}
+
 #incorrect_data_notes{
 	margin-left: 40px;
 	margin-right: 40px;
@@ -351,10 +365,10 @@ h3{
 	color: #EF5350;
 	font-size: 15px;
 	font-weight: bold;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	padding-left: 70px;
-	padding-right: 70px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
 	margin-top: 15px;
 }
 
@@ -570,7 +584,7 @@ h1, h3{
 	background-color: #293689;
 }
 
-.register_button{
+#register_button{
 	background-color: white;
 	border-width: 2px;
 	border-color: #303F9F;
@@ -586,7 +600,7 @@ h1, h3{
 	font-weight: bold;
 }
 
-.register_button:hover{
+#register_button:hover{
 	border-color: #293689;
 	color: #293689;
 }
@@ -598,7 +612,8 @@ h1, h3{
     width: 30px;
     height: 30px;
     animation: spin .7s linear infinite;
-    margin: 0 auto;
+	margin-top: 215px;
+	margin-left: 255px;
 }
 
 @keyframes spin {

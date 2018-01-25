@@ -21,7 +21,7 @@
 	</script>
 </head>
 <body>
-
+	
 	<div id="loading_div">
 		<div id="loader"></div>
 	</div>
@@ -38,6 +38,7 @@
 					<li class="header_li"><a onclick="navAddLocation()">ADD LOCATIONS</a></li>
 					<li class="header_li"><a onclick="navEditLocation()">EDIT LOCATIONS</a></li>
 					<li class="header_li"><a onclick="navCheckFeedback()">CHECK LOCATION ERRORS</a></li>
+					<li class="header_li"><a onclick="getMoreCredit()">LOCATION CREDITS</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
@@ -50,6 +51,8 @@
 		<a onclick="navEditLocation()">Edit Locations</a>
 		<div class="nav_divider_div"></div>
 		<a onclick="navCheckFeedback()">Check Location Errors</a>
+		<div class="nav_divider_div"></div>
+		<a onclick="getMoreCredit()">Location Credits</a>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -195,8 +198,69 @@
 						<button id="feedback_edit_location" onclick="feedbackEditLocation()">Edit Location</button>
 					</div>
 			</div>
+			
 			<div id="loading_feedback">
 				<div id="feedback_loader"></div>
+			</div>
+		</div>
+		
+		<div id="get_more_credits_container">
+			<center><h2>Select a package</h2></center>
+			<div id="tier_container">
+				<div class="tier" id="five">
+					<div id="tier_five">
+						<h4 class="tier_label">5</h4>
+						<h4 class="house_holds_label">households</h4>
+					</div>
+					<div>
+						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="five()">
+						<p class="price_label">$5</p>
+					</div>
+				</div>
+				<div class="tier" id="fifteen">
+					<div id="tier_fifteen">
+						<h4 class="tier_label">15</h4>
+						<h4 class="house_holds_label">households</h4>
+					</div>
+					<div>
+						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="fifteen()">
+						<p class="price_label">$75</p>
+					</div>
+				</div>
+				<div class="tier" id="twentyfive">
+					<div id="tier_twentyfive">
+						<h4 class="tier_label">25</h4>
+						<h4 class="house_holds_label">households</h4>
+					</div>
+					<div>
+						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="twentyfive()">
+						<p class="price_label">$125</p>
+					</div>
+				</div>
+				<div class="tier" id="fifty">
+					<div id="tier_fifty">
+						<h4 class="tier_label">50</h4>
+						<h4 class="house_holds_label">households</h4>
+					</div>
+					<div>
+						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="fifty()">
+						<p class="price_label">$250</p>
+					</div>
+				</div>
+				<div class="tier" id="seventyfive">
+					<div id="tier_seventyfive">
+						<h4 class="tier_label">75</h4>
+						<h4 class="house_holds_label">households</h4>
+					</div>
+					<div>
+						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="seventyfive()">
+						<p class="price_label">$375</p>
+					</div>
+				</div>
+			</div>
+			<div id="added_to_cart_div">
+				<h3 id="item_added_to_cart"></h3>
+				<button onclick="checkout()" id="checkout_btn">Checkout</button>
 			</div>
 		</div>
 		
@@ -232,6 +296,7 @@
 		document.getElementById("maps_div").style.display = "none";
 		document.getElementById("edit_location_div").style.display = "none";
 		document.getElementById("check_feedback_div").style.display = "none";
+		document.getElementById("get_more_credits_container").style.display = "none";
 		document.getElementById("add_location_div_container").style.display = "none";
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("cong_message").style.display = "none";
@@ -398,6 +463,7 @@
 	    function saveLocation(varLatitude, varLongitude, varFirstName, varLastName, varCity, varState, varAddress, varCong, varUserId, varDate){
 			var firstName = capitalizeFirstLetter(varFirstName);
 			var lastName = capitalizeFirstLetter(varLastName);
+			var city = capitalizeFirstLetter(varCity);
 			var firstAndLastName = firstName + " " + lastName;
             var ref = firebase.database().ref('locations').push();
             var key = ref.getKey();
@@ -409,7 +475,7 @@
 				firstName: firstName,
 				lastName: lastName,
 				address: varAddress,
-				city: varCity,
+				city: city,
 				congregation: varCong,
 				state: varState,
                 locationId: key,
@@ -681,6 +747,7 @@
 			document.getElementById("add_location_div_container").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
+			document.getElementById("get_more_credits_container").style.display = "none";
 		}
 		
 		
@@ -692,6 +759,7 @@
 			closeNav();
 			document.getElementById("edit_location_div").style.display = "block";
 			document.getElementById("add_location_div_container").style.display = "none";
+			document.getElementById("get_more_credits_container").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
@@ -699,6 +767,7 @@
 			document.getElementById("edit_state_div").style.display = "none";
 			document.getElementById("edit_cong_div").style.display = "none";
 			document.getElementById("edit_state_box").style.display = "none";
+		
 			
 			var editSelectState = document.getElementById("edit_state_select");
 			var editSelectCong = document.getElementById("edit_cong_select");
@@ -1087,6 +1156,7 @@
 			document.getElementById("check_feedback_div").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
+			document.getElementById("get_more_credits_container").style.display = "none";
 			for(var k=0; mLocationFeedbackArray.length > k; k++){
 				var itemArray = mLocationFeedbackArray[k];
 				var whatsWrong = itemArray.whatsWrong;
@@ -1184,6 +1254,55 @@
 			document.getElementById("shadow_div").style.visibility = "hidden";
 			document.getElementById("view_feedback").style.visibility = "hidden";
 			document.getElementById("loading_feedback").style.visibility = "hidden";
+		}
+		
+		/*
+			***** GET MORE LOCATION CREDITS *****
+		*/
+		function getMoreCredit(){
+			closeNav();
+			document.getElementById("added_to_cart_div").style.display = "none";
+			document.getElementById("edit_location_div").style.display = "none";
+			document.getElementById("add_location_div_container").style.display = "none";
+			document.getElementById("check_feedback_div").style.display = "none";
+			document.getElementById("get_more_credits_container").style.display = "block";
+		}
+		
+		function five(){
+			addCreditsToCart(5);
+		}
+		
+		function fifteen(){
+			addCreditsToCart(15);
+		}
+		
+		function twentyfive(){
+			addCreditsToCart(25);
+		}
+		
+		function fifty(){
+			addCreditsToCart(50);
+		}
+		
+		function seventyfive(){
+			addCreditsToCart(75);
+		}
+		
+		function addCreditsToCart(credits){
+			var ref = firebase.database().ref('shoppingCart').child(mCurrentUserId).push();
+			var key = ref.getKey();
+			
+			ref.set({
+				credits: credits,
+				key: key
+			})
+			document.getElementById("added_to_cart_div").style.display = "block";
+			var added_to_cart_text = credits + " location credits added to your cart";
+			document.getElementById("item_added_to_cart").innerHTML = added_to_cart_text;
+		}
+		
+		function checkout(){
+			window.location = "checkout.html";
 		}
 		
 	</script>

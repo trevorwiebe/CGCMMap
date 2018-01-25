@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Check out</title>
+	<link rel="stylesheet" href="checkout.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="checkout.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+</head>
+<body>
+
+	<div id="container">
+		<div id="right_div"></div>
+		<div id="content_with_heading">
+			<h1 id="check_out_heading">Checkout</h1>
+			<div id="content_div">
+				<div class="blocks" id="account_info_div">
+					<h4 class="block_label">Account Information</h4>
+					<p class="account_info">John Smith</p>
+					<p class="account_info">54 Deckawoo Drive</p>
+					<p class="account_info">Durham, Kansas - 67438</p>
+					<p id="cong_info">Morning Star</p>
+				</div>
+				<div class="blocks">
+					<h4 class="block_label">Items</h4>
+					<ul id="list_name">
+						<li>5 Location credits</li>
+						<li>50 Location credits</li>
+					</ul>
+				</div>
+				<div class="blocks">
+					<h4 class="block_label">Order Summary</h4>
+					<p class="summary_content">Sub-total - $250</p>
+					<div id="divider_div"></div>
+					<p class="summary_content">Tax - $23</p>
+					<h4 class="summary_content">Total - $273</h4>
+				</div>
+				<div class="blocks">
+					<h4 class="block_label">Check out</h4>
+						<form action="thanks.html" method="POST">
+						  <script
+							src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+							data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+							data-amount="49900"
+							data-name="CGCM Map"
+							data-description="Secure checkout"
+							data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+							data-locale="auto"
+							data-zip-code="true">
+						  </script>
+							<script>
+								document.getElementsByClassName("stripe-button-el")[0].style.display = "none";
+							</script>
+							<center><button type="submit" id="pay">Pay with card</button></center>
+						</form>
+				</div>
+			</div>
+		</div>
+		<div id="left_div"></div>
+	</div>
+	
+
+	
+	
+</body>
+</html> 

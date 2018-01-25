@@ -22,89 +22,120 @@
 <body>
 
 	<div id="container">
-		<center><h1>Become a Register User</h1></center>
-		<p>Some of us here at Morning Star Congregation in Kansas, have been thinking about and now building a congregational map website, and we are now looking to you for your help.
-		We would like at least one member from every congregation in North America to become a 'Registered User'.
-		Being a 'Register User' allows you to add and edit the locations of the people in your congregation.</p> 
-		<p>To become a registered user you need to apply below.
-		Then in about 3 to 4 days you will get an email with a passcode that you can use to sign into your account. Once registered you would be expected to maintain the location you have added.</p>
-		<p>Thanks so much for your support!</p>
-		<center><h3>Fill in the blanks and submit</h3></center>
-		<div id="input_container">
-			<div id="cont_1">
-				<input type="text" id="first_name" placeholder="First Name" class="input"><br>
-				<input type="text" id="last_name" placeholder="Last Name" class="input"><br>
-				<input type="text" id="address" placeholder="Address" class="input"><br>
-				<input type="text" id="city" placeholder="City" class="input"><br>
-			</div>
-			<div id="cont_2">
-				<input type="text" id="state" placeholder="State" class="input"><br>
-				<input type="text" id="email" placeholder="Email" class="input"><br>
-				<input type="text" id="cong" placeholder="Congregation" class="input"><br>
-			</div>
-		</div>
-		<center><h4 id="error_text"></h4></center>
-		<center><input type="button" onclick="submit()" value="Submit" class="button"></center>
-		<center><h4 id="thanks_text">Thanks for registering. You should get an email with your password in about 3 to 4 days.</h4></center>
 		
-		<p>Mennonite Maps was designed to be used by the members of the <a href="https://en.wikipedia.org/wiki/Church_of_God_in_Christ,_Mennonite" target="_blank">Church of God in Christ Mennonite.</a></p>
+		<div id="right_div"></div>
+		
+		<div id="content_div">
+						
+			<div id="cgcm_map_div">
+				<h1>CGCM Map</h1>
+				<p id="cgcm_map_explain">CGCM Map is a reliable and low cost medium for the members of the Church of God in Christ Mennonite to find their way around the Conference. How CGCM Map is designed is, one person from every congregation in the conference is required to add and maintain the locations in their congregation. We have design CGCM Map in such a way that this job will be quick and painless. If we all do our part, CGCM Map will be the helpful and dependable tool we envision it to be.</p>
+			</div>
+			
+			<div id="add_cong_div">
+				<h1>Adding your congregation</h1>
+				<p id="add_cong_explain">To add your congregation to CGCM Map you will need to apply for an account, be accepted and buy the necessary location credits. Once accepted you will receive an email with more instructions and a password. Once you sign in with your email and password, an option in the navigation drawer will appear called 'Congregational Agent'. This is where you can add edit and delete locations.</p>
+			</div>
+			
+			<div id="one_time_fee_div">
+				<h1>Location credits</h1>
+				<p>We charge a smal one time fee to help offset some of the development cost. The cost for one location credit is 5$. You can buy them in packages of 5, 15, 25, 50 or 75. If you have more than 75 households in your congregation that you would like to be on the map, just buy as many packages you need until everyone is added.  Its also perfectly fine if before you buy all the location credits you need for you congregation, buy just the 5 location credit package to get a feel for how things work. You can always buy more credits later.</p>
+			</div>
+			
+			<div id="register_div">
+				
+				<h1>Apply</h1>
+				<div id="register_div_content">
+					
+					<div>
+						<input type="text" placeholder="First Name" id="register_first_name" class="input"><br>
+						<input type="text" placeholder="Last Name" id="register_last_name" class="input"><br>
+						<input type="text" placeholder="Address" id="register_address" class="input"><br>
+						<input type="text" placeholder="City" id="register_city" class="input"><br>
 
+					</div>
+					
+					<div>
+						<input type="text" placeholder="State or Province" id="register_state" class="input"><br>
+						<input type="text" placeholder="Congregation" id="register_cong" class="input"><br>
+						<input type="text" placeholder="Email Address" id="register_email" class="input"><br>
+						<input type="text" placeholder="Phone number" id="register_phone_number" class="input"><br>
+
+					</div>
+					
+				</div>
+				<p id="message_center">message center</p>
+				<center><button onclick="submit()" id="submit_btn">Submit</button></center>
+			</div>
+			
+		
+		</div>
+		
+		<div id="left_div"></div>
+		
 	</div>
+	
 	
 	<script>
 		
-		document.getElementById("thanks_text").style.visibility = "hidden";
-		function submit(){
-			var firstName = document.getElementById("first_name").value;
-			var lastName = document.getElementById("last_name").value;
-			var address = document.getElementById("address").value;
-			var email = document.getElementById("email").value;
-			var city = document.getElementById("city").value;
-			var state = document.getElementById("state").value;
-			var cong = document.getElementById("cong").value;
-			
-			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || email.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
-				return;
-			}
-			
-			if(!validateEmail(email)){
-				document.getElementById("error_text").innerHTML = "Email address is not formatted correctly";
-				return;
-			}
-			
-			var ref = firebase.database().ref("applicants").push();
-			var key = ref.getKey();
-			ref.set({
-				firstName: firstName,
-				lastName: lastName,
-				address: address,
-				email: email,
-				city: city,
-				state: state,
-				cong: cong,
-				applicantStatus: 0,
-				applicantId: key
-			})
-			
-			document.getElementById("first_name").value = "";
-			document.getElementById("last_name").value = "";
-			document.getElementById("address").value = "";
-			document.getElementById("email").value = "";
-			document.getElementById("city").value = "";
-			document.getElementById("state").value = "";
-			document.getElementById("cong").value = "";
-			document.getElementById("error_text").innerHTML = "";
-			
-			document.getElementById("thanks_text").style.visibility = "visible";
-
-		}
+		document.getElementById("message_center").style.visibility = "hidden";
 		
-		function validateEmail(mail){  
-			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
-				return (true)  
-			}   
-			return (false)  
-		}  
+		 function submit(){
+			 
+			 var message_center = document.getElementById("message_center");
+			 message_center.style.visibility = "visible";
+			 message_center.value= "Test";
+
+			 var firstNameEl = document.getElementById("register_first_name");
+			 var lastNameEl = document.getElementById("register_last_name");
+			 var addressEl = document.getElementById("register_address");
+			 var cityEl = document.getElementById("register_city");
+			 var stateEl = document.getElementById("register_state");
+			 var congEl = document.getElementById("register_cong");
+			 var emailEl = document.getElementById("register_email");
+			 var phoneEl = document.getElementById("register_phone_number");
+			 
+			 var firstName = firstNameEl.value;
+			 var lastName = lastNameEl.value;
+			 var address = addressEl.value;
+			 var city = cityEl.value;
+			 var state = stateEl.value;
+			 var cong = congEl.value;
+			 var email = emailEl.value;
+			 var phone = phoneEl.value;
+			 
+			 if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0 || email.length == 0 || phone.length == 0){
+				 message_center.innerHTML = "Please fill the blanks";
+				 message_center.style.color = "#B71C1C";
+				 return;
+			 }
+			 
+			 var ref = firebase.database().ref('applicants').push();
+			 var key = ref.getKey();
+			 ref.set({
+				 firstName: firstName,
+				 lastName: lastName,
+				 address: address,
+				 city: city,
+				 state: state,
+				 congregation: cong,
+				 email: email,
+				 phone: phone
+			 })
+			 
+
+			firstNameEl.value = "";
+			lastNameEl.value = "";
+			addressEl.value = "";
+			cityEl.value = "";
+			stateEl.value = "";
+			congEl.value = "";
+			emailEl.value = "";
+			phoneEl.value = "";
+			 
+			 message_center.innerHTML = "Thanks for applying. You should get an email with your password in about 1 to 4 days.";
+			 message_center.style.color = "#1B5E20";
+		 }
 
 	</script>
 	
