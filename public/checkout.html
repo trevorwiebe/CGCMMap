@@ -28,51 +28,196 @@
 			<div id="content_div">
 				<div class="blocks" id="account_info_div">
 					<h4 class="block_label">Account Information</h4>
-					<p class="account_info">John Smith</p>
-					<p class="account_info">54 Deckawoo Drive</p>
-					<p class="account_info">Durham, Kansas - 67438</p>
-					<p id="cong_info">Morning Star</p>
+					<p class="account_info" id="first_and_last_name"></p>
+					<p class="account_info" id="address"></p>
+					<p class="account_info" id="city_and_state"></p>
+					<p class="account_info" id="email"></p>
+					<p id="cong_info"></p>
 				</div>
 				<div class="blocks">
 					<h4 class="block_label">Items</h4>
-					<ul id="list_name">
-						<li>5 Location credits</li>
-						<li>50 Location credits</li>
+					<p id="no_items_in_cart">There are no items in your shopping cart</p>
+					<ul id="items_in_cart_ul">
 					</ul>
 				</div>
 				<div class="blocks">
 					<h4 class="block_label">Order Summary</h4>
-					<p class="summary_content">Sub-total - $250</p>
+					<p class="summary_content" id="subtotal"></p>
 					<div id="divider_div"></div>
-					<p class="summary_content">Tax - $23</p>
-					<h4 class="summary_content">Total - $273</h4>
+					<p class="summary_content" id="tax"></p>
+					<h4 class="summary_content" id="total"></h4>
 				</div>
 				<div class="blocks">
 					<h4 class="block_label">Check out</h4>
-						<form action="thanks.html" method="POST">
-						  <script
-							src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-							data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
-							data-amount="49900"
-							data-name="CGCM Map"
-							data-description="Secure checkout"
-							data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-							data-locale="auto"
-							data-zip-code="true">
-						  </script>
-							<script>
-								document.getElementsByClassName("stripe-button-el")[0].style.display = "none";
-							</script>
-							<center><button type="submit" id="pay">Pay with card</button></center>
-						</form>
+					<center><button type="submit" id="pay">Pay with card</button></center>
 				</div>
 			</div>
 		</div>
 		<div id="left_div"></div>
 	</div>
 	
-
+	<div id="shadow_div"></div>
 	
+	<div id="delete_credit">
+		<h4 id="delete_h">Would you like to delete this credit</h4>
+		<div id="delete_div">
+			<button id="cancel_btn" onclick="cancel()">Cancel</button>
+			<button id="delete_btn" onclick="deleteCredit()">Delete Credit</button>
+		</div>
+	</div>
+	
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	
+	<script>
+		
+		document.getElementById("no_items_in_cart").style.display = "none";
+		document.getElementById("shadow_div").style.visibility = "hidden";
+		document.getElementById("delete_credit").style.visibility = "hidden";
+		
+		var mUserId;
+		var mAmount;
+		var mSelectedCredit;
+		
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				mUserId = user.uid;
+				var userRef = firebase.database().ref('congregationalAgents').orderByChild("userId").equalTo(mUserId);
+				userRef.on('value', function(snapshot){
+					var array = snapshotToArray(snapshot);
+					var userArray = array[0];
+					
+					var firstAndLastName = userArray.firstAndLastName;
+					var address = userArray.address;
+					var city = userArray.city;
+					var state = userArray.state;
+					var cong = userArray.congregation;
+					var email = userArray.email;
+					
+					document.getElementById("first_and_last_name").innerHTML = firstAndLastName;
+					document.getElementById("address").innerHTML = address;
+					var city_and_state = city + ", " + state;
+					document.getElementById("city_and_state").innerHTML = city_and_state;
+					document.getElementById("cong_info").innerHTML = cong;
+					document.getElementById("email").innerHTML = email;
+				})
+				
+				var cartRef = firebase.database().ref('shoppingCart').child(mUserId);
+				cartRef.on('value', function(snapshot){
+					var array = snapshotToArray(snapshot);
+					var locationCredits = 0;
+					var ul = document.getElementById('items_in_cart_ul');
+					ul.innerHTML = "";
+					for(var p=0; array.length > p; p++){
+						var itemArray = array[p];
+						var credits = itemArray.credits;
+						var creditId = itemArray.key;
+						var locationCredits = credits + locationCredits;
+						var strCredits = parseInt(credits);
+						var full_credits_name = credits + " location credits"
+						var li = document.createElement("li");
+						li.setAttribute("creditId", creditId);
+						li.appendChild(document.createTextNode(full_credits_name));
+						ul.appendChild(li);
+					}
+					
+					if(array.length === 0){
+						document.getElementById("no_items_in_cart").style.display = "block";
+					}else{
+						document.getElementById("no_items_in_cart").style.display = "none";
+					}
+					
+					for(k=0;k<=ul.childElementCount-1;k++){
+						ul.children[k].addEventListener("click",itemClicked);
+					}
+					
+					function itemClicked(){
+						mSelectedCredit = this.getAttribute("creditId");
+						
+						document.getElementById("shadow_div").style.visibility = "visible";
+						document.getElementById("delete_credit").style.visibility = "visible";
+					}
+					
+					var subtotal = locationCredits * 5;
+					var strSubtotal = parseInt(subtotal);
+					document.getElementById("subtotal").innerHTML = "Subtotal - $" + strSubtotal;
+					
+					var tax = subtotal * 0.08;
+					var strTax = parseInt(tax);
+					document.getElementById("tax").innerHTML = "Tax - $" + strTax;
+					
+					mAmount = subtotal + tax;
+					var strTotal = parseInt(mAmount);
+					document.getElementById("total").innerHTML = "Total - $" + strTotal;
+					
+				})
+				
+			} else {
+				mUserId = null;
+			}
+		});
+
+		var tokenTriggered = false;
+		
+		var handler = StripeCheckout.configure({
+			key: 'pk_test_JkpE1pqAEwQVEZpDAGAJJNiW',
+			image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+			locale: 'auto',
+			closed: function(){
+				if(tokenTriggered){
+					location.href = "thanks.html";
+				}
+			},
+			token: function(token) {
+				tokenTriggered = true;
+			}
+		});
+		
+		document.getElementById("pay").addEventListener("click", function(e){
+			var email = document.getElementById("email").innerHTML;
+			handler.open({
+				name: 'CGCM Map',
+				description: 'Secure checkout',
+				zipCode: true,
+				amount: mAmount * 100,
+				email: email
+			});
+		
+			e.preventDefault();
+		})
+		
+		window.addEventListener('popstate', function() {
+			console.log("here");
+			handler.close();
+		});
+		
+		
+		function cancel(){
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("delete_credit").style.visibility = "hidden";
+		}
+		
+		function deleteCredit(){
+			if(mSelectedCredit != null){
+				firebase.database().ref('shoppingCart').child(mUserId).child(mSelectedCredit).remove();	
+			}
+			mSelectedCredit = null;
+			cancel();
+		}
+		
+		function snapshotToArray(snapshot) {
+			var returnArr = [];
+
+			snapshot.forEach(function(childSnapshot) {
+				var item = childSnapshot.val();
+				item.key = childSnapshot.key;
+
+				returnArr.push(item);
+			});
+
+			return returnArr;
+		};
+		
+	</script>
 	
 </body>
 </html> 

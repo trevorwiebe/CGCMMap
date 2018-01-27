@@ -60,13 +60,19 @@ change all the instances of "address book" to "map" -- !completed!
 
 on add location selects, order congs and states alphebetically -- !completed!
 
+add phone number field to register users page -- !completed!
+
+add applicant id and applicant status to field when adding applicants -- !completed!
+
 **High Priority**
 connect mark resolved button
 connect edit location feedback btn to edit locations
 
 *Low Priority*
-add phone number field to register users page
 add loader to add new location to show after verify location is clicked
 add note saying if cong or state isn't in dropdown menu to add it below
 work on error reporting
 add forgot password link to sign in div
+change phone number type from text to phone number
+add margin left and right margin around register cards
+sign in widget needs some help on mobile

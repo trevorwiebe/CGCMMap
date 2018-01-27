@@ -21,54 +21,11 @@ html, body{
 #left_div{
 	width: 20%;
 }
-/*
 
-#tier_container{
-	display: flex;
-	flex-wrap:  wrap;
-	justify-content: center;
-	margin-bottom: 100px;
-}
-
-.tier{
-	width: 250px;
-	height: 175px;
-	background-color: white;
-	border-radius: 2px;
-	margin: 20px;
-	box-shadow: 2px 2px 4px #888;
-}
-
-.tier:hover{
-	box-shadow: 9px 9px 16px #888;
-	cursor: pointer;
-}
-
-.tier_label{
-	color: white;
-	margin: 0px;
-	font-size: 30px;
-	text-align: center;
-	padding-top: 20px;
-}
-
-.house_holds_label{
-	color: white;
-	text-align: center;
-	margin: 10px;
-	font-size: 20px;
-}
-
-.price_label{
-	text-align: right;
-	font-size: 18px;
-	color: gray;
-	margin-left: 20px;
-	margin-right: 20px;
-}
-*/
 
 #cgcm_map_div{
+	margin-left: 20px;
+	margin-right: 20px;
 	margin-top: 50px;
 	text-indent: 50px;
 	padding-top: 50px;
@@ -82,6 +39,8 @@ html, body{
 }
 
 #add_cong_div{
+	margin-left: 20px;
+	margin-right: 20px;
 	margin-top: 50px;
 	margin-bottom: 50px;
 	padding-top: 50px;
@@ -95,6 +54,8 @@ html, body{
 }
 
 #one_time_fee_div{
+	margin-left: 20px;
+	margin-right: 20px;
 	margin-top: 50px;
 	margin-bottom: 50px;
 	padding-top: 50px;
@@ -109,6 +70,8 @@ html, body{
 }
 
 #register_div{
+	margin-left: 20px;
+	margin-right: 20px;
 	margin-top: 50px;
 	margin-bottom: 50px;
 	background-color: white;
