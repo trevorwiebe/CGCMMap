@@ -1,3 +1,19 @@
+**High Priority**
+connect mark resolved button
+connect edit location feedback btn to edit locations
+remove 'key' from congregation object
+
+*Low Priority*
+add loader to add new location to show after verify location is clicked
+add note saying if cong or state isn't in dropdown menu to add it below
+work on error reporting
+add forgot password link to sign in div
+change phone number type from text to phone number
+add margin left and right margin around register cards
+sign in widget needs some help on mobile
+make sure all buttons have at least 15px of padding
+
+
 remove all pins after name is searched -- worked on, but didn't finish
 
 check bug where sometimes navigate button and feedback link aren't shown  -- !completed!
@@ -63,16 +79,3 @@ on add location selects, order congs and states alphebetically -- !completed!
 add phone number field to register users page -- !completed!
 
 add applicant id and applicant status to field when adding applicants -- !completed!
-
-**High Priority**
-connect mark resolved button
-connect edit location feedback btn to edit locations
-
-*Low Priority*
-add loader to add new location to show after verify location is clicked
-add note saying if cong or state isn't in dropdown menu to add it below
-work on error reporting
-add forgot password link to sign in div
-change phone number type from text to phone number
-add margin left and right margin around register cards
-sign in widget needs some help on mobile

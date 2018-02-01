@@ -38,7 +38,7 @@
 					<li class="header_li"><a onclick="navAddLocation()">ADD LOCATIONS</a></li>
 					<li class="header_li"><a onclick="navEditLocation()">EDIT LOCATIONS</a></li>
 					<li class="header_li"><a onclick="navCheckFeedback()">CHECK LOCATION ERRORS</a></li>
-					<li class="header_li"><a onclick="getMoreCredit()">LOCATION CREDITS</a></li>
+					<li class="header_li"><a onclick="getMoreCredit()" id="location_credits">LOCATION CREDITS</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
@@ -52,7 +52,7 @@
 		<div class="nav_divider_div"></div>
 		<a onclick="navCheckFeedback()">Check Location Errors</a>
 		<div class="nav_divider_div"></div>
-		<a onclick="getMoreCredit()">Location Credits</a>
+		<a onclick="getMoreCredit()" id="location_credits">Location Credits</a>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -317,13 +317,13 @@
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				mCurrentUserId = user.uid;
-				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
+				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").once('value').then(function(snapshot){
 					mLocationFeedbackArray = snapshotToArray(snapshot);
 					document.getElementById("add_location_div_container").style.display = "block";
 					document.getElementById("loading_div").style.display = "none";
 				})
 				
-				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
+				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).once('value').then(function(snapshot){
 					mLocationThatCurrentUserPutIn = snapshotToArray(snapshot);
 				});
 			} else {
@@ -404,7 +404,7 @@
 			parseCongSnapshot(snapshot);
 		});
 		
-		database.ref('stateOrProvince').orderByChild("state").on('value', function(snapshot){
+		database.ref('stateOrProvince').orderByChild("state").once('value').then(function(snapshot){
 			var congSelect = document.getElementById("state_select");
 			congSelect.innerHTML = "";
 			parseStateSnapshot(snapshot);
@@ -558,7 +558,7 @@
 				return;
 			}
 			var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
-			databaseRef.on('value', function(snapshot){
+			databaseRef.once('value').then(function(snapshot){
 				var array = snapshotToArray(snapshot);
 				if(areNamesInArray(array, firstName, lastName)){
 					setMessage("message_center_add_location", "This person's location is already saved", 0);
@@ -1219,7 +1219,7 @@
 				document.getElementById("feedback_notes").innerHTML = notes;
 				document.getElementById("feedback_date").innerHTML = date;
 				var ref = database.ref('locations').child(locationKey);
-				ref.on('value', function(snapshot){
+				ref.once('value').then(function(snapshot){
 					document.getElementById("loading_feedback").style.visibility = "hidden";
 					var array = snapshotToArray(snapshot);
 					var address = array[0];

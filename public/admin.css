@@ -16,6 +16,10 @@ body, html{
 	z-index: 2;
 }
 
+#location_credits{
+	display: none;
+}
+
 #loader {
     border: 10px solid #e8e1e1;
     border-top: 10px solid #FFC107;

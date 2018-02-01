@@ -124,6 +124,7 @@
 		var mAllMarkers = [];
 		var mAreAllLocationsShown;
 		var mSelectedLocationId;
+		var mPreviousSelectedIcon;
 		
 		document.getElementById("feedback_error").style.visibility = "hidden";
 		document.getElementById("total_feedback").style.visibility = "hidden";
@@ -141,8 +142,30 @@
 		
 		document.onclick = close_menus;
 		
+		// maintain a count of how many people have visited this site
+		var domain = window.location.hostname;
+		if(domain == "cgcmmap.com" ||  domain == "churchofgodinchristmennonitemap.com"){
+			var ref;
+			if (/Mobi/.test(navigator.userAgent)) {
+				ref = firebase.database().ref('visits').child("mobile");
+			}else{
+				ref = firebase.database().ref('visits').child("desktop");
+			}
+			ref.once('value').then(function(snapshot){
+				if(snapshot.val() == null){
+					num = 0;
+				}else{
+					var num = snapshot.val().count;	
+				}
+				var numToSet = num + 1;
+				ref.set({
+					count: numToSet
+				})
+			})
+		}
+		
 		var databaseRef = firebase.database().ref('stateOrProvince');
-		databaseRef.on('value', function(snapshot){
+		databaseRef.once('value').then(function(snapshot){
 			var array = snapshotToArray(snapshot);
 			for(var i=0; i < array.length; i++){
 				var name = array[i].state;
@@ -162,7 +185,7 @@
 			
 				var whereToCenter = {lat: 38.566678, lng: -97.2637757};
 				mMap = new google.maps.Map(document.getElementById('map'), {
-					zoom: 4,
+					zoom: 10,
 					center: whereToCenter,
 					mapTypeControlOptions: {
 						position: google.maps.ControlPosition.RIGHT_BOTTOM,
@@ -175,7 +198,7 @@
 				var locations = []
 
 				var databaseRef = firebase.database().ref('locations');
-				databaseRef.on('value', function(snapshot){
+				databaseRef.once('value').then(function(snapshot){
 					var array = snapshotToArray(snapshot);
 					for(var i=0; i<array.length; i++){
 						itemArray = array[i];
@@ -197,13 +220,13 @@
 							position: {lat: parseFloat(location[1]), lng: parseFloat(location[2])},
 							title: location[0],
 							locationId: location[3],
-							userId: location[4]
+							userId: location[4],
+							icon: customMapIcon({
+								fillColor: "#F44336"
+							})
 						});
 						
-						mAllMarkers.push(marker);
 						markersArray.push(marker);
-						
-						 var markerCluster = new MarkerClusterer(mMap, markersArray, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 						google.maps.event.addListener(marker, 'click', function(){
 							setOverlayDivHeight(50);
@@ -211,6 +234,7 @@
 							document.getElementById("names_found_list").innerHTML = "";
 							document.getElementById("name_details_div").style.visibility = "hidden";
 							document.getElementById("open_in_google_maps_btn").style.display = "none";
+							document.getElementById("report_error").style.display = "none";
 							
 							var locationId = this.get("locationId");
 							mWhoAddedIt = this.get("userId");
@@ -221,13 +245,14 @@
 						})
 					}
 					
+					var markerCluster = new MarkerClusterer(mMap, markersArray, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
 					// Fade out loading div
 					var loading_div = document.getElementById("loading_div");
 					fade(loading_div);
 				});
 	
 		}  
-		
 
 		function notifyAsIncorrect(){
 			document.getElementById("incorrect_data_div").style.visibility = 'visible';
@@ -326,6 +351,7 @@
 		}	
 
 		function searchForMatches(){
+			
 			var namesFoundList = document.getElementById("names_found_list");
 			namesFoundList.innerHTML = "";
 			namesFoundList.style.visibility = "visible";
@@ -357,6 +383,7 @@
 			document.getElementById("name_details_div").style.visibility = "hidden";
 			var ref = firebase.database().ref("locations").orderByChild('firstAndLastName').startAt(equalTo).limitToFirst(6);
 			ref.once('value').then(function(snapshot){
+				namesFoundList.innerHTML = "";
 				var array = snapshotToArray(snapshot);
 				var heightToSetAt = array.length * 45;
 				setOverlayDivHeight(heightToSetAt);
@@ -451,6 +478,20 @@
 			
 			mSelectedLatnLng = {lat: lat, lng: long};
 			
+			var marker = findSelectedMarker(lat, long);
+			
+			if(mPreviousSelectedIcon !== undefined){
+				mPreviousSelectedIcon.setIcon(customMapIcon({
+					fillColor: "#F44336"
+				}))	
+			}
+
+			marker.setIcon(customMapIcon({
+				fillColor: "#303F9F"
+			}));
+
+			mPreviousSelectedIcon = marker;
+
 			var ref = firebase.database().ref("congregations/" + congId + "/congregation");
 			ref.once('value').then(function(snapshot){
 				
@@ -694,6 +735,17 @@
 		
 		function toTitleCase(str){
 			return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+		}
+		
+		function findSelectedMarker(latutide, longitude){
+			for(var e=0; markersArray.length > e; e++){
+				var marker = markersArray[e];
+				var lat = marker.position.lat();
+				var long = marker.position.lng();
+				if(latutide === lat && longitude === long){
+					return marker;
+				}
+			}
 		}
 	
 		firebase.auth().onAuthStateChanged(function(user) {

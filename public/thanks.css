@@ -1,0 +1,73 @@
+html, body{
+	height: 100%;
+	background-color: #eeeeee;
+	font-family: Roboto, sans-serif;
+	margin: 0px;
+}
+
+#container_div{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#left_div{
+	width: 20%;
+}
+
+#content_div{
+	width: 60%;
+}
+
+#right_div{
+	width: 20%;
+}
+
+#thanks_content_div{
+	padding: 40px;
+	text-indent: 20px;
+	background-color: white;
+	box-shadow: 1px 1px 2px #888;
+}
+
+#cong_btn{
+	padding: 15px;
+	border: none;
+	margin: 30px;
+	color: white;
+	box-shadow: 1px 1px 2px #888;
+	background-color: #303F9F;
+}
+
+#cong_btn:hover{
+	box-shadow: 2px 2px 4px #888;
+	background-color: #232f77;
+}
+
+#loading_div{
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background: white;
+	z-index: 3;
+}
+
+#loader {
+    border: 10px solid #e8e1e1;
+    border-top: 10px solid #FFC107;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+	margin-top: 250px;
+	margin-left: auto;
+	margin-right: auto;
+    animation: spin 0.7s linear infinite;
+	z-index: 4;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

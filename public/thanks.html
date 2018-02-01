@@ -1,12 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Thanks</title>
+	<title>Thanks</title>
+	<link rel="stylesheet" href="thanks.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="thanks.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
 </head>
 <body>
+	
+	<div id="container_div">
+		<div id="left_div"></div>
+	
+		<div id="content_div">
+			<center><h1>Thanks for your purchase!</h1></center>
+			<div id="thanks_content_div">
+				<p id="credit_info">Your purchase of 50 location credits has been added to your account.</p>
+				<center><button id="cong_btn" onclick="congAccount()">Go to Congregational Agent</button></center>
+			</div>
+		</div>
 
-<h1>Thanks</h1>
-<p>Thankyou for your purchase</p>
+		<div id="right_div"></div>
+	</div>
+	
+	<div id="loading_div">
+		<div id="loader"></div>
+	</div>
+	
+	<script>
+
+		
+		var mUserId;
+		
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				mUserId = user.uid;
+				
+				var ref = firebase.database().ref('shoppingCart').child(mUserId).once('value').then(function(snapshot){
+					var array = snapshotToArray(snapshot);
+					if(array.length === 0){
+						loadMain();
+					}else{
+						document.getElementById("loading_div").style.visibility = "hidden";
+						var locationCredits = 0;
+						for(var r=0; array.length > r; r++){
+							var itemArray = array[r];
+							var credit = itemArray.credits;
+							locationCredits = locationCredits + credit;
+						}
+						var strCredit = parseInt(locationCredits);
+						document.getElementById("credit_info").innerHTML = "Your purchase of " + strCredit + " location credits has been added to your account.";
+						
+//						firebase.database().ref('shoppingCart').child(mUserId).remove();
+						
+						var ref = firebase.database().ref('congregationalAgents').orderByChild('userId').equalTo(mUserId);
+						ref.once('value').then(function(snapshot){
+							var array = snapshotToArray(snapshot)[0];
+							
+							var address = array.address;
+							var city = array.city;
+							var congAgentObjectKey = array.congAgentObjectKey;
+							var congregation = array.congregation;
+							var dateAdded = array.dateAdded;
+							var email = array.email;
+							var firstAndLastName = array.firstAndLastName;
+							var firstName = array.firstName;
+							var lastName = array.lastName;
+							var currentLocationCredits = array.locationCredits;
+							var phone = array.phone;
+							var state = array.state;
+							var userId = array.userId;
+							
+							locationCredits = locationCredits + currentLocationCredits;
+							
+							
+							var ref = firebase.database().ref("congregationalAgents").child(congAgentObjectKey);
+							ref.set({
+								address: address,
+								city: city,
+								congAgentObjectKey: congAgentObjectKey,
+								congregation: congregation,
+								dateAdded: dateAdded,
+								email: email,
+								firstAndLastName: firstAndLastName,
+								firstName: firstName,
+								lastName: lastName,
+								locationCredits: locationCredits,
+								phone: phone,
+								state: state,
+								userId: userId
+							})
+							
+						})
+					}
+				});
+			} else {
+				mUserId = null;
+			}
+		});
+		
+		function congAccount(){
+			location.href = "admin.html";
+		}
+		
+		function snapshotToArray(snapshot) {
+			var returnArr = [];
+
+			snapshot.forEach(function(childSnapshot) {
+				var item = childSnapshot.val();
+				item.key = childSnapshot.key;
+
+				returnArr.push(item);
+			});
+
+			return returnArr;
+		};
+		
+		function loadMain(){
+			location.href = "index.html";
+		}
+		
+	</script>
 
 </body>
 </html>
