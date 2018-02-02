@@ -377,6 +377,17 @@ h3{
 	margin-right: 70px;
 }
 
+#loader{
+	border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid #ffc400; 
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin .7s linear infinite;
+	margin-top: 215px;
+	margin-left: 255px;
+}
+
 @media screen and (max-width: 615px){
 
 	#total_feedback{
@@ -395,11 +406,19 @@ h3{
 	
 	#sign_in{
 		width: 325px;
+		height: 475px;
 	}
 	
 	#sign_in_explain{
-		margin-left: 0px;
-		margin-right: 0px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	#sign_in_loading{
+		width: 325px;
+		height: 475px;
+	}
+	#loader{
+		margin-left: 150px;
 	}
 }
 
@@ -603,17 +622,6 @@ h1, h3{
 #register_button:hover{
 	border-color: #293689;
 	color: #293689;
-}
-
-#loader{
-	border: 6px solid #f3f3f3; /* Light grey */
-    border-top: 6px solid #ffc400; 
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin .7s linear infinite;
-	margin-top: 215px;
-	margin-left: 255px;
 }
 
 @keyframes spin {
