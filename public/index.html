@@ -103,11 +103,11 @@
 	
 	<div id="side_nav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a>
+		<center><a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a></center>
 		<div class="nav_divider_div"></div>
-		<a onclick="admin()" id="registered_user_href">Congregational<br>Agent</a>
+		<center><a onclick="admin()" id="registered_user_href">Congregational<br>Agent</a></center>
 		<div class="nav_divider_div" id="registered_user_div"></div>
-		<a onclick="signInAndOut()" id="sign_in_out_href"></a>
+		<center><a onclick="signInAndOut()" id="sign_in_out_href"></a></center>
 	</div>
 
 	<script>
@@ -486,11 +486,13 @@
 				}))	
 			}
 
-			marker.setIcon(customMapIcon({
-				fillColor: "#303F9F"
-			}));
+			if(marker != undefined){
+				marker.setIcon(customMapIcon({
+					fillColor: "#303F9F"
+				}));
 
-			mPreviousSelectedIcon = marker;
+				mPreviousSelectedIcon = marker;
+			}
 
 			var ref = firebase.database().ref("congregations/" + congId + "/congregation");
 			ref.once('value').then(function(snapshot){

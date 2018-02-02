@@ -1,18 +1,30 @@
-**High Priority**
 connect mark resolved button
 connect edit location feedback btn to edit locations
-remove 'key' from congregation object
-
-*Low Priority*
 add loader to add new location to show after verify location is clicked
-add note saying if cong or state isn't in dropdown menu to add it below
 work on error reporting
 add forgot password link to sign in div
-change phone number type from text to phone number
-add margin left and right margin around register cards
-sign in widget needs some help on mobile
-make sure all buttons have at least 15px of padding
+add left and right margin around register complete message
+in index.html, instead of requerying the db query the locally stored array instead
+make main feedback div more mobile responsive, and make it so it can't resize
+add shopping cart tab
+make added to cart notice a floating dialog
+figure out if i need to charge tax
+add real key to stripe checkout
+change the place where you add purchased location credits from thankyou page to right after payment is recieved
+add go to main page button on thankyou page.
 
+
+remove 'key' from congregation object -- !completed!
+
+add margin left and right margin around register cards -- !completed!
+
+add note saying if cong or state isn't in dropdown menu to add it below -- !completed!
+
+change phone number type from text to phone number -- !completed!
+
+sign in widget needs some help on mobile -- !completed!
+
+make sure all buttons have at least 15px of padding -- !completed!
 
 remove all pins after name is searched -- worked on, but didn't finish
 

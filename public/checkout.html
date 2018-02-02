@@ -81,11 +81,11 @@
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				mUserId = user.uid;
-				console.log(mUserId);
 				var userRef = firebase.database().ref('congregationalAgents').orderByChild("userId").equalTo(mUserId);
 				userRef.once('value').then(function(snapshot){
 					var array = snapshotToArray(snapshot);
 					var userArray = array[0];
+				
 					
 					var firstAndLastName = userArray.firstAndLastName;
 					var address = userArray.address;
@@ -103,7 +103,7 @@
 				})
 				
 				var cartRef = firebase.database().ref('shoppingCart').child(mUserId);
-				cartRef.once('value').then(function(snapshot){
+				cartRef.on('value', function(snapshot){
 					var array = snapshotToArray(snapshot);
 					var locationCredits = 0;
 					var ul = document.getElementById('items_in_cart_ul');

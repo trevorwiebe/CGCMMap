@@ -39,6 +39,7 @@
 					<li class="header_li"><a onclick="navEditLocation()">EDIT LOCATIONS</a></li>
 					<li class="header_li"><a onclick="navCheckFeedback()">CHECK LOCATION ERRORS</a></li>
 					<li class="header_li"><a onclick="getMoreCredit()" id="location_credits">LOCATION CREDITS</a></li>
+					<li class="header_li"><a onclick="tips()">INFORMATION</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
@@ -53,6 +54,8 @@
 		<a onclick="navCheckFeedback()">Check Location Errors</a>
 		<div class="nav_divider_div"></div>
 		<a onclick="getMoreCredit()" id="location_credits">Location Credits</a>
+		<div class="nav_divider_div"></div>
+		<a onclick="tips()">Information</a>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -64,19 +67,21 @@
 		<div id="add_location_div_container">
 			<div id="add_location_box">
 				<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
+				<center><p id="location_credits_remaining"></p></center>
+				<center><button id="add_more_credits" onclick="getMoreCredit()">Add more</button></center>
 				<div id="add_location_container">
 					<div id="add_location_1">
 						<input type="text" id="first_name" class="input" placeholder="First Name"><br>
 						<input type="text" id="last_name" class="input" placeholder="Last Name"><br>
 						<input type="text" id="address" class="input" placeholder="Address"><br>
 						<input type="text" id="city" class="input" placeholder="City"><br>
-					</div>
-					<div id="add_location_2">
 						<h4 class="tags">Select State or Province</h4>
 						<select id="state_select" class="select"></select>
+					</div>
+					<div id="add_location_2">
 						<h4 class="tags">Select Congregation</h4>
 						<select id="cong_select" class="select"></select>
-						<p>You must verify location before<br>adding to the database.</p>
+						<p id="verify_location_explain">Sometime the exact location of the<br>household you are adding can not be<br>determined by just address alone.<br>Therefore you must verify that the pin<br>on the map is at the correct place before<br>adding.  If it is not on the correct place,<br>please select the location it should be<br>with your mouse.</p>
 						<center><button id="verify_location_btn" onclick="verify_location()">Verify Location</button></center>
 					</div>
 				</div>
@@ -107,10 +112,12 @@
 		<div id="edit_location_div">
 			
 			<div id="edit_location_box">
-				<center><h2>Edit or Delete locations</h2></center>
+				<center><h2>Edit or Delete Locations</h2></center>
 			
 				<center><input type="text" class="input" placeholder="Search for location", id="edit_search_location" onkeyup="searchForPlacesToEdit()"></center>
-				<center><ul id="locations_to_edit_ul"></ul></center>
+				<div id="drop_down_location_edit_div">
+					<ul id="locations_to_edit_ul"></ul>
+				</div>
 
 				<div id="verify_edit_location_div">
 
@@ -139,24 +146,13 @@
 				<center><button onclick="deleteThisLocation()" id="delete_this_location_btn">Delete this location</button></center>
 			</div>
 			
-			<div id="edit_state_box">
-				<center><h2>Edit State or Provinces</h2></center>
-			
-				<center><input type="text" class="input" placeholder="Search for state or province", id="edit_search_state" onkeyup="searchForStatesToEdit()"></center>
-				<center><ul id="states_to_edit_ul"></ul></center>
-
-				<div id="edit_state_div">
-					<input type="text" class="input" id="state_to_edit" placeholder="State or Province"><br>
-					<input type="button" class="save_button" value="Update State or Province" onclick="updateState()">
-				</div>
-				<p id="edit_state_message"></p>
-			</div>
-			
 			<div id="edit_congs_box">
 				<center><h2>Edit Congregations</h2></center>
 			
 				<center><input type="text" class="input" placeholder="Search for congregation", id="edit_search_cong" onkeyup="searchForCongsToEdit()"></center>
-				<center><ul id="cong_to_edit_ul"></ul></center>
+				<div id="drop_down_cong_edit_div">
+					<ul id="cong_to_edit_ul"></ul>
+				</div>
 
 				<div id="edit_cong_div">
 					<input type="text" class="input" id="cong_to_edit" placeholder="Congregation"><br>
@@ -210,7 +206,7 @@
 				<div class="tier" id="five">
 					<div id="tier_five">
 						<h4 class="tier_label">5</h4>
-						<h4 class="house_holds_label">households</h4>
+						<h4 class="house_holds_label">Credits</h4>
 					</div>
 					<div>
 						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="five()">
@@ -220,7 +216,7 @@
 				<div class="tier" id="fifteen">
 					<div id="tier_fifteen">
 						<h4 class="tier_label">15</h4>
-						<h4 class="house_holds_label">households</h4>
+						<h4 class="house_holds_label">Credits</h4>
 					</div>
 					<div>
 						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="fifteen()">
@@ -230,7 +226,7 @@
 				<div class="tier" id="twentyfive">
 					<div id="tier_twentyfive">
 						<h4 class="tier_label">25</h4>
-						<h4 class="house_holds_label">households</h4>
+						<h4 class="house_holds_label">Credits</h4>
 					</div>
 					<div>
 						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="twentyfive()">
@@ -240,7 +236,7 @@
 				<div class="tier" id="fifty">
 					<div id="tier_fifty">
 						<h4 class="tier_label">50</h4>
-						<h4 class="house_holds_label">households</h4>
+						<h4 class="house_holds_label">Credits</h4>
 					</div>
 					<div>
 						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="fifty()">
@@ -250,7 +246,7 @@
 				<div class="tier" id="seventyfive">
 					<div id="tier_seventyfive">
 						<h4 class="tier_label">75</h4>
-						<h4 class="house_holds_label">households</h4>
+						<h4 class="house_holds_label">Credits</h4>
 					</div>
 					<div>
 						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="seventyfive()">
@@ -262,6 +258,13 @@
 				<h3 id="item_added_to_cart"></h3>
 				<button onclick="checkout()" id="checkout_btn">Checkout</button>
 			</div>
+		</div>
+		
+		<div id="information_div">
+			<ul id="info_ul">
+				<li class="info_li">The information from 'Check Location Errors' comes directly from when a user reports an error on one of the locations that you entered.</li>
+				<li class="info_li">When you first began to enter your locations, your congregation most likely will not be one of the options in the congregation dropdown.  On the bottom of 'Add location' page there is an option to add a new congregation, go ahead and add yours.</li>
+			</ul>
 		</div>
 		
 		<div id="left_content_div"></div>
@@ -291,6 +294,8 @@
 		var mIsEditingFromCheckFeedback = false;
 		var mStateIdToUpdate;
 		var mCongIdToUpdate;
+		var mLocationCredits;
+		var mCongregationalAgentObjectId;
 		
 		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
@@ -298,12 +303,12 @@
 		document.getElementById("check_feedback_div").style.display = "none";
 		document.getElementById("get_more_credits_container").style.display = "none";
 		document.getElementById("add_location_div_container").style.display = "none";
+		document.getElementById("information_div").style.display = "none"
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("cong_message").style.display = "none";
 		document.getElementById("state_or_province_message").style.display = "none";
 		document.getElementById("delete_this_location_btn").style.display = "none";
 		document.getElementById("edit_cong_message").style.display = "none";
-		document.getElementById("edit_state_message").style.display = "none";
 		document.getElementById("edit_location_message").style.display = "none";
 		document.getElementById("add_s_p_c_1").style.display = "none";
 
@@ -323,9 +328,19 @@
 					document.getElementById("loading_div").style.display = "none";
 				})
 				
-				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).once('value').then(function(snapshot){
+				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
 					mLocationThatCurrentUserPutIn = snapshotToArray(snapshot);
 				});
+				
+				database.ref('congregationalAgents').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
+					var array = snapshotToArray(snapshot);
+					
+					mLocationCredits = array[0].locationCredits;
+					mCongregationalAgentObjectId = array[0].congAgentObjectKey;
+					
+					document.getElementById("location_credits_remaining").innerHTML = "Location credits remaining: " + mLocationCredits;
+				
+				})
 			} else {
 				mCurrentUserId = null;
 			}
@@ -358,6 +373,10 @@
 					// Not an Error
 					messageCenter.style.color = "#1B5E20";
 					messageCenter.style.backgroundColor = "#66BB6A";
+					break;
+				case 2:
+					messageCenter.style.color = "#3b3b3b";
+					messageCenter.style.backgroundColor = "#f5f5f5";
 					break;
 				default:
 					messageCenter.style.color = "white";
@@ -416,7 +435,7 @@
 		*/
 		
 		function saveLocationBtn(){
-			 var firstName = document.getElementById('first_name').value;
+			var firstName = document.getElementById('first_name').value;
 			var lastName = document.getElementById('last_name').value;
 			var address = document.getElementById('address').value;
 			var city = document.getElementById('city').value;
@@ -444,7 +463,11 @@
 				long = mNewLatnLngFromMap.lng;
 			}
 			
-			saveLocation(lat, long, firstName, lastName, city, stateId, address, congId, userId, Date.now());
+			var capFirstName = capitalizeFirstLetter(firstName);
+			var capLastName = capitalizeFirstLetter(lastName);
+			var capCity = capitalizeFirstLetter(city);
+			
+			saveLocation(lat, long, capFirstName, capLastName, capCity, stateId, address, congId, userId, Date.now());
          
             document.getElementById('first_name').value = "";
 			document.getElementById('last_name').value = "";
@@ -481,31 +504,14 @@
                 locationId: key,
 				userId: varUserId
             });
+			
+			var updateCountRef = firebase.database().ref('congregationalAgents').child(mCongregationalAgentObjectId).child("locationCredits");
+			updateCountRef.once('value').then(function(snapshot){
+				var currentVal = snapshot.val();
+				var countToUpdate = currentVal - 1;
+				updateCountRef.set(countToUpdate);
+			})
         }
-        
-		function saveState(){
-			var state = document.getElementById("state").value;
-			if(state.length == 0){
-				setMessage("state_or_province_message", "Please fill the blank", 0);
-				return;
-			}
-			if(mStatesArray.indexOf(state) > -1){
-				setMessage("state_or_province_message", state + " was already added", 0);
-				return;
-			}
-			if(isNotCapital(state)){
-				setMessage("state_or_province_message", "State or province must be capitalized", 0);
-				return;
-			}
-			var ref = firebase.database().ref('stateOrProvince').push();
-			var key = ref.getKey();
-			ref.set({
-				stateId: key,
-				state: state
-			});
-			setMessage("state_or_province_message", state + " was added successfully", 1);
-			document.getElementById("state").value = "";
-		}
 		
 		function saveCongregation(){
 			var cong = document.getElementById("congregation").value;
@@ -517,17 +523,15 @@
 				setMessage("cong_message", "Congregation already added", 0);
 				return;
 			}
-			if(isNotCapital(cong)){
-				setMessage("cong_message", "Congregation must be capitalized", 0);
-				return;
-			}
+			var capCong = capitalizeFirstLetter(cong);
+			
 			var ref = firebase.database().ref('congregations').push();
 			var key = ref.getKey();
 			ref.set({
 				congregationId: key,
-				congregation: cong
+				congregation: capCong
 			});
-			setMessage("cong_message", cong + " was added successfully", 1);
+			setMessage("cong_message", capCong + " was added successfully", 1);
 			document.getElementById("congregation").value = "";
 		}
 		
@@ -552,89 +556,93 @@
 				setMessage("message_center_add_location", "Please fill all the blanks",0);
 				return;
 			}
-
-			if(isNotCapital(firstName) || isNotCapital(lastName) || isNotCapital(city)){
-				setMessage("message_center_add_location", "First name, last name and city must be capitalized",0);
-				return;
-			}
-			var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
-			databaseRef.once('value').then(function(snapshot){
-				var array = snapshotToArray(snapshot);
-				if(areNamesInArray(array, firstName, lastName)){
-					setMessage("message_center_add_location", "This person's location is already saved", 0);
-					document.getElementById("maps_div").style.display = "none";
+			
+			var updateCountRef = firebase.database().ref('congregationalAgents').child(mCongregationalAgentObjectId).child("locationCredits");
+			updateCountRef.once('value').then(function(snapshot){
+				var currentVal = snapshot.val();
+				if(currentVal == 0){
+					setMessage("message_center_add_location", "You are out of location credits", 0);
 				}else{
-					var addressString = address.split(" ");
-					var finishedAddresString = "";
-					var cityAndStateString = "";
-					for(var i=0; addressString.length > i; i++){
-						var item = addressString[i];
-						finishedAddresString = finishedAddresString + item + "+";	
-					}
-
-					cityAndStateString = city + "+" + state;
-
-					var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
-					var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-					var url = baseUrl + finishedAddresString + cityAndStateString + apiKey;
-					var request = new XMLHttpRequest();
-					request.onreadystatechange = function(){
-						if(this.readyState == 4 && this.status == 200){
-							var json = JSON.parse(this.responseText);
-							var successCode = json.status;
-							if(successCode === "ZERO_RESULTS"){
-								setMessage("message_center_add_location", "Address is unknown, please try a different one", 0);
-							}else{
-								document.getElementById("maps_div").style.display = "block";
-								var lat_n_long = json.results[0].geometry.location;
-
-								var lat = lat_n_long.lat;
-								var long = lat_n_long.lng;
-
-								var congId = mCongregationMap[cong];
-								var stateId = mStatesMap[state];
-
-								var userId = firebase.auth().currentUser.uid;
-
-								mLatnLngFromAddress = {lat: lat, lng: long};
-
-								mMap= new google.maps.Map(document.getElementById('maps_container'), {
-									zoom: 18,
-									center: mLatnLngFromAddress,
-									mapTypeId: 'satellite'
-								});
-
-								var marker = new google.maps.Marker({
-									position: mLatnLngFromAddress,
-									map: mMap
-								});
-								markersArray.push(marker);
-								setMapOnAll(mMap);
-
-								google.maps.event.addListener(mMap, "click", function (e) {
-
-									deleteMarkers();
-
-									//lat and lng is available in e object
-									var latLng = e.latLng;
-									mNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
-
-									var marker = new google.maps.Marker({
-										position: mNewLatnLngFromMap,
-										map: mMap
-									});
-									markersArray.push(marker);
-									setMapOnAll(mMap);
-
-								});	
+					var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
+					databaseRef.once('value').then(function(snapshot){
+						var array = snapshotToArray(snapshot);
+						if(areNamesInArray(array, firstName, lastName)){
+							setMessage("message_center_add_location", "This person's location is already saved", 0);
+							document.getElementById("maps_div").style.display = "none";
+						}else{
+							var addressString = address.split(" ");
+							var finishedAddresString = "";
+							var cityAndStateString = "";
+							for(var i=0; addressString.length > i; i++){
+								var item = addressString[i];
+								finishedAddresString = finishedAddresString + item + "+";	
 							}
 
-						}else{
+							cityAndStateString = city + "+" + state;
 
+							var apiKey = "&key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA";
+							var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+							var url = baseUrl + finishedAddresString + cityAndStateString + apiKey;
+							var request = new XMLHttpRequest();
+							request.onreadystatechange = function(){
+								if(this.readyState == 4 && this.status == 200){
+									var json = JSON.parse(this.responseText);
+									var successCode = json.status;
+									if(successCode === "ZERO_RESULTS"){
+										setMessage("message_center_add_location", "Address is unknown, please try a different one", 0);
+									}else{
+										document.getElementById("maps_div").style.display = "block";
+										var lat_n_long = json.results[0].geometry.location;
+
+										var lat = lat_n_long.lat;
+										var long = lat_n_long.lng;
+
+										var congId = mCongregationMap[cong];
+										var stateId = mStatesMap[state];
+
+										var userId = firebase.auth().currentUser.uid;
+
+										mLatnLngFromAddress = {lat: lat, lng: long};
+
+										mMap= new google.maps.Map(document.getElementById('maps_container'), {
+											zoom: 18,
+											center: mLatnLngFromAddress,
+											mapTypeId: 'satellite'
+										});
+
+										var marker = new google.maps.Marker({
+											position: mLatnLngFromAddress,
+											map: mMap
+										});
+										markersArray.push(marker);
+										setMapOnAll(mMap);
+
+										google.maps.event.addListener(mMap, "click", function (e) {
+
+											deleteMarkers();
+
+											//lat and lng is available in e object
+											var latLng = e.latLng;
+											mNewLatnLngFromMap = {lat: latLng.lat(), lng: latLng.lng()}
+
+											var marker = new google.maps.Marker({
+												position: mNewLatnLngFromMap,
+												map: mMap
+											});
+											markersArray.push(marker);
+											setMapOnAll(mMap);
+
+										});	
+									}
+
+								}else{
+
+								}
+							}
+							request.open('GET', url);
+							request.send();
 						}
-					}
-					request.open('GET', url);
-					request.send();
+					})		
 				}
 			})
 		}
@@ -651,7 +659,11 @@
 		}
 		
 		function parseCongSnapshot(snapshot) {
+			mCongregationArray = [];
+			mCongregationMap = {};
+			mCongregationMapIds = {};
 			var congSelect = document.getElementById("cong_select");
+			congSelect.innerHTML = "";
 	   		snapshot.forEach(function(childSnapshot) {
 		   		var name = childSnapshot.val().congregation;
 		   		var nameId = childSnapshot.val().congregationId;
@@ -669,8 +681,11 @@
 	     };
 		
 		function parseStateSnapshot(snapshot){
+			mStatesArray = [];
+			mStatesMap = {};
+			mStateMapIds = {};
 			var stateSelect = document.getElementById("state_select");
-			var editStateSelect = document.getElementById("edit_state_select");
+			stateSelect.innerHTML = "";
 			snapshot.forEach(function(childSnapshot){
 				var name = childSnapshot.val().state;
 				var nameId = childSnapshot.val().stateId;
@@ -748,6 +763,7 @@
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
 			document.getElementById("get_more_credits_container").style.display = "none";
+			document.getElementById("information_div").style.display = "none"
 		}
 		
 		
@@ -757,6 +773,7 @@
 		function navEditLocation(){
 			markersArray = [];
 			closeNav();
+			document.getElementById("information_div").style.display = "none"
 			document.getElementById("edit_location_div").style.display = "block";
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("get_more_credits_container").style.display = "none";
@@ -764,13 +781,15 @@
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
-			document.getElementById("edit_state_div").style.display = "none";
 			document.getElementById("edit_cong_div").style.display = "none";
-			document.getElementById("edit_state_box").style.display = "none";
-		
+			document.getElementById("drop_down_cong_edit_div").style.display = "none";
+			document.getElementById("drop_down_location_edit_div").style.display = "none";
 			
 			var editSelectState = document.getElementById("edit_state_select");
 			var editSelectCong = document.getElementById("edit_cong_select");
+			
+			editSelectCong.innerHTML = "";
+			editSelectState.innerHTML = "";
 			
 			for(var i=0; mStatesArray.length > i; i++){
 				var name = mStatesArray[i];
@@ -800,18 +819,22 @@
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
+			document.getElementById("delete_this_location_btn").style.display = "none";
 			
 			locationsToEdit.innerHTML = "";
 			
 			if(searchToEditItem.length == 0 || searchToEditItem == null){
 				locationsToEdit.style.display = "none";
+				document.getElementById("drop_down_location_edit_div").style.display = "none";
 				return;
 			}
 			
+				document.getElementById("drop_down_location_edit_div").style.display = "block";
+
 				locationsToEdit.style.display = "block";
 				
 				var searchAndFoundItems = [];
-			
+		
 			
 				for(var t=0; mLocationThatCurrentUserPutIn.length >t; t++){
 					var array = mLocationThatCurrentUserPutIn[t];
@@ -821,6 +844,11 @@
 					}
 				};
 			
+			if(searchAndFoundItems.length == 0){
+				setMessage("edit_location_message", "No results", 2);
+				document.getElementById("drop_down_location_edit_div").style.display = "none";
+				return;
+			}
 				for(var j=0; searchAndFoundItems.length > j; j++){
 					var itemArray = searchAndFoundItems[j];
 					var firstName = itemArray.firstName;
@@ -847,6 +875,7 @@
 					var locationId = this.getAttribute("myLocationId");
 					var ref = firebase.database().ref("locations/" + locationId);
 					ref.once('value').then(function(snapshot){
+						
 						document.getElementById("verify_edit_location_div").style.display = "block";
 						document.getElementById("locations_to_edit_ul").style.display = "none";
 						document.getElementById("edit_search_location").value = "";
@@ -873,10 +902,16 @@
 						document.getElementById("edit_address").value = address;
 						document.getElementById("edit_city").value = city;
 						
+						var congName = mCongregationMapIds[cong];
+						var stateName = mStateMapIds[state];
+				
+						document.getElementById("edit_state_select").value = stateName;
+						document.getElementById("edit_cong_select").value = congName;
+						
 						mEditLatnLngFromAddress = {lat: lat, lng: long};
 
 						var edit_map = new google.maps.Map(document.getElementById('edit_map_location'), {
-							zoom: 19,
+							zoom: 18,
 							center: mEditLatnLngFromAddress,
 							mapTypeId: 'satellite'
 						});
@@ -911,61 +946,19 @@
 				}
 		}
 		
-		function searchForStatesToEdit(){
-			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_state").value);
-			var editStateUl = document.getElementById("states_to_edit_ul");
-			document.getElementById("edit_state_div").style.display = "none";
-			editStateUl.innerHTML = "";
-			if(searchToEditItem.length == 0 || searchToEditItem == null){
-				editStateUl.style.display = "none";
-				return;
-			}
-			
-			editStateUl.style.display = "block";
-			
-			var statesFound = [];
-			
-			for(var t=0; mStatesArray.length >t; t++){
-				var state = mStatesArray[t];
-				if(checkIfNameStartsWithString(searchToEditItem, state)){
-					statesFound.push(state);  
-				}
-			};
-			
-			for(var r=0; statesFound.length>r; r++){
-				var state = statesFound[r];
-				var stateId = mStatesMap[state];
-				var li = document.createElement("li");
-				li.appendChild(document.createTextNode(state));
-				li.setAttribute("id", "edit_li_items");
-				li.setAttribute("stateId", stateId);
-				li.setAttribute("state", state);
-				editStateUl.appendChild(li);
-			}
-			
-			for(k=0;k<=editStateUl.childElementCount-1;k++){
-				editStateUl.children[k].addEventListener("click",itemClicked);
-			}
-			
-			function itemClicked(){
-				editStateUl.style.display = "none";
-				mStateIdToUpdate = this.getAttribute("stateId");
-				var state = this.getAttribute("state");
-				document.getElementById("edit_state_div").style.display = "block";
-				document.getElementById("state_to_edit").value = state;
-				
-			}
-		}
-		
 		function searchForCongsToEdit(){
 			var searchToEditItem = capitalizeFirstLetter(document.getElementById("edit_search_cong").value);
 			document.getElementById("edit_cong_div").style.display = "none";
 			var editCongUl = document.getElementById("cong_to_edit_ul");
 			editCongUl.innerHTML = "";
 			if(searchToEditItem.length == 0 || searchToEditItem == null){
+				document.getElementById("drop_down_cong_edit_div").style.display = "none";
 				return;
 			}
 			
+			editCongUl.style.display = "block";
+			document.getElementById("drop_down_cong_edit_div").style.display = "block";
+
 			var congsFound = [];
 			
 			for(var t=0; mCongregationArray.length >t; t++){
@@ -986,11 +979,18 @@
 				editCongUl.appendChild(li);
 			}
 			
+			if(congsFound.length == 0){				
+				document.getElementById("drop_down_cong_edit_div").style.display = "none";
+				setMessage("edit_cong_message", "No results", 2);	
+				return;
+			}
+			
 			for(k=0;k<=editCongUl.childElementCount-1;k++){
 				editCongUl.children[k].addEventListener("click",itemClicked);
 			}
 			
 			function itemClicked(){
+				document.getElementById("edit_search_cong").value = "";
 				editCongUl.style.display = "none";
 				mCongIdToUpdate = this.getAttribute("congId");
 				var cong = this.getAttribute("cong");
@@ -1009,6 +1009,10 @@
 			}
 			if(isNotCapital(cong)){
 				setMessage("edit_cong_message", "Congregation must be capitalized", 0);
+				return;
+			}
+			if(mCongIdToUpdate == undefined){
+				setMessage("edit_cong_message", "There was an error", 0);
 				return;
 			}
 			var ref = firebase.database().ref('congregations').child(mCongIdToUpdate);
@@ -1105,6 +1109,12 @@
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
 			document.getElementById("delete_this_location_btn").style.display = "none";
+			var updateCountRef = firebase.database().ref('congregationalAgents').child(mCongregationalAgentObjectId).child("locationCredits");
+			updateCountRef.once('value').then(function(snapshot){
+				var currentVal = snapshot.val();
+				var countToUpdate = currentVal + 1;
+				updateCountRef.set(countToUpdate);
+			})
 		}
 		
 		function updateState(){
@@ -1157,6 +1167,7 @@
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("get_more_credits_container").style.display = "none";
+			document.getElementById("information_div").style.display = "none"
 			for(var k=0; mLocationFeedbackArray.length > k; k++){
 				var itemArray = mLocationFeedbackArray[k];
 				var whatsWrong = itemArray.whatsWrong;
@@ -1256,11 +1267,13 @@
 			document.getElementById("loading_feedback").style.visibility = "hidden";
 		}
 		
+		
 		/*
 			***** GET MORE LOCATION CREDITS *****
 		*/
 		function getMoreCredit(){
 			closeNav();
+			document.getElementById("information_div").style.display = "none"
 			document.getElementById("added_to_cart_div").style.display = "none";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
@@ -1303,6 +1316,18 @@
 		
 		function checkout(){
 			window.location = "checkout.html";
+		}
+		
+		/*
+			***** INFORMATION *****
+		*/
+		function tips(){
+			closeNav();
+			document.getElementById("information_div").style.display = "block"
+			document.getElementById("edit_location_div").style.display = "none";
+			document.getElementById("add_location_div_container").style.display = "none";
+			document.getElementById("check_feedback_div").style.display = "none";
+			document.getElementById("get_more_credits_container").style.display = "none";
 		}
 		
 	</script>
