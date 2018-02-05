@@ -32,7 +32,9 @@
 		<p id="sign_in_error"></p>
 		<button class="log_in_button" onclick="logIn()">LOG IN</button><br>
 		<button id="register_button" onclick="register()">REGISTER</button><br>
-		<button class="sign_in_cancel_button" onclick="cancelSignIn()">CANCEL</button><br>
+		<button class="sign_in_forgot_password_button" onclick="forgotPassword()">Forgot<br>Password</button>
+		<button class="sign_in_cancel_button" onclick="cancelSignIn()">Cancel</button>
+		
 		
 	</div>
 		
@@ -621,6 +623,10 @@
 					setErrorEmailErrorText("Email is not valid");
 				}
 			}
+		}
+		
+		function forgotPassword() {
+			location.href = "reset_password.html"
 		}
 
 		function register(){

@@ -1,4 +1,3 @@
-add loader to add new location to show after verify location is clicked
 add forgot password link to sign in div
 add left and right margin around register complete message
 in index.html, instead of requerying the db query the locally stored array instead
@@ -14,6 +13,8 @@ add explanation about when you delete locations you get those credits back
 add explanaiton that credits are non-refundable
 add user profile
 add explaniton that when someone moves away you must delete them
+
+add loader to add new location to show after verify location is clicked -- !completed!
 
 work on error reporting -- !completed!
 
