@@ -1,7 +1,9 @@
 in index.html, instead of requerying the db query the locally stored array instead
-make added to cart notice a floating dialog
-figure out if i need to charge tax
 add real key to stripe checkout
+
+make added to cart notice a floating dialog -- !completed!
+
+figure out if i need to charge tax -- !completed!
 
 fix edit locations -- !completed!
 

@@ -200,6 +200,11 @@
 		</div>
 		
 		<div id="get_more_credits_container">
+			<div id="added_to_cart_div">
+				<h3 id="item_added_to_cart"></h3>
+				<button onclick="cancelCheckoutDialog()" id="cancel_checkout_dialog">Add More</button>
+				<button onclick="checkout()" id="checkout_btn">Checkout</button>
+			</div>
 			<center><h2>Select a package</h2></center>
 			<div id="tier_container">
 				<div class="tier" id="five">
@@ -252,10 +257,6 @@
 						<p class="price_label">$375</p>
 					</div>
 				</div>
-			</div>
-			<div id="added_to_cart_div">
-				<h3 id="item_added_to_cart"></h3>
-				<button onclick="checkout()" id="checkout_btn">Checkout</button>
 			</div>
 		</div>
 		
@@ -449,6 +450,13 @@
 				if(nav_style.width !== '0px'){
 					closeNav();
 				}
+				
+				var location_credits = document.getElementById("added_to_cart_div");
+				var credits_style = window.getComputedStyle(location_credits);
+				if(credits_style.width !== "visible"){
+					location_credits.style.visibility = "hidden"
+				}
+
 				
 			}	
 		}
@@ -1376,6 +1384,9 @@
 		}
 		
 		function addCreditsToCart(credits){
+			document.getElementById("added_to_cart_div").style.visibility = "visible";
+			document.getElementById("shadow_div").style.visibility = "visible";
+			
 			var ref = firebase.database().ref('shoppingCart').child(mCurrentUserId).push();
 			var key = ref.getKey();
 			
@@ -1386,6 +1397,11 @@
 			document.getElementById("added_to_cart_div").style.display = "block";
 			var added_to_cart_text = credits + " location credits added to your cart";
 			document.getElementById("item_added_to_cart").innerHTML = added_to_cart_text;
+		}
+		
+		function cancelCheckoutDialog(){
+			document.getElementById("shadow_div").style.visibility = "hidden";
+			document.getElementById("added_to_cart_div").style.visibility = "hidden";
 		}
 		
 		function checkout(){

@@ -44,7 +44,7 @@
 					<h4 class="block_label">Order Summary</h4>
 					<p class="summary_content" id="subtotal"></p>
 					<div id="divider_div"></div>
-					<p class="summary_content" id="tax"></p>
+					<p class="summary_content" id="tax">Tax - $0</p>
 					<h4 class="summary_content" id="total"></h4>
 				</div>
 				<div class="blocks">
@@ -59,10 +59,10 @@
 	<div id="shadow_div"></div>
 	
 	<div id="delete_credit">
-		<h4 id="delete_h">Would you like to delete this credit</h4>
+		<h4 id="delete_h">Would you like to delete this item?</h4>
 		<div id="delete_div">
 			<button id="cancel_btn" onclick="cancel()">Cancel</button>
-			<button id="delete_btn" onclick="deleteCredit()">Delete Credit</button>
+			<button id="delete_btn" onclick="deleteCredit()">Delete Item</button>
 		</div>
 	</div>
 	
@@ -142,11 +142,11 @@
 					var strSubtotal = parseInt(subtotal);
 					document.getElementById("subtotal").innerHTML = "Subtotal - $" + strSubtotal;
 					
-					var tax = subtotal * 0.08;
-					var strTax = parseInt(tax);
-					document.getElementById("tax").innerHTML = "Tax - $" + strTax;
+//					var tax = subtotal * 0.08;
+//					var strTax = parseInt(tax);
+//					document.getElementById("tax").innerHTML = "Tax - $" + strTax;
 					
-					mAmount = subtotal + tax;
+					mAmount = subtotal + 0;
 					var strTotal = parseInt(mAmount);
 					document.getElementById("total").innerHTML = "Total - $" + strTotal;
 					
