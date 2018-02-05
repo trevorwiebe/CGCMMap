@@ -1,18 +1,22 @@
-add forgot password link to sign in div
-add left and right margin around register complete message
 in index.html, instead of requerying the db query the locally stored array instead
-make main feedback div more mobile responsive, and make it so it can't resize
 add shopping cart tab
 make added to cart notice a floating dialog
 figure out if i need to charge tax
 add real key to stripe checkout
+fix edit locations
 change the place where you add purchased location credits from thankyou page to right after payment is recieved
 add go to main page button on thankyou page.
 add explantion on how to add businesses
 add explanation about when you delete locations you get those credits back
 add explanaiton that credits are non-refundable
-add user profile
+add edit user profile
 add explaniton that when someone moves away you must delete them
+
+make main feedback div more mobile responsive, and make it so it can't resize -- !completed!
+
+add left and right margin around register complete message -- !completed!
+
+add forgot password link to sign in div -- !completed!
 
 add loader to add new location to show after verify location is clicked -- !completed!
 

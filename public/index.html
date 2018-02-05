@@ -34,8 +34,6 @@
 		<button id="register_button" onclick="register()">REGISTER</button><br>
 		<button class="sign_in_forgot_password_button" onclick="forgotPassword()">Forgot<br>Password</button>
 		<button class="sign_in_cancel_button" onclick="cancelSignIn()">Cancel</button>
-		
-		
 	</div>
 		
 	<div id="sign_in_loading">
@@ -43,11 +41,13 @@
 	</div>
 	
 	<div id="total_feedback">
-		<h2>Feedback:</h2>
+		<h2>Send feedback</h2>
 		<textarea id="total_feedback_text_area"></textarea>
-		<center><h4 id="feedback_error">Please type some feedback before sending.</h4></center>
-		<input type="button" class="button" id="total_feedback_cancel" onclick="cancelSendWholeFeedback()" value="Cancel">
-		<input type="button"  class="button" value="Send" onclick="sendFeedbackOnWholeSite()">
+		<center><h4 id="feedback_error">Please fill the blank</h4></center>
+		<div id="total_feedback_button_bar">
+			<input type="button" class="button" id="total_feedback_cancel" onclick="cancelSendWholeFeedback()" value="Cancel">
+			<input type="button"  class="button" value="Send" onclick="sendFeedbackOnWholeSite()">
+		</div>
 	</div>
 	
 	<div id="incorrect_data_div">
