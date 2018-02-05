@@ -27,21 +27,14 @@
 	</div>
 	
 	<div id="nav_div">
-		<div id="left_header_div"></div>
-			<div id="header_content_div">
-				<div id="menu_container" onclick="openNav()">
-					<div class="menu_style"></div>
-					<div class="menu_style"></div>
-					<div class="menu_style"></div>
-				</div>
-				<ul id="header_ul">
-					<li class="header_li"><a onclick="navAddLocation()">ADD LOCATIONS</a></li>
-					<li class="header_li"><a onclick="navEditLocation()">EDIT LOCATIONS</a></li>
-					<li class="header_li"><a onclick="navCheckFeedback()">CHECK LOCATION ERRORS</a></li>
-					<li class="header_li"><a onclick="getMoreCredit()" id="location_credits">LOCATION CREDITS</a></li>
-					<li class="header_li"><a onclick="information()">INFORMATION</a></li>
-				</ul>
+		<div id="left_header_div">
+			<div id="menu_container" onclick="openNav()">
+				<div class="menu_style"></div>
+				<div class="menu_style"></div>
+				<div class="menu_style"></div>
 			</div>
+		</div>
+			<div id="header_content_div"></div>
 		<div id="right_header_div"></div>
 	</div>
 	
@@ -55,7 +48,12 @@
 		<div class="nav_divider_div"></div>
 		<a onclick="getMoreCredit()" id="location_credits">Location Credits</a>
 		<div class="nav_divider_div"></div>
-		<a onclick="information()">Information</a>
+		<a onclick="information()">Tips and Information</a>
+		<div class="nav_divider_div"></div>
+		<a onclick="shoppingCart()">Cart and Checkout</a>
+		<div class="nav_divider_div"></div>
+		<a onclick="profile()">Edit Profile</a>
+		<div class="nav_divider_div"></div>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -268,6 +266,30 @@
 			</ul>
 		</div>
 		
+		<div id="profile_div">
+			<center><h2>Edit profile</h2></center>
+			<div id="edit_profile_container">
+				<div>
+					<input id="profile_first_name" placeholder="First Name" class="input"><br>
+					<input id="profile_last_name" placeholder="Last Name" class="input"><br>
+					<input id="profile_address" placeholder="Address" class="input"><br>
+					<input id="profile_city" placeholder="City" class="input"><br>
+				</div>
+				<div>
+					<input id="profile_state" placeholder="State" class="input"><br>
+					<input id="profile_cong" placeholder="Congregation" class="input"><br>
+					<input id="profile_email" placeholder="Email" class="input"><br>
+					<input id="profile_phone" placeholder="Phone" class="input"><br>
+				</div>
+			</div>
+			<center><p id="update_profile_message"></p></center>
+			<center><button onclick="updateProfile()" id="update_profile_btn">Update Profile</button></center>
+			<div id="extra_profile_info_div">
+				<center><p id="profile_location_credits_remaining"></p></center>
+				<center><p id="date_created"></p></center>
+			</div>
+		</div>
+		
 		<div id="left_content_div"></div>
 	</div>
 
@@ -298,6 +320,7 @@
 		var mLocationCredits;
 		var mCongregationalAgentObjectId;
 		var mSelectedLocationFeedbackId;
+		var mCurrentUserArray = [];
 		
 		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
@@ -314,6 +337,7 @@
 		document.getElementById("edit_location_message").style.display = "none";
 		document.getElementById("add_s_p_c_1").style.display = "none";
 		document.getElementById("add_location_loader").style.display = "none";
+		document.getElementById("profile_div").style.display = "none";
 
 		
 		document.onclick = closeMenus;
@@ -339,6 +363,8 @@
 				
 				database.ref('congregationalAgents').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
 					var array = snapshotToArray(snapshot);
+					
+					mCurrentUserArray = array[0];
 					
 					mLocationCredits = array[0].locationCredits;
 					mCongregationalAgentObjectId = array[0].congAgentObjectKey;
@@ -420,6 +446,11 @@
 				}
 				
 			}	
+		}
+		
+		function shoppingCart(){
+			closeNav();
+			location.href = "checkout.html"
 		}
 		
 		database.ref('congregations').orderByChild("congregation").on('value', function(snapshot){
@@ -776,6 +807,7 @@
 		function navAddLocation(){
 			markersArray = [];
 			closeNav();
+			document.getElementById("profile_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
@@ -790,6 +822,7 @@
 		function navEditLocation(){
 			markersArray = [];
 			closeNav();
+			document.getElementById("profile_div").style.display = "none";
 			document.getElementById("information_div").style.display = "none"
 			document.getElementById("edit_location_div").style.display = "block";
 			document.getElementById("add_location_div_container").style.display = "none";
@@ -1174,6 +1207,7 @@
 		
 		function navCheckFeedback(){
 			closeNav();
+			document.getElementById("profile_div").style.display = "none";
 			document.getElementById("loading_feedback").style.visibility = "hidden";
 			document.getElementById("view_feedback").style.visibility = "hidden";
 			document.getElementById("check_feedback_div").style.display = "block";
@@ -1305,6 +1339,7 @@
 		*/
 		function getMoreCredit(){
 			closeNav();
+			document.getElementById("profile_div").style.display = "none";
 			document.getElementById("information_div").style.display = "none"
 			document.getElementById("added_to_cart_div").style.display = "none";
 			document.getElementById("edit_location_div").style.display = "none";
@@ -1355,12 +1390,95 @@
 		*/
 		function information(){
 			closeNav();
+			document.getElementById("profile_div").style.display = "none";
 			document.getElementById("information_div").style.display = "block"
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
 			document.getElementById("get_more_credits_container").style.display = "none";
 		}
+		
+		/*
+			***** PROFILE *****
+		*/
+		function profile(){
+			closeNav();
+			document.getElementById("profile_div").style.display = "block";
+			document.getElementById("information_div").style.display = "none"
+			document.getElementById("edit_location_div").style.display = "none";
+			document.getElementById("add_location_div_container").style.display = "none";
+			document.getElementById("check_feedback_div").style.display = "none";
+			document.getElementById("get_more_credits_container").style.display = "none";
+			document.getElementById("update_profile_message").style.display = "none";
+			
+			var firstName = mCurrentUserArray.firstName;
+			var lastName = mCurrentUserArray.lastName;
+			var address = mCurrentUserArray.address;
+			var city = mCurrentUserArray.city;
+			var state = mCurrentUserArray.state;
+			var email = mCurrentUserArray.email;
+			var phone = mCurrentUserArray.phone;
+			var cong = mCurrentUserArray.congregation;
+			var dateAdded = mCurrentUserArray.dateAdded;
+			var locationCredits = mCurrentUserArray.locationCredits;
+			
+			document.getElementById("date_created").innerHTML = "A Congregational Agent since " + new Date(dateAdded).toDateString();
+			document.getElementById("profile_location_credits_remaining").innerHTML = "Location credits remaining: " + locationCredits;
+			
+			document.getElementById("profile_first_name").value = firstName;
+			document.getElementById("profile_last_name").value = lastName;
+			document.getElementById("profile_address").value = address;
+			document.getElementById("profile_city").value = city;
+			document.getElementById("profile_state").value = state;
+			document.getElementById("profile_email").value = email;
+			document.getElementById("profile_phone").value = phone;
+			document.getElementById("profile_cong").value = cong;
+		}
+		
+		function updateProfile(){
+			var firstName = document.getElementById("profile_first_name").value;
+			var lastName = document.getElementById("profile_last_name").value;
+			var address = document.getElementById("profile_address").value;
+			var city = document.getElementById("profile_city").value;
+			var state = document.getElementById("profile_state").value;
+			var email = document.getElementById("profile_email").value;
+			var phone = document.getElementById("profile_phone").value;
+			var cong = document.getElementById("profile_cong").value;
+			
+			var firstName = capitalizeFirstLetter(firstName);
+			var lastName = capitalizeFirstLetter(lastName);
+			var city = capitalizeFirstLetter(city);
+			var cong = capitalizeFirstLetter(cong);
+			
+			var dateAdded = mCurrentUserArray.dateAdded;
+			var congAgentObjectKey = mCurrentUserArray.congAgentObjectKey;
+			var firstAndLastName = firstName + " " + lastName;
+			var locationCredits = mCurrentUserArray.locationCredits;
+			var userId = mCurrentUserArray.userId;
+			
+			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || email.length == 0  || phone.length == 0){
+				setMessage("update_profile_message", "Please fill the blanks", 0);
+			} else{
+				var ref = firebase.database().ref('congregationalAgents').child(congAgentObjectKey);
+				ref.set({
+					address: address,
+					city: city,
+					congAgentObjectKey : congAgentObjectKey,
+					congregation: cong,
+					dateAdded: dateAdded,
+					email: email,
+					firstAndLastName: firstAndLastName,
+					firstName: firstName,
+					lastName: lastName,
+					locationCredits: locationCredits,
+					phone: phone,
+					state: state,
+					userId: userId
+				});
+				setMessage("update_profile_message", "Profile updated successfully", 1);
+			}
+		}
+	
 		
 	</script>
 	

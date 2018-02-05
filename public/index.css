@@ -95,7 +95,7 @@ h3{
     left: 0;
     background-color: #3F51B5;
     overflow-x: hidden;
-    transition: 0.3s;
+    transition: 0.1s;
     padding-top: 60px;
 	z-index: 5;
 	cursor: pointer;
