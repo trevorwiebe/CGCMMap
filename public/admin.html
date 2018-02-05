@@ -260,9 +260,14 @@
 		</div>
 		
 		<div id="information_div">
+			<center><h2>Tips and Information</h2></center>
 			<ul id="info_ul">
 				<li class="info_li">The information from 'Check Location Errors' comes directly from when a user reports an error on one of the locations that you entered.</li>
 				<li class="info_li">When you first began to enter your locations, your congregation most likely will not be one of the options in the congregation dropdown.  On the bottom of 'Add location' page there is an option to add a new congregation, go ahead and add yours.</li>
+				<li class="info_li">We encourage you to also add the businesses in your congregation. Because when you add a location the first and last name must be filled before adding, Just split the business name in half the best you can so you can fill both blanks.</li>
+				<li class="info_li">When someone in your congregation moves away, you must delete that location. Although this may seem counter-intuitive, CGCM Map is designed so you only have to manage you own congregations locations. So therefore the person who moved away is no longer your responsibility.</li>
+				<li class="info_li">Location credits are non-refundable</li>
+				<li class="info_li">When you delete a location, you get back the credit you used.</li>
 			</ul>
 		</div>
 		
@@ -935,16 +940,18 @@
 
 						var array = snapshotToArray(snapshot);
 						
+						console.log(array);
+						
 						var firstName = array[5];
-						var lastName = array[6];
+						var lastName = array[7];
 						var address = array[0];
-						var state = array[10];
+						var state = array[11];
 						var city = array[1];
 						var cong = array[2];
-						var lat = array[7];
-						var long = array[9];
-						mLocationId = array[8];
-						mUserId = array[11];
+						var lat = array[8];
+						var long = array[10];
+						mLocationId = array[9];
+						mUserId = array[12];
 						mSelectedDate = array[3];
 						
 						document.getElementById("edit_first_name").value = firstName;

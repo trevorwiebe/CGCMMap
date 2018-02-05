@@ -2,13 +2,18 @@ in index.html, instead of requerying the db query the locally stored array inste
 make added to cart notice a floating dialog
 figure out if i need to charge tax
 add real key to stripe checkout
-fix edit locations
-change the place where you add purchased location credits from thankyou page to right after payment is recieved
-add go to main page button on thankyou page.
-add explantion on how to add businesses
-add explanation about when you delete locations you get those credits back
-add explanaiton that credits are non-refundable
-add explaniton that when someone moves away you must delete them
+
+fix edit locations -- !completed!
+
+add go to main page button on thankyou page. -- !completed!
+
+add explanation about when you delete locations you get those credits back -- !completed!
+
+add explanaiton that credits are non-refundable -- !completed!
+
+add explaniton that when someone moves away you must delete them -- !completed!
+
+add explantion on how to add businesses -- !completed!
 
 add edit user profile -- !completed!
 
