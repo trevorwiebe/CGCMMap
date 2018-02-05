@@ -87,6 +87,7 @@
 		<div id="overlay_loader_id"></div>
 		<ul id="names_found_list"></ul>
 		<div id="details">
+			<p id="something_wrong_with_entry">There may be something wrong with this entry.<br>Help us solve this issue by reporting the error.</p>
 			<div id="name_details_div">
 				<h3 id="name"></h3>
 				<h4 id="h_address" class="name_details"></h4>
@@ -98,7 +99,6 @@
 				<button id="report_error" onclick="notifyAsIncorrect()">Report<br>Error</button>
 			</div>
 		</div>
-		<center><p id="location_maybe_incorrect">The information reguarding this location may be incorrect.<br>Please send feedback so we can resolve the issue.</p></center>
 	</div> 
 	
 	<div id="side_nav" class="sidenav">
@@ -125,6 +125,7 @@
 		var mAreAllLocationsShown;
 		var mSelectedLocationId;
 		var mPreviousSelectedIcon;
+		var mIsDisputeOpen;
 		
 		document.getElementById("feedback_error").style.visibility = "hidden";
 		document.getElementById("total_feedback").style.visibility = "hidden";
@@ -136,9 +137,9 @@
 		document.getElementById("loader").style.display = "none";
 		document.getElementById("sign_in_loading").style.display = "none";
 		document.getElementById("overlay_loader_id").style.display = "none";
-		document.getElementById("location_maybe_incorrect").style.display = "none";
 		document.getElementById("open_in_google_maps_btn").style.display = "none";
 		document.getElementById("report_error").style.display = "none";
+		document.getElementById("something_wrong_with_entry").style.display = "none";
 		
 		document.onclick = close_menus;
 		
@@ -280,6 +281,9 @@
 				date: date,
 				notes: notes
 			})
+			var locationRef = firebase.database().ref("locations").child(mSelectedLocationId).child("isDisputeOpen");
+			locationRef.set(true);
+			
 			document.getElementById("incorrect_data_notes").value = "";
 			document.getElementById("whats_wrong").options[0].selected = true;
 			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
@@ -357,6 +361,7 @@
 			namesFoundList.style.visibility = "visible";
 			document.getElementById("open_in_google_maps_btn").style.display = "none";
 			document.getElementById("report_error").style.display = "none";
+			document.getElementById("something_wrong_with_entry").style.display = "none";
 
 			
 			// capitalize first letter to make sure it searches correctly
@@ -473,6 +478,7 @@
 			var lat = array.latitude;
 			var long = array.longitude;
 			var locationId = array.locationId;
+			mIsDisputeOpen = array.isDisputeOpen;
 			
 			mSelectedLocationId = locationId;
 			
@@ -514,7 +520,14 @@
 					
 					mMap.setZoom(18);
 					mMap.panTo(mSelectedLatnLng);
-					setOverlayDivHeight(135);
+					
+					if(mIsDisputeOpen){
+						setOverlayDivHeight(175);
+						document.getElementById("something_wrong_with_entry").style.display = "block";
+					}else{
+						setOverlayDivHeight(135);
+						document.getElementById("something_wrong_with_entry").style.display = "none";
+					}
 					document.getElementById("overlay_loader_id").style.display = "none";
 					
 					var arrow = document.getElementById("open_close_arrow");
@@ -695,6 +708,7 @@
 			var namesList = document.getElementById("names_found_list");
 			var openInGMaps = document.getElementById("open_in_google_maps_btn");
 			var reportError = document.getElementById("report_error");
+			var errorOpen = document.getElementById("something_wrong_with_entry");
 			if(mIsOpen){
 				arrow.className = "rotate_closed";
 				mIsOpen = false;
@@ -703,19 +717,27 @@
 				namesList.style.visibility = "hidden";
 				openInGMaps.style.display = "none";
 				reportError.style.display = "none";
+				errorOpen.style.display = "none";
+
 				
 
 				setOverlayDivHeight(0);
 			}else{
 				arrow.className = "rotate_open";
 				mIsOpen = true;
-			
+		
 				
 				if(mIsNameDetailsShown){
 					nameDetailsDiv.style.visibility = "visible"
 					openInGMaps.style.display = "block";
 					reportError.style.display = "block";
-					setOverlayDivHeight(135);
+					if(mIsDisputeOpen){
+						setOverlayDivHeight(175);
+						errorOpen.style.display = "block";
+					}else{
+						setOverlayDivHeight(135);
+						errorOpen.style.display = "none";
+					}
 				}
 				
 				if(mIsNameListShown){

@@ -39,7 +39,7 @@
 					<li class="header_li"><a onclick="navEditLocation()">EDIT LOCATIONS</a></li>
 					<li class="header_li"><a onclick="navCheckFeedback()">CHECK LOCATION ERRORS</a></li>
 					<li class="header_li"><a onclick="getMoreCredit()" id="location_credits">LOCATION CREDITS</a></li>
-					<li class="header_li"><a onclick="tips()">INFORMATION</a></li>
+					<li class="header_li"><a onclick="information()">INFORMATION</a></li>
 				</ul>
 			</div>
 		<div id="right_header_div"></div>
@@ -55,7 +55,7 @@
 		<div class="nav_divider_div"></div>
 		<a onclick="getMoreCredit()" id="location_credits">Location Credits</a>
 		<div class="nav_divider_div"></div>
-		<a onclick="tips()">Information</a>
+		<a onclick="information()">Information</a>
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -68,7 +68,7 @@
 			<div id="add_location_box">
 				<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
 				<center><p id="location_credits_remaining"></p></center>
-				<center><button id="add_more_credits" onclick="getMoreCredit()">Add more</button></center>
+				<center><button id="add_more_credits" onclick="getMoreCredit()">Add more credits</button></center>
 				<div id="add_location_container">
 					<div id="add_location_1">
 						<input type="text" id="first_name" class="input" placeholder="First Name"><br>
@@ -86,6 +86,7 @@
 					</div>
 				</div>
 			<center><h3 id="message_center_add_location"></h3></center>
+			<div id="add_location_loader"></div>	
 			</div>
 			<div id="maps_div">
 				<center><h2 id="must_verify">Verify new location</h2></center>
@@ -180,7 +181,7 @@
 				<div id="feedback_content">
 					<center><h3>Error</h3></center>
 					<p id="feedback_whats_wrong" class="show_feedback_p"></p>
-					<p id="feedback_notes" class="show_feedback_p"></p>
+					<b><p id="feedback_notes" class="show_feedback_p"></p></b>
 					<p id="feedback_date" class="show_feedback_p"></p>
 					<center><h3>Location in question</h3></center>
 					<p id="first_and_last_name" class="show_feedback_p">test</p>
@@ -190,7 +191,7 @@
 				</div>
 					<div id="feedback_button_bar">
 						<button id="feedback_cancel" onclick="feedback_cancel()">Cancel</button>
-						<button id="feedback_mark_resolved" onclick="markResolved()">Mark as resolved</button>
+						<button id="feedback_mark_resolved" onclick="markResolved()">Mark resolved</button>
 						<button id="feedback_edit_location" onclick="feedbackEditLocation()">Edit Location</button>
 					</div>
 			</div>
@@ -296,6 +297,7 @@
 		var mCongIdToUpdate;
 		var mLocationCredits;
 		var mCongregationalAgentObjectId;
+		var mSelectedLocationFeedbackId;
 		
 		// hide elements that are not needed
 		document.getElementById("maps_div").style.display = "none";
@@ -311,6 +313,7 @@
 		document.getElementById("edit_cong_message").style.display = "none";
 		document.getElementById("edit_location_message").style.display = "none";
 		document.getElementById("add_s_p_c_1").style.display = "none";
+		document.getElementById("add_location_loader").style.display = "none";
 
 		
 		document.onclick = closeMenus;
@@ -321,11 +324,13 @@
 		var database = firebase.database();
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
+				document.getElementById("add_location_div_container").style.display = "block";
+				document.getElementById("loading_div").style.display = "none";
+				
 				mCurrentUserId = user.uid;
-				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").once('value').then(function(snapshot){
+				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
 					mLocationFeedbackArray = snapshotToArray(snapshot);
-					document.getElementById("add_location_div_container").style.display = "block";
-					document.getElementById("loading_div").style.display = "none";
+					refreshFeedbackUls();
 				})
 				
 				database.ref('locations').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
@@ -502,7 +507,8 @@
 				congregation: varCong,
 				state: varState,
                 locationId: key,
-				userId: varUserId
+				userId: varUserId,
+				isDisputeOpen: false
             });
 			
 			var updateCountRef = firebase.database().ref('congregationalAgents').child(mCongregationalAgentObjectId).child("locationCredits");
@@ -545,6 +551,9 @@
 		
 		function verify_location(){
 
+			var loader = document.getElementById("add_location_loader");
+			loader.style.display = "block";
+
 			var firstName = document.getElementById('first_name').value;
 			var lastName = document.getElementById('last_name').value;
 			var address = document.getElementById('address').value;
@@ -553,6 +562,7 @@
 			var cong = getSelectedText('cong_select');
 
 			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || cong.length == 0){
+				loader.style.display = "none";
 				setMessage("message_center_add_location", "Please fill all the blanks",0);
 				return;
 			}
@@ -561,6 +571,7 @@
 			updateCountRef.once('value').then(function(snapshot){
 				var currentVal = snapshot.val();
 				if(currentVal == 0){
+					loader.style.display = "none";
 					setMessage("message_center_add_location", "You are out of location credits", 0);
 				}else{
 					var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
@@ -569,6 +580,8 @@
 						if(areNamesInArray(array, firstName, lastName)){
 							setMessage("message_center_add_location", "This person's location is already saved", 0);
 							document.getElementById("maps_div").style.display = "none";
+							loader.style.display = "none";
+
 						}else{
 							var addressString = address.split(" ");
 							var finishedAddresString = "";
@@ -590,6 +603,7 @@
 									var successCode = json.status;
 									if(successCode === "ZERO_RESULTS"){
 										setMessage("message_center_add_location", "Address is unknown, please try a different one", 0);
+										loader.style.display = "none";
 									}else{
 										document.getElementById("maps_div").style.display = "block";
 										var lat_n_long = json.results[0].geometry.location;
@@ -633,6 +647,9 @@
 											setMapOnAll(mMap);
 
 										});	
+										
+										loader.style.display = "none";
+
 									}
 
 								}else{
@@ -1157,10 +1174,6 @@
 		
 		function navCheckFeedback(){
 			closeNav();
-			var unresolvedFeedUl = document.getElementById("unresolved_feedback_ul");
-			var resolvedFeedUl = document.getElementById("resolved_feedback_ul");
-			unresolvedFeedUl.innerHTML = "";
-			resolvedFeedUl.innerHTML = ""
 			document.getElementById("loading_feedback").style.visibility = "hidden";
 			document.getElementById("view_feedback").style.visibility = "hidden";
 			document.getElementById("check_feedback_div").style.display = "block";
@@ -1168,17 +1181,32 @@
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("get_more_credits_container").style.display = "none";
 			document.getElementById("information_div").style.display = "none"
+			
+			refreshFeedbackUls();
+		}
+		
+		function refreshFeedbackUls(){
+			var unresolvedFeedUl = document.getElementById("unresolved_feedback_ul");
+			var resolvedFeedUl = document.getElementById("resolved_feedback_ul");
+			unresolvedFeedUl.innerHTML = "";
+			resolvedFeedUl.innerHTML = ""
+			
+			document.getElementById("feedback_resolved_tv").style.display = "block";
+			document.getElementById("no_feedback_tv").style.display = "block";
+			
 			for(var k=0; mLocationFeedbackArray.length > k; k++){
 				var itemArray = mLocationFeedbackArray[k];
 				var whatsWrong = itemArray.whatsWrong;
 				var isResolved = itemArray.isResolved;
 				var locationId = itemArray.locationFeedbackKey;
+				var feedbackKey = itemArray.feedbackKey;
 				var date = itemArray.date;
 				var notes = itemArray.notes;
 				if(isResolved){
 					document.getElementById("feedback_resolved_tv").style.display = "none";
 					var li = document.createElement("li");
 					li.appendChild(document.createTextNode(whatsWrong));
+					li.setAttribute("feedbackKey", feedbackKey);
 					li.setAttribute("id", "feedback_resolved_li");
 					li.setAttribute("locationId", locationId);
 					li.setAttribute("date", date);
@@ -1191,6 +1219,7 @@
 					var li = document.createElement("li");
 					li.appendChild(document.createTextNode(whatsWrong));
 					li.setAttribute("id", "feedback_not_resolved_li");
+					li.setAttribute("feedbackKey", feedbackKey);
 					li.setAttribute("locationId", locationId);
 					li.setAttribute("date", date);
 					li.setAttribute("notes", notes);
@@ -1218,6 +1247,7 @@
 				var notes = this.getAttribute("notes");
 				var whatsWrong = this.getAttribute("whatsWrong");
 				var isResolved = this.getAttribute("isResolved");
+				mSelectedLocationFeedbackId = this.getAttribute("feedbackKey");
 				
 				if(isResolved === "1"){
 					document.getElementById("feedback_mark_resolved").style.display = "none";
@@ -1246,7 +1276,6 @@
 					document.getElementById("feedback_congregation").innerHTML= cong;
 				})
 			}
-			
 		}
 		
 		function feedback_cancel(){
@@ -1259,12 +1288,15 @@
 			document.getElementById("shadow_div").style.visibility = "hidden";
 			document.getElementById("view_feedback").style.visibility = "hidden";
 			document.getElementById("loading_feedback").style.visibility = "hidden";
+			var ref = firebase.database().ref("locationFeedback").child(mCurrentUserId).child(mSelectedLocationFeedbackId).child("isResolved");
+			ref.set(true);
 		}
 		
 		function feedbackEditLocation(){
 			document.getElementById("shadow_div").style.visibility = "hidden";
 			document.getElementById("view_feedback").style.visibility = "hidden";
 			document.getElementById("loading_feedback").style.visibility = "hidden";
+			navEditLocation();
 		}
 		
 		
@@ -1321,7 +1353,7 @@
 		/*
 			***** INFORMATION *****
 		*/
-		function tips(){
+		function information(){
 			closeNav();
 			document.getElementById("information_div").style.display = "block"
 			document.getElementById("edit_location_div").style.display = "none";

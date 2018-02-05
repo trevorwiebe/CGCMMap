@@ -63,7 +63,7 @@
 						var strCredit = parseInt(locationCredits);
 						document.getElementById("credit_info").innerHTML = "Your purchase of " + strCredit + " location credits has been added to your account.";
 						
-//						firebase.database().ref('shoppingCart').child(mUserId).remove();
+						firebase.database().ref('shoppingCart').child(mUserId).remove();
 						
 						var ref = firebase.database().ref('congregationalAgents').orderByChild('userId').equalTo(mUserId);
 						ref.once('value').then(function(snapshot){
@@ -108,6 +108,7 @@
 				});
 			} else {
 				mUserId = null;
+				loadMain();
 			}
 		});
 		
