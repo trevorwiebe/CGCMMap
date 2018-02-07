@@ -160,7 +160,7 @@
 		var tokenTriggered = false;
 		
 		var handler = StripeCheckout.configure({
-			key: 'pk_test_JkpE1pqAEwQVEZpDAGAJJNiW',
+			key: 'pk_live_YAMgpygJihpWp5P78uATKasv',
 			image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
 			locale: 'auto',
 			closed: function(){
@@ -170,6 +170,17 @@
 			},
 			token: function(token) {
 				tokenTriggered = true;
+				var ref = firebase.database().ref('payments').child(mUserId);
+				var paymentRef = ref.push();
+				
+				var key = paymentRef.getKey();
+				
+				paymentRef.set({
+					token: token,
+					amount: mAmount * 100,
+					paymentId: key
+				})
+				
 			}
 		});
 		
