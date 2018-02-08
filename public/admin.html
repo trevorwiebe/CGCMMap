@@ -27,8 +27,8 @@
 	</div>
 	
 	<div id="nav_div">
-		<div id="left_header_div">
-			<div id="menu_container" onclick="openNav()">
+		<div id="left_header_div" onclick="openNav()">
+			<div id="menu_container">
 				<div class="menu_style"></div>
 				<div class="menu_style"></div>
 				<div class="menu_style"></div>
@@ -332,7 +332,6 @@
 		document.getElementById("edit_location_div").style.display = "none";
 		document.getElementById("check_feedback_div").style.display = "none";
 		document.getElementById("get_more_credits_container").style.display = "none";
-		document.getElementById("add_location_div_container").style.display = "none";
 		document.getElementById("information_div").style.display = "none"
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("cong_message").style.display = "none";
@@ -353,8 +352,6 @@
 		var database = firebase.database();
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
-				document.getElementById("add_location_div_container").style.display = "block";
-				document.getElementById("loading_div").style.display = "none";
 				
 				mCurrentUserId = user.uid;
 				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
@@ -375,6 +372,8 @@
 					mCongregationalAgentObjectId = array[0].congAgentObjectKey;
 					
 					document.getElementById("location_credits_remaining").innerHTML = "Location credits remaining: " + mLocationCredits;
+					
+					document.getElementById("loading_div").style.display = "none";
 				
 				})
 			} else {

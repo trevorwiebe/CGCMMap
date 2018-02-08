@@ -66,6 +66,10 @@
 		</div>
 	</div>
 	
+	<div id="loading_div">
+		<div id="loader"></div>
+	</div>
+	
 	<script src="https://checkout.stripe.com/checkout.js"></script>
 	
 	<script>
@@ -150,6 +154,7 @@
 					var strTotal = parseInt(mAmount);
 					document.getElementById("total").innerHTML = "Total - $" + strTotal;
 					
+					document.getElementById("loading_div").style.visibility = "hidden";
 				})
 				
 			} else {

@@ -21,6 +21,35 @@ html, body{
 	margin: 50px;
 }
 
+#loading_div{
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background: white;
+	z-index: 3;
+}
+
+#loader {
+    border: 10px solid #e8e1e1;
+    border-top: 10px solid #FFC107;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+	margin-top: 250px;
+	margin-left: auto;
+	margin-right: auto;
+    animation: spin 0.7s linear infinite;
+	z-index: 3;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
 #delete_credit{
 	position: fixed;
 	margin-left: auto;

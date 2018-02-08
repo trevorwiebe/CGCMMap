@@ -25,7 +25,6 @@ html, body{
 
 #thanks_content_div{
 	padding: 40px;
-	text-indent: 20px;
 	background-color: white;
 	box-shadow: 1px 1px 2px #888;
 }
@@ -33,13 +32,31 @@ html, body{
 #cong_btn{
 	padding: 15px;
 	border: none;
-	margin: 30px;
 	color: white;
 	box-shadow: 1px 1px 2px #888;
 	background-color: #303F9F;
+	margin-top: 30px;
+	margin-bottom: 30px;
 }
 
 #cong_btn:hover{
 	box-shadow: 2px 2px 4px #888;
 	background-color: #232f77;
+}
+
+#credit_info{
+	text-indent: 20px;
+}
+
+@media screen and (max-width: 850px){
+	#left_div{
+		width: 1%;
+	}
+	
+	#content_div{
+		width: 98%;
+	}
+	#right_div{
+		width: 1%;
+	}
 }

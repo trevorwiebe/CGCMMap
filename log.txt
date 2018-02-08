@@ -1,5 +1,21 @@
 in index.html, instead of requerying the db query the locally stored array instead
-add real key to stripe checkout
+when editing a location add an area to close dispute if one is open
+
+
+
+fix forgot password btn and cancel btn on signin div -- !completed!
+
+if no items in cart go back to main page -- !completed!
+
+remove left margin on tips and info page when on mobile -- !completed!
+
+increase the touch target of admin page open side nav -- !completed!
+
+make loading indicator stay on longer on admin page -- !completed!
+
+add loading indicator to cart -- !completed!
+
+add real key to stripe checkout -- !completed!
 
 make added to cart notice a floating dialog -- !completed!
 

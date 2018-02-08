@@ -299,7 +299,8 @@
 		function openInGoogleMaps(){
 			var lat = mSelectedLatnLng.lat;
 			var lng = mSelectedLatnLng.lng;
-			window.open("https://www.google.com/maps/dir/?api=1&destination=" + lat + ',' + lng + "&dir_action=navigate", '_system');
+			window.open("https://www.google.com/maps/dir/Current+Location/" + lat + "," + lng, '_system');
+//			window.open("https://www.google.com/maps/dir/?api=1&destination=" + lat + ',' + lng + "&dir_action=navigate", '_system');
 		}
 		
 		function sendFeedbackOnWholeSite(){

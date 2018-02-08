@@ -861,7 +861,7 @@ body, html{
 }
 
 /* resizing css code */
-@media only screen and (max-width: 1200px){
+@media only screen and (max-width: 1000px){
 	#right_header_div{
 		width: 0%;
 	}
@@ -954,6 +954,11 @@ body, html{
 	}
 	
 	#feedback_mark_resolved{
+		margin-right: 0px;
+	}
+	
+	#info_ul{
+		margin-left: 0px;
 		margin-right: 0px;
 	}
 }
