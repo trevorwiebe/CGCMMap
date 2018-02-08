@@ -131,6 +131,11 @@
 						<select id="edit_state_select" class="select"></select>
 						<h4 class="tags">Select Congregation</h4>
 						<select id="edit_cong_select" class="select"></select>
+						<div id="dispute_div">
+							<p id="dispute_explain">There maybe an error with this location,<br>please close the dispute before updating.</p>
+							<center><button onclick="closeDispute()" id="close_dispute_btn">Close dispute</button></center>
+						</div>
+						<p id="dispute_message">Test</p>
 					</div>
 
 				</div>
@@ -262,10 +267,11 @@
 		<div id="information_div">
 			<center><h2>Tips and Information</h2></center>
 			<ul id="info_ul">
-				<li class="info_li">The information from 'Check Location Errors' comes directly from when a user reports an error on one of the locations that you entered.</li>
 				<li class="info_li">When you first began to enter your locations, your congregation most likely will not be one of the options in the congregation dropdown.  On the bottom of 'Add location' page there is an option to add a new congregation, go ahead and add yours.</li>
-				<li class="info_li">We encourage you to also add the businesses in your congregation. Because when you add a location the first and last name must be filled before adding, Just split the business name in half the best you can so you can fill both blanks.</li>
-				<li class="info_li">When someone in your congregation moves away, you must delete that location. Although this may seem counter-intuitive, CGCM Map is designed so you only have to manage you own congregations locations. So therefore the person who moved away is no longer your responsibility.</li>
+				<li class="info_li">The information from 'Check Location Errors' comes directly from when a user reports an error on one of the locations that you entered.</li>
+				<li class="info_li">When you are viewing your location errors and mark one as resolved, the location is not actually updated, it just lets CGCM Map know that you are aware of a problem with one of your locations.  To actually update the location, you must edit it, and then mark it that the error is resolved.</li>
+				<li class="info_li">We encourage you to add your church, school and the locations of the businesses in your congregation. But when you add a location, the first and last name must be filled before adding, so just split the name in half the best you can so you can fill both blanks.</li>
+				<li class="info_li">When someone in your congregation moves away, you must delete that location. Although this may seem a little strange to some (Why no just edit the location?),  CGCM Map is designed so you only have to manage you own congregations locations. So therefore the person who moved away is no longer your responsibility.</li>
 				<li class="info_li">Location credits are non-refundable</li>
 				<li class="info_li">When you delete a location, you get back the credit you used.</li>
 			</ul>
@@ -845,6 +851,8 @@
 			document.getElementById("edit_cong_div").style.display = "none";
 			document.getElementById("drop_down_cong_edit_div").style.display = "none";
 			document.getElementById("drop_down_location_edit_div").style.display = "none";
+			document.getElementById("dispute_div").style.display = "none";
+			document.getElementById("dispute_message").style.display = "none";
 			
 			var editSelectState = document.getElementById("edit_state_select");
 			var editSelectCong = document.getElementById("edit_cong_select");
@@ -946,8 +954,6 @@
 
 						var array = snapshotToArray(snapshot);
 						
-						console.log(array);
-						
 						var firstName = array[5];
 						var lastName = array[7];
 						var address = array[0];
@@ -959,6 +965,12 @@
 						mLocationId = array[9];
 						mUserId = array[12];
 						mSelectedDate = array[3];
+						
+						var isDisputeOpen = array[6];
+						if(isDisputeOpen){
+							document.getElementById("update_location_btn").style.display = "none";
+							document.getElementById("dispute_div").style.display = "block";
+						}
 						
 						document.getElementById("edit_first_name").value = firstName;
 						document.getElementById("edit_last_name").value = lastName;
@@ -1122,6 +1134,7 @@
 				lastName: lastName,
 				address: address,
 				city: city,
+				isDisputeOpen: false,
 				date: mSelectedDate,
 				firstAndLastName: firstAndLastName,
 				congregation: congId,
@@ -1201,11 +1214,16 @@
 			document.getElementById("edit_state_div").style.display = "none";
 		}
 		
+		function closeDispute(){
+			var ref = database.ref("locations").child(mLocationId).child("isDisputeOpen").set(false);
+			document.getElementById("update_location_btn").style.display = "block";
+			document.getElementById("dispute_div").style.display = "none";
+			setMessage("dispute_message", "Dispute closed successfully", 1);
+		}
 		
 		/*
 			*****  CHECK FEEDBACK CODE   *****
 		*/
-		
 		function parseDate(date){
 		
 			var date = parseFloat(date);

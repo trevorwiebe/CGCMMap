@@ -1,7 +1,8 @@
 in index.html, instead of requerying the db query the locally stored array instead
-when editing a location add an area to close dispute if one is open
 
 
+
+when editing a location add an area to close dispute if one is open -- !completed!
 
 fix forgot password btn and cancel btn on signin div -- !completed!
 
