@@ -373,15 +373,17 @@ h3{
 }
 
 .sign_in_cancel_button{
+	vertical-align: top;
 	background-color: white;
 	border-style: none;
 	color: #EF5350;
 	font-weight: bold;
 	margin-top: 20px;
-	padding-left: 20px;
+	padding-top: 17px;
+	padding-bottom: 17px;
 	padding-right: 20px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-left: 20px;
+	margin-left: 10px;
 }
 
 .sign_in_forgot_password_button:hover{
@@ -389,15 +391,17 @@ h3{
 }
 
 .sign_in_forgot_password_button{
+	vertical-align: top;
 	background-color: white;
 	border: none;
 	color: #303F9F;
 	font-weight: bold;
 	margin-top: 20px;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 5px;
-	padding-bottom: 5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-right: 10px;
 }
 
 #sign_in_explain{

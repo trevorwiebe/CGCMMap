@@ -5,12 +5,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="admin.css">
     <link rel="stylesheet" href="admin.css">
-      
-	<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
+    
+	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
 	<script>
 	  // Initialize Firebase
 	  var config = {
-		apiKey: "AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA",
+		apiKey: "AIzaSyCK4mj6C1LpZ24ueWG4P7HDhZ06evs7KNI",
 		authDomain: "maps-ca38f.firebaseapp.com",
 		databaseURL: "https://maps-ca38f.firebaseio.com",
 		projectId: "maps-ca38f",
@@ -369,10 +369,13 @@
 					mLocationThatCurrentUserPutIn = snapshotToArray(snapshot);
 				});
 				
+				console.log(mCurrentUserId);
 				database.ref('congregationalAgents').orderByChild("userId").equalTo(mCurrentUserId).on('value', function(snapshot){
 					var array = snapshotToArray(snapshot);
 					
 					mCurrentUserArray = array[0];
+					
+					console.log(mCurrentUserArray);
 					
 					mLocationCredits = array[0].locationCredits;
 					mCongregationalAgentObjectId = array[0].congAgentObjectKey;
@@ -1517,9 +1520,16 @@
 				setMessage("update_profile_message", "Profile updated successfully", 1);
 			}
 		}
-	
+
 		
 	</script>
+	
+	
+<!--
+	<script 
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC43Y-DKLX6bv69Kx9Q7NLDbbYzJPo-0gw">
+	</script>
+-->
 	
 	<script 
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA">
