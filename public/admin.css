@@ -834,6 +834,19 @@ body, html{
 	padding: 20px;
 }
 
+#flow_chart_div{
+	position: fixed; 
+    width: 600px; 
+    height: 600px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+	margin: auto;
+    z-index: 4;
+    box-shadow: 1px 1px 2px #888;
+}
+
 /*profile code*/
 #profile_div{
 	width: 60%;
