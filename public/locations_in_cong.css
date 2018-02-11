@@ -1,0 +1,47 @@
+html, body{
+	background-color: #eeeeee;
+	font-family: Roboto, sans-serif;
+	height: 100%;
+}
+
+#container{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#right_div{
+	width: 20%;
+}
+
+#content_div{
+	width: 60%;
+}
+
+#left_div{
+	width: 20%;
+}
+
+#view_location{
+	padding: 50px;
+	background-color: white;
+	box-shadow: 1px 1px 2px #888;
+	border-radius: 2px;
+}
+
+#location_ul{
+	list-style-type: none;
+}
+
+@media screen and (max-width: 700px){
+	#left_div{
+		width: 0%;
+	}
+	
+	#content_div{
+		width: 100%;
+	}
+	
+	#right_div{
+		width: 0%;
+	}
+}

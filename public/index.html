@@ -8,8 +8,8 @@
 	<meta name="description" content="A handy website to help the members of the Church of God in Christ Mennonite go where they need to go.">
 	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
 	<script>
+		
 	  // Initialize Firebase
-//		AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA
 	  var config = {
 		apiKey: "AIzaSyCK4mj6C1LpZ24ueWG4P7HDhZ06evs7KNI",
 		authDomain: "maps-ca38f.firebaseapp.com",
@@ -106,7 +106,7 @@
 	
 	<div id="side_nav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<center><a onclick="congs_represended">Congregations<br>Represented</a></center>
+		<center><a onclick="window.location = 'congs_represented.html'">Congregations<br>Represented</a></center>
 		<div class="nav_divider_div"></div>
 		<center><a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a></center>
 		<div class="nav_divider_div"></div>
@@ -304,8 +304,8 @@
 		function openInGoogleMaps(){
 			var lat = mSelectedLatnLng.lat;
 			var lng = mSelectedLatnLng.lng;
-			window.open("https://www.google.com/maps/dir/Current+Location/" + lat + "," + lng, '_system');
-//			window.open("https://www.google.com/maps/dir/?api=1&destination=" + lat + ',' + lng + "&dir_action=navigate", '_system');
+//			window.open("https://www.google.com/maps/dir/Current+Location/" + lat + "," + lng, '_system');
+			window.open("https://www.google.com/maps/dir/?api=1&destination=" + lat + ',' + lng + "&dir_action=navigate", '_system');
 		}
 		
 		function sendFeedbackOnWholeSite(){

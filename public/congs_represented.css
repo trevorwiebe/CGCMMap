@@ -1,0 +1,59 @@
+html, body{
+	background-color: #eeeeee;
+	height: 100%;
+	font-family: Roboto, sans-serif;
+}
+
+#container{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#left_div{
+	width: 20%;
+}
+
+#content_div{
+	width: 60%;
+}
+
+#right_div{
+	width: 20%;
+}
+
+#congs_represented_div{
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 40px;
+	background-color: white;
+	border-radius: 2px;
+	box-shadow: 1px 1px 2px #888;
+}
+
+#congs_represented_ul{
+	list-style-type: none;
+}
+
+#congs_represented_li:hover{
+	background-color: #eeeeee;
+}
+
+#congs_represented_li{
+	margin-right: 40px;
+	padding: 20px;
+	border-bottom: 1px solid #888;
+}
+
+@media screen and (max-width: 700px){
+	#left_div{
+		width: 0%;
+	}
+	
+	#content_div{
+		width: 100%;
+	}
+	
+	#right_div{
+		width: 0%;
+	}
+}

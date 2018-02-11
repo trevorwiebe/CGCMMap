@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>View Congregation Locations</title>
+	<link rel="stylesheet" href="locations_in_cong.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="locations_in_cong.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCK4mj6C1LpZ24ueWG4P7HDhZ06evs7KNI",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+</head>
+<body>
+	
+	<div id="container">
+		<div id="left_div"></div>
+		<div id="content_div">
+			<center><h1>View Congregation Locations</h1></center>
+			<div id="view_location">
+				<ul id="location_ul"></ul>
+			</div>
+		</div>
+		<div id="right_div"></div>
+	</div>
+	
+	<script>
+		
+		var congId = getQuerystring('congId');
+		console.log(congId);
+		
+		function getQuerystring(key, default_){
+			if (default_==null) default_="";
+			key = key.replace(/[\\[]/,"\\\\\\[").replace(/[\\]]/,"\\\\\\]");
+			var regex = new RegExp("[\\\\?&]"+key+"=([^&#]*)");
+			var qs = regex.exec(window.location.href);
+			if(qs == null)
+				return default_;
+			else
+				return qs[1];
+		}
+		
+	</script>
+
+</body>
+</html>

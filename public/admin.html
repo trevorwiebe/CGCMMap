@@ -582,9 +582,12 @@
 			
 			var ref = firebase.database().ref('congregations').push();
 			var key = ref.getKey();
+			var date = new Date().getTime();
 			ref.set({
 				congregationId: key,
-				congregation: capCong
+				congregation: capCong,
+				whoSaved: mCurrentUserId,
+				date: date
 			});
 			setMessage("cong_message", capCong + " was added successfully", 1);
 			document.getElementById("congregation").value = "";

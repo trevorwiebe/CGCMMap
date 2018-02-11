@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Congregations Represented</title>
+	<link rel="stylesheet" href="congs_represented.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="congs_represented.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCK4mj6C1LpZ24ueWG4P7HDhZ06evs7KNI",
+		authDomain: "maps-ca38f.firebaseapp.com",
+		databaseURL: "https://maps-ca38f.firebaseio.com",
+		projectId: "maps-ca38f",
+		storageBucket: "maps-ca38f.appspot.com",
+		messagingSenderId: "6568625724"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+</head>
+<body>
+
+	<div id="container">
+		<div id="left_div"></div>
+		<div id="content_div">
+			<center><h1>Congregations Represented</h1></center>
+			<div id="congs_represented_div">
+				<ul id="congs_represented_ul">
+				</ul>
+			</div>
+		</div>
+		<div id="right_div"></div>
+	</div>
+
+	<script>
+		
+		var congs_ref = firebase.database().ref("congregations").orderByChild("congregation");
+		congs_ref.once('value').then(function(snapshot){
+			
+			var congsList = document.getElementById('congs_represented_ul');
+				
+			var array = snapshotToArray(snapshot);
+			
+			for(var r=0; array.length>r; r++){
+				var itemArray = array[r];
+				
+				var congName = itemArray.congregation;
+				var congId = itemArray.congregationId;
+				
+				var li = document.createElement("li");
+				li.appendChild(document.createTextNode(congName));
+				li.setAttribute("id", "congs_represented_li");
+				li.setAttribute("congId", congId);
+				congsList.appendChild(li);
+			}
+			
+			for(i=0;i<=congsList.childElementCount-1;i++){
+				congsList.children[i].addEventListener("click",itemClicked);
+			}
+			
+			function itemClicked(){
+				var congId = this.getAttribute("congId");
+				window.location = "locations_in_cong.html" + "?congId=" + congId;
+			}
+				
+		});
+		
+		function snapshotToArray(snapshot) {
+			var returnArr = [];
+
+			snapshot.forEach(function(childSnapshot) {
+				var item = childSnapshot.val();
+				item.key = childSnapshot.key;
+
+				returnArr.push(item);
+			});
+
+			return returnArr;
+		};
+		
+	</script>
+</body>
+</html>
