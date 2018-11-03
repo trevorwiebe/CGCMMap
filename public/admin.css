@@ -348,7 +348,7 @@ body, html{
 #add_new_location_title{
 	padding-top: 10px;
 	padding-bottom: 0px;
-	margin-bottom: 0px;
+	margin-bottom: 10px;
 }
 
 #add_location_loader{

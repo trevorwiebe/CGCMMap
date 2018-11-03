@@ -173,10 +173,14 @@ h3{
 
 #total_feedback_text_area{
 	width: 480px;
-	height: 290px;
+	height: 210px;
 	font-size: 16px;
 	padding: 10px;
 	resize: none;
+}
+
+#total_feedback_explain{
+	text-indent: 30px;
 }
 
 #shadow_div{
@@ -222,10 +226,6 @@ h3{
 
 #loading_maps_text{
 	margin-top: 20px;
-}
-
-#details{
-	
 }
 
 #name_details_div{
@@ -428,6 +428,7 @@ h3{
 
 	#total_feedback_text_area{
 		width: 235px;
+		height: 140px;
 	}
 	
 	#sign_in{

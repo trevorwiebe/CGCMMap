@@ -36,7 +36,17 @@
 	<script>
 		
 		var congId = getQuerystring('congId');
-		console.log(congId);
+		
+		var locationsQuery = firebase.database().ref('locations').orderByChild("congregation").equalTo(congId);
+		locationsQuery.once('value').then(function(snapshot){
+			var array = snapshotToArray(snapshot);
+			
+			for(var e=0; array.length<e; e++){
+				var itemArray = array[e];
+				console.log(itemArray);
+			}
+			
+		})
 		
 		function getQuerystring(key, default_){
 			if (default_==null) default_="";
@@ -48,6 +58,19 @@
 			else
 				return qs[1];
 		}
+		
+		function snapshotToArray(snapshot) {
+			var returnArr = [];
+
+			snapshot.forEach(function(childSnapshot) {
+				var item = childSnapshot.val();
+				item.key = childSnapshot.key;
+
+				returnArr.push(item);
+			});
+
+			return returnArr;
+		};
 		
 	</script>
 

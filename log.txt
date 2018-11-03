@@ -1,131 +1,76 @@
 in index.html, instead of requerying the db query the locally stored array instead
+add the ability to edit password in edit profile
+fill in faq section
+add loader to congs_represented.html
+fill in locations_in_cong.html
+fix bug where when looking at location feedback the state is undefined
+in location feedback change mark resolved to mark as read
+add 'Main map' to admin side nav
 
 
 
+update sendfeedback div -- !completed!
 when editing a location add an area to close dispute if one is open -- !completed!
-
 fix forgot password btn and cancel btn on signin div -- !completed!
-
 if no items in cart go back to main page -- !completed!
-
-remove left margin on tips and info page when on mobile -- !completed!
-
+remove left margin in tips and info page when on mobile -- !completed!
 increase the touch target of admin page open side nav -- !completed!
-
 make loading indicator stay on longer on admin page -- !completed!
-
 add loading indicator to cart -- !completed!
-
 add real key to stripe checkout -- !completed!
-
 make added to cart notice a floating dialog -- !completed!
-
 figure out if i need to charge tax -- !completed!
-
 fix edit locations -- !completed!
-
 add go to main page button on thankyou page. -- !completed!
-
 add explanation about when you delete locations you get those credits back -- !completed!
-
 add explanaiton that credits are non-refundable -- !completed!
-
 add explaniton that when someone moves away you must delete them -- !completed!
-
 add explantion on how to add businesses -- !completed!
-
 add edit user profile -- !completed!
-
 add shopping cart tab -- !completed!
-
 make main feedback div more mobile responsive, and make it so it can't resize -- !completed!
-
 add left and right margin around register complete message -- !completed!
-
 add forgot password link to sign in div -- !completed!
-
 add loader to add new location to show after verify location is clicked -- !completed!
-
 work on error reporting -- !completed!
-
 connect edit location feedback btn to edit locations -- !completed!
-
 connect mark resolved button -- !completed!
-
 remove 'key' from congregation object -- !completed!
-
 add margin left and right margin around register cards -- !completed!
-
 add note saying if cong or state isn't in dropdown menu to add it below -- !completed!
-
 change phone number type from text to phone number -- !completed!
-
 sign in widget needs some help on mobile -- !completed!
-
 make sure all buttons have at least 15px of padding -- !completed!
-
 remove all pins after name is searched -- worked on, but didn't finish
-
 check bug where sometimes navigate button and feedback link aren't shown  -- !completed!
-
 decrease the size of the sign in div on very small screens  -- !completed!
-
 add more of an explaination to the sign in div tell why a sign in is neccasary -- !completed!
-
 fix bug where there are duplicates in searching for location to edit -- !completed!
-
 in edit location only search for the locations that you added -- !completed!
-
 remove register button -- !completed!
-
 hide navigate and report error link when loading new selected location -- !completed!
-
 add full name field to location entry -- !completed!
-
 fix bug where google maps doesn't always open correctly -- !didn't fix, but current solution is good enough!
-
 force user to only add first and last name and city that are capitalized -- !completed!
-
 fix where when verifing the location with the addres it sometimes return "no results" -- !completed!
-
 add the ablitity to delete locations -- !completed!
-
 add indexOn to firebase rules -- !completed!
-
 add "cgcmaddressbook.com" as another domain name -- !completed!
-
 add check feedback -- !completed!
-
 make it so when you add a cong or state it checks to see if ones is already added -- !completed!
-
 force user to add only capitalized congs and states -- !completed!
-
 add the ability to edit states and congregations -- !completed!
-
 add a feedback option - "Type in congregation name" -- !completed!
-
 clear location feedback box when canceled or send -- !completed!
-
 make admin feedback more mobile responsive -- !completed!
-
 remove stats from nav -- !completed!
-
 fix padding bug in admin where when side margins go to 20% the widgets go into one column -- !completed!
-
 clear the feedback uls when switching away from the feedback tab -- !completed!
-
 move delete location button to bottom of edit location div -- !completed!
-
 hide edit congregations ul after a cong is selected -- !completed!
-
 hide delete location button after location is deleted -- !completed!
-
 fix bug where on small screens the menu arrow goes below the search maps widget -- !completed!
-
 change all the instances of "address book" to "map" -- !completed!
-
 on add location selects, order congs and states alphebetically -- !completed!
-
 add phone number field to register users page -- !completed!
-
 add applicant id and applicant status to field when adding applicants -- !completed!
