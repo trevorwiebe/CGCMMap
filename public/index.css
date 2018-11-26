@@ -241,8 +241,8 @@ h3{
 }
 
 #name{
-	width: 247px;
-	margin: 5px;
+	text-align: center;
+	width: 180px;
 }
 
 #something_wrong_with_entry{
@@ -342,7 +342,7 @@ h3{
 	background: #303F9F;
 	padding: 15px;
 	border-radius: 2px;
-	margin-left: 27px;
+	margin-left: 20px;
 	color: white;
 	box-shadow: 1px 1px 2px #888;
 }
@@ -353,7 +353,7 @@ h3{
 	border-radius: 2px;
 	color: #303F9F;
 	box-shadow: 1px 1px 2px #888;
-	margin-left: 27px;
+	margin-left: 20px;
 	margin-top: 20px;
 	
 	padding-top: 7px;
@@ -506,7 +506,8 @@ h3{
 		margin-right: 0px;
 	}
 	#name{
-		width: 200px;
+		text-align: center;
+		width: 160px;
 	}
 	#details{
 		margin-left: 5%;
@@ -543,8 +544,8 @@ select{
 }
 
 .name_details{
-    margin-left: 40px;
-    margin-right: 40px;
+    margin-left: 30px;
+    margin-right: 30px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	color: #757575;
