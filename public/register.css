@@ -27,21 +27,6 @@ html, body{
 	margin-left: 20px;
 	margin-right: 20px;
 	margin-top: 50px;
-	text-indent: 50px;
-	padding-top: 50px;
-	padding-bottom: 50px;
-	padding-left: 20px;
-	padding-right: 20px;
-	color: white;
-	background-color: #303F9F;
-	box-shadow: 1px 1px 2px #888;
-	border-radius: 2px;
-}
-
-#add_cong_div{
-	margin-left: 20px;
-	margin-right: 20px;
-	margin-top: 50px;
 	margin-bottom: 50px;
 	padding-top: 50px;
 	padding-bottom: 50px;
@@ -53,11 +38,11 @@ html, body{
 	text-indent: 50px;
 }
 
-#one_time_fee_div{
+#add_cong_div{
 	margin-left: 20px;
 	margin-right: 20px;
 	margin-top: 50px;
-	margin-bottom: 50px;
+	text-indent: 50px;
 	padding-top: 50px;
 	padding-bottom: 50px;
 	padding-left: 20px;
@@ -66,7 +51,6 @@ html, body{
 	background-color: #303F9F;
 	box-shadow: 1px 1px 2px #888;
 	border-radius: 2px;
-	text-indent: 50px;
 }
 
 #register_div{

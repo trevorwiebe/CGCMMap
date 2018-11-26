@@ -107,16 +107,8 @@
 	
 	<div id="side_nav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-<!--
-		<center><a onclick="window.location = 'congs_represented.html'">Congregations<br>Represented</a></center>
-		<div class="nav_divider_div"></div>
--->
 		<center><a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a></center>
 		<div class="nav_divider_div"></div>
-<!--
-		<center><a onclick="faq()">FAQ</a></center>
-		<div class="nav_divider_div"></div>
--->
 		<center><a onclick="admin()" id="registered_user_href">Congregational<br>Agent</a></center>
 		<div class="nav_divider_div" id="registered_user_div"></div>
 		<center><a onclick="signInAndOut()" id="sign_in_out_href"></a></center>
@@ -309,7 +301,6 @@
 		function openInGoogleMaps(){
 			var lat = mSelectedLatnLng.lat;
 			var lng = mSelectedLatnLng.lng;
-//			window.open("https://www.google.com/maps/dir/Current+Location/" + lat + "," + lng, '_system');
 			window.open("https://www.google.com/maps/dir/?api=1&destination=" + lat + ',' + lng + "&dir_action=navigate", '_system');
 		}
 		
@@ -818,11 +809,6 @@
 	<script 
 		async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC43Y-DKLX6bv69Kx9Q7NLDbbYzJPo-0gw&callback=initMap">
 	</script>
-<!--
-	<script 
-		async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA&callback=initMap">
-	</script>
--->
 	
 </body>
 </html>

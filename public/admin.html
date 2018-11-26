@@ -45,18 +45,10 @@
 		<a onclick="navEditLocation()">Edit Locations</a>
 		<div class="nav_divider_div"></div>
 		<a onclick="navCheckFeedback()">Check Location Feedback</a>
-<!--
-		<div class="nav_divider_div"></div>
-		<a onclick="getMoreCredit()" id="location_credits">Add Location Credits</a>
--->
 		<div class="nav_divider_div"></div>
 		<a onclick="information()">Tips and Information</a>
 		<div class="nav_divider_div"></div>
 		<a onclick="profile()">Edit Profile</a>
-<!--
-		<div class="nav_divider_div"></div>
-		<a onclick="shoppingCart()">Cart and Checkout</a>
--->
 	</div>
 	
 	<div id="shadow_div"></div>
@@ -68,8 +60,6 @@
 		<div id="add_location_div_container">
 			<div id="add_location_box">
 				<center><h2 class="tags" id="add_new_location_title">Add new Location</h2></center>
-<!--				<center><p id="location_credits_remaining"></p></center>-->
-<!--				<center><button id="add_more_credits" onclick="getMoreCredit()">Add more credits</button></center>-->
 				<div id="add_location_container">
 					<div id="add_location_1">
 						<input type="text" id="first_name" class="input" placeholder="First Name"><br>
@@ -378,8 +368,7 @@
 					
 					mLocationCredits = array[0].locationCredits;
 					mCongregationalAgentObjectId = array[0].congAgentObjectKey;
-					
-//					document.getElementById("location_credits_remaining").innerHTML = "Location credits remaining: " + mLocationCredits;
+				
 					
 					document.getElementById("loading_div").style.display = "none";
 				
@@ -620,16 +609,8 @@
 				setMessage("message_center_add_location", "Please fill all the blanks",0);
 				return;
 			}
-			
-//			var updateCountRef = firebase.database().ref('congregationalAgents').child(mCongregationalAgentObjectId).child("locationCredits");
-//			updateCountRef.once('value').then(function(snapshot){
-//				var currentVal = snapshot.val();
-//				if(currentVal == 0){
-//					loader.style.display = "none";
-//					setMessage("message_center_add_location", "You are out of location credits", 0);
-//				}else{
-					var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
-					databaseRef.once('value').then(function(snapshot){
+			var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
+			databaseRef.once('value').then(function(snapshot){
 						var array = snapshotToArray(snapshot);
 						if(areNamesInArray(array, firstName, lastName)){
 							setMessage("message_center_add_location", "This person's location is already saved", 0);
@@ -714,8 +695,6 @@
 							request.send();
 						}
 					})		
-//				}
-//			})
 		}
 		
 		function resetPins(){
@@ -1372,65 +1351,6 @@
 		
 		
 		/*
-			***** GET MORE LOCATION CREDITS *****
-		*/
-		function getMoreCredit(){
-			closeNav();
-			document.getElementById("profile_div").style.display = "none";
-			document.getElementById("information_div").style.display = "none"
-			document.getElementById("added_to_cart_div").style.display = "none";
-			document.getElementById("edit_location_div").style.display = "none";
-			document.getElementById("add_location_div_container").style.display = "none";
-			document.getElementById("check_feedback_div").style.display = "none";
-			document.getElementById("get_more_credits_container").style.display = "block";
-		}
-		
-		function five(){
-			addCreditsToCart(5);
-		}
-		
-		function fifteen(){
-			addCreditsToCart(15);
-		}
-		
-		function twentyfive(){
-			addCreditsToCart(25);
-		}
-		
-		function fifty(){
-			addCreditsToCart(50);
-		}
-		
-		function seventyfive(){
-			addCreditsToCart(75);
-		}
-		
-		function addCreditsToCart(credits){
-			document.getElementById("added_to_cart_div").style.visibility = "visible";
-			document.getElementById("shadow_div").style.visibility = "visible";
-			
-			var ref = firebase.database().ref('shoppingCart').child(mCurrentUserId).push();
-			var key = ref.getKey();
-			
-			ref.set({
-				credits: credits,
-				key: key
-			})
-			document.getElementById("added_to_cart_div").style.display = "block";
-			var added_to_cart_text = credits + " location credits added to your cart";
-			document.getElementById("item_added_to_cart").innerHTML = added_to_cart_text;
-		}
-		
-		function cancelCheckoutDialog(){
-			document.getElementById("shadow_div").style.visibility = "hidden";
-			document.getElementById("added_to_cart_div").style.visibility = "hidden";
-		}
-		
-		function checkout(){
-			window.location = "checkout.html";
-		}
-		
-		/*
 			***** INFORMATION *****
 		*/
 		function information(){
@@ -1524,7 +1444,6 @@
 				setMessage("update_profile_message", "Profile updated successfully", 1);
 			}
 		}
-
 		
 	</script>
 	
@@ -1532,12 +1451,6 @@
 	<script 
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC43Y-DKLX6bv69Kx9Q7NLDbbYzJPo-0gw">
 	</script>
-	
-<!--
-	<script 
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9GSNr_y7G9nRoTXnJ7wNY9N7ACt9u8SA">
-	</script>
--->
 
 </body>
 </html> 
