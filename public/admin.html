@@ -85,20 +85,6 @@
 				<center><button onclick="resetPins()" id="reset_location">Reset Pin</button>
 				<button id="save_location" onclick="saveLocationBtn()" class="save_button">Save Location</button></center>
 			</div>
-			<div id="add_state_province_cong_container">
-				<div id="add_s_p_c_1">
-					<center><h2 class="tags">Add new State or Province</h2></center>
-					<center><input type="text" id="state" class="input" placeholder="State or Province"><br></center>
-					<center><p id="state_or_province_message"></p></center>
-					<center><button id="save_state" class="save_button" onclick="saveState()">Save State or Province</button></center>
-				</div>
-				<div id="add_s_p_c_2">
-					<center><h2 class="tags">Add new Congregation</h2></center>
-					<center><input type="text" id="congregation" class="input" placeholder="Congregation"><br></center>
-					<center><p id="cong_message"></p></center>
-					<center><button id="save_congregation" class="save_button" onclick="saveCongregation()">Save Congregation</button></center>
-				</div>
-			</div>
 		</div>
 		
 		<div id="edit_location_div">
@@ -143,6 +129,7 @@
 				<center><button onclick="deleteThisLocation()" id="delete_this_location_btn">Delete this location</button></center>
 			</div>
 			
+<!--
 			<div id="edit_congs_box">
 				<center><h2>Edit Congregations</h2></center>
 			
@@ -157,6 +144,7 @@
 				</div>
 				<p id="edit_cong_message"></p>
 			</div>
+-->
 			
 		</div>
 	
@@ -261,10 +249,10 @@
 		<div id="information_div">
 			<center><h2>Tips and Information</h2></center>
 			<ul id="info_ul">
-				<li class="info_li">When you first began to enter your locations, your congregation most likely will not be one of the options in the congregation dropdown.  On the bottom of 'Add location' page there is an option to add a new congregation. Saved your congregation exactly like it says in the yearbook <b>minus the word 'Congregation'</b></li>
-				<li class="info_li">The information from 'Check Location Errors' comes directly from when a user reports an error on one of the locations that you entered. The process of how this works is the following. A random map user searches for a location, finds it then realizes something is not right with it. The user then reports an error with the location. The location is then marked that a dispute is open essentially saying that something maybe wrong with it and the users feedback shows up in your Congregational Agent Console. You can see the feedback on the 'Check Location Errors' page. When you are viewing your location errors and mark one as resolved, the location is not actually updated, it just lets CGCM Map know that you are aware of a problem with one of your locations.  To actually update the location, you must go to the edit locations page, search for it and then fill in the updated information and then mark the location dispute as closed, and save.</li>
 				<li class="info_li">We encourage you to add your church, school and the locations of the businesses in your congregation. But when you add a location, the first and last name must be filled before saving.  So the way to do this is, enter the full name of your church or school as it appears in the year book, or the full business name in the first name blank. Then in the last name blank enter Church, School or Business according to what was saved.</li>
+				<li class="info_li">The information from 'Check Location Errors' comes directly from when a user reports an error on one of the locations that you entered. The process of how this works is the following. A random map user searches for a location, finds it then realizes something is not right with it. The user then reports an error with the location. The location is then marked that a dispute is open essentially saying that something maybe wrong with it and the users feedback shows up in your Congregational Agent Console. You can see the feedback on the 'Check Location Errors' page. When you are viewing your location errors and mark one as resolved, the location is not actually updated, it just lets CGCM Map know that you are aware of a problem with one of your locations.  To actually update the location, you must go to the edit locations page, search for it and then fill in the updated information and then mark the location dispute as closed, and save.</li>
 				<li class="info_li">When someone in your congregation moves away, you must delete that location. Although this may seem a little strange to some (Why not just edit the location?),  CGCM Map is designed so you only have to manage you own congregations locations. So therefore the person who moved away is no longer your responsibility.</li>
+				<li class="info_li">If you have any questions please contact me at 'thisistrevor4@gmail.com'</li>
 			</ul>
 		
 		</div>
@@ -288,7 +276,6 @@
 			<center><p id="update_profile_message"></p></center>
 			<center><button onclick="updateProfile()" id="update_profile_btn">Update Profile</button></center>
 			<div id="extra_profile_info_div">
-<!--				<center><p id="profile_location_credits_remaining"></p></center>-->
 				<center><p id="date_created"></p></center>
 			</div>
 		</div>
@@ -332,12 +319,9 @@
 		document.getElementById("get_more_credits_container").style.display = "none";
 		document.getElementById("information_div").style.display = "none"
 		document.getElementById("shadow_div").style.visibility = "hidden";
-		document.getElementById("cong_message").style.display = "none";
-		document.getElementById("state_or_province_message").style.display = "none";
 		document.getElementById("delete_this_location_btn").style.display = "none";
-		document.getElementById("edit_cong_message").style.display = "none";
+//		document.getElementById("edit_cong_message").style.display = "none";
 		document.getElementById("edit_location_message").style.display = "none";
-		document.getElementById("add_s_p_c_1").style.display = "none";
 		document.getElementById("add_location_loader").style.display = "none";
 		document.getElementById("profile_div").style.display = "none";
 
@@ -833,8 +817,6 @@
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
 			document.getElementById("update_location_btn").style.display = "none";
-			document.getElementById("edit_cong_div").style.display = "none";
-			document.getElementById("drop_down_cong_edit_div").style.display = "none";
 			document.getElementById("drop_down_location_edit_div").style.display = "none";
 			document.getElementById("dispute_div").style.display = "none";
 			document.getElementById("dispute_message").style.display = "none";
@@ -1419,7 +1401,6 @@
 			var dateAdded = mCurrentUserArray.dateAdded;
 			var congAgentObjectKey = mCurrentUserArray.congAgentObjectKey;
 			var firstAndLastName = firstName + " " + lastName;
-//			var locationCredits = mCurrentUserArray.locationCredits;
 			var userId = mCurrentUserArray.userId;
 			
 			if(firstName.length == 0 || lastName.length == 0 || address.length == 0 || city.length == 0 || state.length == 0 || email.length == 0  || phone.length == 0){
@@ -1436,7 +1417,6 @@
 					firstAndLastName: firstAndLastName,
 					firstName: firstName,
 					lastName: lastName,
-					locationCredits: locationCredits,
 					phone: phone,
 					state: state,
 					userId: userId
