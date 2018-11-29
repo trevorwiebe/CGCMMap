@@ -40,6 +40,8 @@
 	
 	<div id="side_nav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a onclick="index.html" href="index.html">Main map</a>
+		<div class="nav_divider_div"></div>
 		<a onclick="navAddLocation()">Add Location</a>
 		<div class="nav_divider_div"></div>
 		<a onclick="navEditLocation()">Edit Locations</a>
@@ -129,23 +131,6 @@
 				<center><button onclick="deleteThisLocation()" id="delete_this_location_btn">Delete this location</button></center>
 			</div>
 			
-<!--
-			<div id="edit_congs_box">
-				<center><h2>Edit Congregations</h2></center>
-			
-				<center><input type="text" class="input" placeholder="Search for congregation", id="edit_search_cong" onkeyup="searchForCongsToEdit()"></center>
-				<div id="drop_down_cong_edit_div">
-					<ul id="cong_to_edit_ul"></ul>
-				</div>
-
-				<div id="edit_cong_div">
-					<input type="text" class="input" id="cong_to_edit" placeholder="Congregation"><br>
-					<input type="button" class="save_button" value="Update Congregation" onclick="updateCong()">
-				</div>
-				<p id="edit_cong_message"></p>
-			</div>
--->
-			
 		</div>
 	
 		<div id="check_feedback_div">
@@ -183,68 +168,7 @@
 			<div id="loading_feedback">
 				<div id="feedback_loader"></div>
 			</div>
-		</div>
-		
-		<div id="get_more_credits_container">
-			<div id="added_to_cart_div">
-				<h3 id="item_added_to_cart"></h3>
-				<button onclick="cancelCheckoutDialog()" id="cancel_checkout_dialog">Add More</button>
-				<button onclick="checkout()" id="checkout_btn">Checkout</button>
-			</div>
-			<center><h2>Select a package</h2></center>
-			<div id="tier_container">
-				<div class="tier" id="five">
-					<div id="tier_five">
-						<h4 class="tier_label">5</h4>
-						<h4 class="house_holds_label">Credits</h4>
-					</div>
-					<div>
-						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="five()">
-						<p class="price_label">$25</p>
-					</div>
-				</div>
-				<div class="tier" id="fifteen">
-					<div id="tier_fifteen">
-						<h4 class="tier_label">15</h4>
-						<h4 class="house_holds_label">Credits</h4>
-					</div>
-					<div>
-						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="fifteen()">
-						<p class="price_label">$75</p>
-					</div>
-				</div>
-				<div class="tier" id="twentyfive">
-					<div id="tier_twentyfive">
-						<h4 class="tier_label">25</h4>
-						<h4 class="house_holds_label">Credits</h4>
-					</div>
-					<div>
-						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="twentyfive()">
-						<p class="price_label">$125</p>
-					</div>
-				</div>
-				<div class="tier" id="fifty">
-					<div id="tier_fifty">
-						<h4 class="tier_label">50</h4>
-						<h4 class="house_holds_label">Credits</h4>
-					</div>
-					<div>
-						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="fifty()">
-						<p class="price_label">$250</p>
-					</div>
-				</div>
-				<div class="tier" id="seventyfive">
-					<div id="tier_seventyfive">
-						<h4 class="tier_label">75</h4>
-						<h4 class="house_holds_label">Credits</h4>
-					</div>
-					<div>
-						<img id="shopping_cart_img" src="res/shopping_cart.jpg" onclick="seventyfive()">
-						<p class="price_label">$375</p>
-					</div>
-				</div>
-			</div>
-		</div>
+		</div>		
 		
 		<div id="information_div">
 			<center><h2>Tips and Information</h2></center>
@@ -275,8 +199,15 @@
 			</div>
 			<center><p id="update_profile_message"></p></center>
 			<center><button onclick="updateProfile()" id="update_profile_btn">Update Profile</button></center>
+			<center><button onclick="resetPassword()" id="reset_password_btn">Reset Password</button></center>
 			<div id="extra_profile_info_div">
 				<center><p id="date_created"></p></center>
+			</div>
+			<div id="reset_password_div">
+				<p id="reset_password_label">Reset Password</p>
+				<input class="input" placeholder="New password" id="first_password"><br>
+				<input class="input" placeholder="New password again" id="last_password"><br>
+				<button id="save_password_btn" onclick="saveNewPassword()">Save</button>
 			</div>
 		</div>
 		
@@ -302,6 +233,7 @@
 		var mSelectedDate;
 		var mUserId;
 		var mCurrentUserId;
+		var mCurrentUser;
 		var mLocationThatCurrentUserPutIn = {};
 		var mLocationFeedbackArray = {};
 		var mIsEditingFromCheckFeedback = false;
@@ -316,11 +248,9 @@
 		document.getElementById("maps_div").style.display = "none";
 		document.getElementById("edit_location_div").style.display = "none";
 		document.getElementById("check_feedback_div").style.display = "none";
-		document.getElementById("get_more_credits_container").style.display = "none";
 		document.getElementById("information_div").style.display = "none"
 		document.getElementById("shadow_div").style.visibility = "hidden";
 		document.getElementById("delete_this_location_btn").style.display = "none";
-//		document.getElementById("edit_cong_message").style.display = "none";
 		document.getElementById("edit_location_message").style.display = "none";
 		document.getElementById("add_location_loader").style.display = "none";
 		document.getElementById("profile_div").style.display = "none";
@@ -334,6 +264,8 @@
 		var database = firebase.database();
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
+				
+				mCurrentUser = user;
 				
 				mCurrentUserId = user.uid;
 				database.ref('locationFeedback').child(mCurrentUserId).orderByChild("date").on('value', function(snapshot){
@@ -797,7 +729,6 @@
 			document.getElementById("add_location_div_container").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
-			document.getElementById("get_more_credits_container").style.display = "none";
 			document.getElementById("information_div").style.display = "none"
 		}
 		
@@ -812,7 +743,6 @@
 			document.getElementById("information_div").style.display = "none"
 			document.getElementById("edit_location_div").style.display = "block";
 			document.getElementById("add_location_div_container").style.display = "none";
-			document.getElementById("get_more_credits_container").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
 			document.getElementById("verify_edit_location_div").style.display = "none";
 			document.getElementById("edit_map_location").style.display = "none";
@@ -1211,7 +1141,6 @@
 			document.getElementById("check_feedback_div").style.display = "block";
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
-			document.getElementById("get_more_credits_container").style.display = "none";
 			document.getElementById("information_div").style.display = "none"
 			
 			refreshFeedbackUls();
@@ -1342,7 +1271,6 @@
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
-			document.getElementById("get_more_credits_container").style.display = "none";
 		}
 		
 		
@@ -1351,12 +1279,12 @@
 		*/
 		function profile(){
 			closeNav();
+			document.getElementById("reset_password_div").style.visibility = "hidden";
 			document.getElementById("profile_div").style.display = "block";
 			document.getElementById("information_div").style.display = "none"
 			document.getElementById("edit_location_div").style.display = "none";
 			document.getElementById("add_location_div_container").style.display = "none";
 			document.getElementById("check_feedback_div").style.display = "none";
-			document.getElementById("get_more_credits_container").style.display = "none";
 			document.getElementById("update_profile_message").style.display = "none";
 			
 			var firstName = mCurrentUserArray.firstName;
@@ -1371,7 +1299,6 @@
 			var locationCredits = mCurrentUserArray.locationCredits;
 			
 			document.getElementById("date_created").innerHTML = "A Congregational Agent since " + new Date(dateAdded).toDateString();
-//			document.getElementById("profile_location_credits_remaining").innerHTML = "Location credits remaining: " + locationCredits;
 			
 			document.getElementById("profile_first_name").value = firstName;
 			document.getElementById("profile_last_name").value = lastName;
@@ -1422,6 +1349,32 @@
 					userId: userId
 				});
 				setMessage("update_profile_message", "Profile updated successfully", 1);
+			}
+		}
+		
+		function resetPassword() {
+			document.getElementById("shadow_div").style.visibility = "visible";
+			document.getElementById("reset_password_div").style.visibility = "visible";
+		}
+		
+		function saveNewPassword(){
+			if(mCurrentUser != null){
+				var firstPass = document.getElementById("first_password").value;
+				var lastPass = document.getElementById("last_password").value;
+				if(firstPass == lastPass){
+					if(firstPass.length >= 6){
+						mCurrentUser.updatePassword(firstPass).then(function() {
+							document.getElementById("reset_password_div").style.visibility = "hidden";
+							document.getElementById("shadow_div").style.visibility = "hidden";
+							setMessage("update_profile_message", "Password Updated successfully!", 1);
+						}).catch(function(error) {
+							console.log(error.message);
+							document.getElementById("reset_password_div").style.visibility = "hidden";
+							document.getElementById("shadow_div").style.visibility = "hidden";
+							setMessage("update_profile_message", error.message, 0);
+						});		
+					}
+				}	
 			}
 		}
 		
