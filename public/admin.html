@@ -528,7 +528,7 @@
 			var databaseRef = firebase.database().ref('locations').orderByChild("firstName").equalTo(firstName);
 			databaseRef.once('value').then(function(snapshot){
 						var array = snapshotToArray(snapshot);
-						if(areNamesInArray(array, firstName, lastName)){
+						if(areNamesInArray(array, firstName, lastName, address, city)){
 							setMessage("message_center_add_location", "This person's location is already saved", 0);
 							document.getElementById("maps_div").style.display = "none";
 							loader.style.display = "none";
@@ -710,12 +710,16 @@
 			return returnArr;
 		};
 
-		function areNamesInArray(array, firstNameToTest, lastNameToTest){
+		function areNamesInArray(array, firstNameToTest, lastNameToTest, addressToTest, cityToTest){
 			for(var i=0; i < array.length; i++){
 				var firstName = array[i].firstName;
 				var lastName = array[i].lastName;
+				var address = array[i].address;
+				var city = array[i].city;
 				
-				if(firstName == firstNameToTest && lastName == lastNameToTest){
+				console.log(array);
+				
+				if(firstName == firstNameToTest && lastName == lastNameToTest && address == addressToTest && city == cityToTest){
 					return true;
 				}
 			}
@@ -733,7 +737,7 @@
 		}
 		
 		
-		/*
+		/*d
 			*****  EDIT ITEMS CODE   *****
 		*/
 		function navEditLocation(){
