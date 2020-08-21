@@ -136,6 +136,32 @@ h3{
     box-shadow: 1px 1px 2px #888;
 }
 
+#message_box{
+    position: fixed; 
+    width: 370px; 
+    height: 0px;
+    top: auto;
+    left: 10px;
+    right: auto;
+    bottom: 0px;
+    border-radius: 2px;
+    background-color: #303F9F;
+    z-index: 2;
+    transition: 0.2s;
+    box-shadow: 1px 1px 2px #888;
+    text-align: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#box_message{
+    color: white;
+    font-weight: bold;
+    font-size: 25px
+}
+
 #incorrect_data_div{
 	position: fixed;
 	margin-left: auto;
@@ -480,7 +506,17 @@ h3{
 		left: 0px;
 		right: 0px;
 		bottom: 0px;
+        
 	}
+    
+    #message_box{
+        width: auto;
+        border-radius: 0px;
+        top: auto;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+    }
 	
 }
 

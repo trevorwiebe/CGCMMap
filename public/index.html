@@ -105,6 +105,10 @@
 			</div>
 		</div>
 	</div> 
+    
+    <div id="message_box">
+        <p id="box_message"></p>
+    </div>
 	
 	<div id="side_nav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -294,6 +298,8 @@
 			document.getElementById("whats_wrong").options[0].selected = true;
 			document.getElementById("incorrect_data_div").style.visibility = 'hidden';
 			document.getElementById("shadow_div").style.visibility = 'hidden';
+            
+            open_message_box("Feedback sent.  Thanks!")
 		}
 
 		function admin(){
@@ -324,6 +330,8 @@
 			document.getElementById("total_feedback").style.visibility = "hidden";
 			document.getElementById("shadow_div").style.visibility = "hidden";
 			document.getElementById("total_feedback_text_area").value = "";
+            
+            open_message_box("Feedback sent.  Thanks!")
 		}
 		
 		function cancelSendWholeFeedback(){
@@ -712,6 +720,9 @@
 		  }
 		
 		function openAndCloseMenu(){
+            
+            open_message_box("Signed in successfully");
+            
 			var arrow = document.getElementById("open_close_arrow");
 			
 			var nameDetailsDiv = document.getElementById("name_details_div");
@@ -792,12 +803,34 @@
 				document.getElementById("loader").style.display = "none";
 				document.getElementById("sign_in_loading").style.display = "none";
                 document.getElementById("register").style.display="none";
+                open_message_box("Sign in successful");
 			} else {
 				document.getElementById("registered_user_href").style.display = "none";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
                 document.getElementById("register").style.display="block";
+                open_message_box("Signed out");
 			}
 		});
+        
+        function open_message_box(message_to_set){
+            var message_box_el = document.getElementById("message_box");
+            
+            message_box_el.style.bottom = "10px";
+            message_box_el.style.height = "70px";
+            message_box_el.style.paddingTop = "10px";
+            message_box_el.style.paddingBottom = "10px";
+            
+            document.getElementById("box_message").innerHTML = message_to_set;
+            
+            setTimeout(
+            function() {
+                message_box_el.style.bottom = "0px";
+                message_box_el.style.height = "0px";
+                message_box_el.style.paddingTop = "0px";
+                message_box_el.style.paddingBottom = "0px";
+            }, 3000);
+            
+        }
 		
 		
 	</script>
