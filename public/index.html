@@ -55,15 +55,16 @@
 	<div id="incorrect_data_div">
 		<h3>Select type of problem</h3>
 		<select id="whats_wrong">
-			<option value="incorrect_location">Location on map is incorrect</option>
+			<option value="incorrect_location">Pin on map is incorrect</option>
 			<option value="incorrect_address">Address is incorrect</option>
 			<option value="delete_location">Location needs to be deleted</option>
 			<option value="typo">Typo in name or address</option>
 			<option value="cong_typo">Typo in congregation name</option>
 			<option value="other">Other</option>
 		</select>
-		<h3>Tell us more</h3>
-		<p id="location_feedback_explain">Try to be clear and descriptive with the problem. Thanks for improving CGCM Maps!</p>
+		<h3>Tell us more!</h3>
+		<p id="location_feedback_explain">Try to be clear and descriptive with the problem.</p>
+        <p id="location_feedback_explain">Thanks for improving CGCM Maps!</p>
 		<textarea id="incorrect_data_notes"></textarea>
 		<input type="button" value="Cancel" class="button" id="incorrect_cancel_btn" onclick="cancelIncorrect()">
 		<input type="button" value="Send" class="button" id="incorrect_send_btn" onclick="sendFeedbackOnLocation()">
@@ -109,6 +110,7 @@
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<center><a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a></center>
 		<div class="nav_divider_div"></div>
+        <center><a onclick="register()" id="register">Register</a></center>
 		<center><a onclick="admin()" id="registered_user_href">Congregational<br>Agent</a></center>
 		<div class="nav_divider_div" id="registered_user_div"></div>
 		<center><a onclick="signInAndOut()" id="sign_in_out_href"></a></center>
@@ -784,16 +786,16 @@
 			mUser = user;
 			if (user) {
 				document.getElementById("registered_user_href").style.display = "block";
-				document.getElementById("registered_user_div").style.display = "block";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
 				document.getElementById("shadow_div").style.visibility = "hidden";
 				document.getElementById("sign_in").style.visibility = "hidden";
 				document.getElementById("loader").style.display = "none";
 				document.getElementById("sign_in_loading").style.display = "none";
+                document.getElementById("register").style.display="none";
 			} else {
-				document.getElementById("registered_user_div").style.display = "none";
 				document.getElementById("registered_user_href").style.display = "none";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
+                document.getElementById("register").style.display="block";
 			}
 		});
 		
