@@ -111,13 +111,15 @@
     </div>
 	
 	<div id="side_nav" class="sidenav">
-		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<center><a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a></center>
-		<div class="nav_divider_div"></div>
-        <center><a onclick="register()" id="register">Register</a></center>
-		<center><a onclick="admin()" id="registered_user_href">Congregational<br>Agent</a></center>
-		<div class="nav_divider_div" id="registered_user_div"></div>
-		<center><a onclick="signInAndOut()" id="sign_in_out_href"></a></center>
+        <div id="close_btn_div">
+            <button id="close_nav_btn" href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</button>
+        </div><br>
+        <ul id="nav_ul">
+            <li><a onclick="showSendFeedbackOnWholeSite()">Send Feedback</a></li>
+            <li><a onclick="register()" id="register_nav">Add your Congregation</a></li>
+            <li><a onclick="admin()" id="registered_user_href">Congregational Agent</a></li>
+            <li><a onclick="signInAndOut()" id="sign_in_out_href"></a></li>
+        </ul>
 	</div>
 
 	<script>
@@ -578,7 +580,7 @@
 		function openNav() {
 			document.getElementById("shadow_div").style.visibility = "visible";
 			document.getElementById("side_nav").style.visibility = "visible";
-			document.getElementById("side_nav").style.width = "300px";
+			document.getElementById("side_nav").style.width = "350px";
 		}
 
 		function closeNav() {
@@ -721,8 +723,6 @@
 		
 		function openAndCloseMenu(){
             
-            open_message_box("Signed in successfully");
-            
 			var arrow = document.getElementById("open_close_arrow");
 			
 			var nameDetailsDiv = document.getElementById("name_details_div");
@@ -796,19 +796,19 @@
 		firebase.auth().onAuthStateChanged(function(user) {
 			mUser = user;
 			if (user) {
-				document.getElementById("registered_user_href").style.display = "block";
+				document.getElementById("registered_user_href").style.display = "inline-block";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign Out";
+                
 				document.getElementById("shadow_div").style.visibility = "hidden";
 				document.getElementById("sign_in").style.visibility = "hidden";
 				document.getElementById("loader").style.display = "none";
 				document.getElementById("sign_in_loading").style.display = "none";
-                document.getElementById("register").style.display="none";
+                document.getElementById("register_nav").style.display="none";
                 open_message_box("Sign in successful");
 			} else {
 				document.getElementById("registered_user_href").style.display = "none";
 				document.getElementById("sign_in_out_href").innerHTML = "Sign In";
-                document.getElementById("register").style.display="block";
-                open_message_box("Signed out");
+                document.getElementById("register_nav").style.display="inline-block";
 			}
 		});
         
@@ -816,9 +816,7 @@
             var message_box_el = document.getElementById("message_box");
             
             message_box_el.style.bottom = "10px";
-            message_box_el.style.height = "70px";
-            message_box_el.style.paddingTop = "10px";
-            message_box_el.style.paddingBottom = "10px";
+            message_box_el.style.height = "60px";
             
             document.getElementById("box_message").innerHTML = message_to_set;
             
@@ -826,8 +824,6 @@
             function() {
                 message_box_el.style.bottom = "0px";
                 message_box_el.style.height = "0px";
-                message_box_el.style.paddingTop = "0px";
-                message_box_el.style.paddingBottom = "0px";
             }, 3000);
             
         }

@@ -87,6 +87,10 @@ h3{
 	text-align: center;
 }
 
+#nav_ul{
+    list-style: none;
+}
+
 .sidenav {
     height: 100%;
     width: 0;
@@ -96,30 +100,60 @@ h3{
     background-color: #3F51B5;
     overflow-x: hidden;
     transition: 0.1s;
-    padding-top: 60px;
+    padding-top: 20px;
 	z-index: 5;
 	cursor: pointer;
 }
 
-.sidenav a {
-    padding: 8px 24px 8px 8px;
-    text-decoration: none;
-    font-size: 20px;
-    color: white;
-    display: block;
-    transition: 0.3s;
+a {
+    padding: 24px 0px 8px 0px;
+	color: #fff;
+	text-decoration: none;
+	letter-spacing: 0.15em;
+	display: inline-block;
+	font-weight: bold;
+	font-size: 20px;
+	position: relative;
 }
 
 .sidenav a:hover {
-    color: #C5CAE9;
+    color: #fff;
 }
 
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+a:after{
+    background: none repeat scroll 0 0 transparent;
+	bottom: 0;
+	content: "";
+	display: block;
+	height: 2px;
+	left: 0%;
+	position: absolute;
+	background: #fff;
+	transition: width 0.2s ease 0s, right 0.2s ease 0s;
+	width: 0;
+}
+
+a:hover:after { 
+	width: 100%; 
+	left: 0; 
+}
+
+#close_nav_btn{
+    color: white;
+    background-color: #3F51B5;
+    border: none;
+    font-size: 33px;
+    margin-left: 24px;
+    margin-right: 24px;
+}
+
+#close_nav_btn:hover{
+    color: #C5CAE9; 
+    cursor: pointer;
+}
+
+#close_btn_div{
+    text-align: right;
 }
 
 #overlay {
@@ -143,7 +177,6 @@ h3{
     top: auto;
     left: 10px;
     right: auto;
-    bottom: 0px;
     border-radius: 2px;
     background-color: #303F9F;
     z-index: 2;
@@ -159,7 +192,8 @@ h3{
 #box_message{
     color: white;
     font-weight: bold;
-    font-size: 25px
+    font-size: 23px;
+    margin-top: 17px;
 }
 
 #incorrect_data_div{
