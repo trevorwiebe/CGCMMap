@@ -397,29 +397,45 @@ a:hover:after {
 	border-bottom: 1px solid black;
 }
 
+#search_input:focus{
+    outline: none;
+}
+
 #open_in_google_maps_btn{
 	border: none;
 	background: #303F9F;
 	padding: 15px;
-	border-radius: 2px;
+	border-radius: 0px;
 	margin-left: 20px;
 	color: white;
-	box-shadow: 1px 1px 2px #888;
+    font-weight: bold;
 }
 
 #report_error{
-	border: none;
+	border: 2px solid #303F9F;
 	background: white;
-	border-radius: 2px;
 	color: #303F9F;
-	box-shadow: 1px 1px 2px #888;
+    font-weight: bold;
 	margin-left: 20px;
 	margin-top: 20px;
-	
 	padding-top: 7px;
 	padding-bottom: 7px;
-	padding-left: 21px;
-	padding-right: 21px;
+	padding-left: 19px;
+	padding-right: 19px;
+}
+
+#open_in_google_maps_btn:hover{
+    background: #242f78;
+    transition: 0.2s;
+    box-shadow: 2px 2px 2px #e1e1e1;
+    cursor: pointer;
+}
+
+#report_error:hover{
+    background: #f7f7f7;
+    transition: 0.2s;
+    box-shadow: 2px 2px 2px #e1e1e1;
+    cursor: pointer;
 }
 
 #names_found_list{
